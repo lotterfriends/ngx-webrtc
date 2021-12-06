@@ -1,0 +1,23 @@
+<section class="start" *ngIf="showJoin">
+
+  <div class="start-room">
+    <input [(ngModel)]="roomName" type="text" placeholder="Room Name" />
+    <button (click)="newRoom()">⟳</button>
+  </div>
+  
+  <div>
+    <button (click)="join()">join</button>
+  </div>
+
+</section>
+
+<section class="room" *ngIf="roomName?.length && showChat">
+  <div class="room-chat">
+    <div>Room: {{roomName}} <button (click)="leave()">leave</button></div>
+    <app-video-chat #videoChat [room]="roomName"></app-video-chat>
+  </div>
+  <div class="room-sidebar">
+    <app-userlist></app-userlist>
+    <app-text-chat #textChat [room]="roomName"></app-text-chat>
+  </div>
+</section>

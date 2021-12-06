@@ -1,0 +1,102 @@
+
+:host {
+  background-color: #141414;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  overflow: hidden;
+}
+
+
+::-webkit-scrollbar {
+  width: .5em;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: .5em;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+li {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: .25em 0 .25em .25em;
+}
+
+section,
+.messages {
+  display: flex;
+  flex-direction: column;
+}
+
+.message-container {
+  overflow: hidden;
+  flex-direction: column;
+}
+
+.message:nth-child(odd) {
+  background-color: #2e2e2e;
+}
+
+
+.message-info {
+  font-size: .75em;
+}
+
+.message-info-author {
+  font-weight: bold;
+  margin-right: .25em;
+}
+
+.message-info-time {
+  /* text-decoration: underline; */
+}
+
+.message-info-time::after {
+  content: ':';
+}
+
+.message-form {
+  flex-direction: row;
+  align-items: center;
+
+}
+
+.message-form input {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  min-width: 100px;
+  flex-grow: 1;
+}
+
+.message-form .send-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.message-form .send-button button {
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+
+.messages {
+  width: 100%;
+  flex-grow: 1;
+  flex-direction: column;
+  overflow-y: auto
+}

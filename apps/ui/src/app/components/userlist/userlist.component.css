@@ -1,0 +1,18 @@
+:host {
+  background-color: #141414;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 1em;
+}
+
+ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  padding:  .25em 0;
+}

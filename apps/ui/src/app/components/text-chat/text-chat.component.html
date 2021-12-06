@@ -1,0 +1,38 @@
+<section class="message-container">
+  <section class="messages" #scrollMe>
+    <ul>
+      <li class="message" *ngFor="let message of messages" title="{{ message.time | date:'short' }}">
+        <span class="message-info">
+          <span class="message-info-author">{{ message.author }}</span>
+          <span class="message-info-time">{{ message.time | date:'HH:mm' }}</span>
+        </span>
+        <span class="message-txt">
+          {{ message.message }}
+        </span>
+      </li>
+    </ul>
+  </section>
+
+  <section class="message-form">
+      <input
+        #messageField
+        placeholder="Message"
+        required
+        autocomplete="off"
+        [(ngModel)]="msg"
+        (keyup.enter)="
+          msg.length &&
+            sendMessage(msg) &&
+            (messageField.value = '')
+        "
+      />
+    <div class="send-button">
+      <button
+        (click)="sendMessage(msg) && (messageField.value = '')"
+        [disabled]="!msg.length"
+      >
+      senden
+      </button>
+    </div>
+  </section>
+</section>

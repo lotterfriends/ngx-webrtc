@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "baseUrl": "./",
+        "rootDir": ".", 
+        "paths": {
+            "@models": ["./libs/models/index.ts"],
+        },
+    },
+    "include": [
+        "./libs/**/*",
+        "./apps/**/*"
+    ]
+}

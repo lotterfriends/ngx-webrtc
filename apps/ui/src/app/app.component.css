@@ -1,0 +1,59 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  overflow-y: auto;
+  justify-content: space-around;
+}
+
+.hidden {
+  display: none;
+}
+
+.start {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-size: 30px;
+}
+
+.start-room {
+  margin-bottom: 1em;
+}
+
+.start-room button {  
+  margin-left: .5em;
+}
+
+.room {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.room .room-chat {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.room .room-sidebar {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 250px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.room .room-sidebar app-userlist {
+  flex-shrink: 3;
+}
+
+.room .room-sidebar app-text-chat {
+  flex-shrink: 1;
+}

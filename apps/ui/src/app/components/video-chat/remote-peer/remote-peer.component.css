@@ -1,0 +1,16 @@
+.peer {
+  background: #ccc;
+  color: #666;
+  border: 1px solid red;
+  max-width: 250px;
+  display: inline-block;
+  text-align: center;
+}
+
+.peer .name {
+  padding: .25em;
+}
+
+.peer video {
+  max-width: 100%;
+}

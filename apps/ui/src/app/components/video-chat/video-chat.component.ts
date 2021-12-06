@@ -1,0 +1,198 @@
+import { ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, Injector, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { distinctUntilChanged, filter, first, map } from 'rxjs/operators';
+import { MessageType } from "../../../../../../libs/models/message-type";
+import { User } from "../../../../../../libs/models/user";
+import { Call } from 'src/app/peer/call';
+import { CallService } from 'src/app/peer/call.service';
+import { PeerConnectionClient, PeerConnectionClientSignalMessage, StreamType } from 'src/app/peer/peer-connection-client';
+import { StreamService } from 'src/app/peer/stream.service';
+import { MessagesService } from 'src/app/services/messages.service';
+import { SocketService } from 'src/app/services/socket.service';
+import { UserStorageService } from 'src/app/services/user-storage.service';
+import { RemotePeerComponent } from './remote-peer/remote-peer.component';
+
+@UntilDestroy()
+@Component({
+  selector: 'app-video-chat',
+  templateUrl: './video-chat.component.html',
+  styleUrls: ['./video-chat.component.css']
+})
+export class VideoChatComponent implements OnInit {
+
+  constructor(
+    private userStorageService: UserStorageService,
+    private socketService: SocketService,
+    private messageService: MessagesService,
+    private streamService: StreamService,
+    private changeDetectorRef: ChangeDetectorRef,
+    private cfr: ComponentFactoryResolver,
+    private injector: Injector,
+    private callService: CallService
+  ) {
+    this.call = new Call();
+  }
+
+  @Input('room') room!: string;
+  @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
+  @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
+
+  private pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
+  private call: Call;
+  private localStream: MediaStream;
+  private isInitiator = false;
+  private self;
+
+  ngOnInit(): void {
+    console.log('init');
+    this.self = this.userStorageService.getCurrentUsername();
+
+    this.socketService.onUserLeftRoom().pipe(
+      untilDestroyed(this),
+      distinctUntilChanged()
+    ).subscribe(this.onUserLeft.bind(this));
+  }
+
+  public startCall() {
+    console.log('startCall');
+    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
+      this.localStream = stream;
+      this.streamService.setStream(this.localStreamNode.nativeElement, stream);
+
+      console.log('joinedRoom');
+
+      this.socketService.getUsersInRoom().pipe(
+        untilDestroyed(this),
+        distinctUntilChanged()
+      ).subscribe(this.onUserJoined.bind(this));
+  
+      this.socketService.joinedRoom();
+
+    });
+  }
+
+  private filterConnectedUsers(user: User) {
+    return user.name !== this.self && !this.pclients.map(e => e.user.socketId).includes(user.socketId);
+  }
+
+  private async onUserJoined(users: User[]) {
+    console.log('onUserJoined', users);
+    if (users.length > 1) {
+
+      if (users.length > 2 && this.pclients.length) {
+        this.isInitiator = true;
+      }
+      
+      for(const user of users.filter(this.filterConnectedUsers.bind(this))) {
+        console.log('new user', user);
+        const component = await this.createRemotePeerComponent();
+        this.pclients.push({
+          component,
+          user,
+          connection: this.addPeer(user, component)
+        });
+        component.instance.setUser(user);
+      }
+    } else {
+      this.isInitiator = true;
+    }
+  }
+
+  private async onUserLeft(user: User) {
+    console.log('onUserLeft', user);
+    if (user.name !== this.self) {
+      const entry = this.pclients.find(e => e.user.name === user.name);
+      if (entry?.component?.instance?.audioStreamNode) {
+        this.streamService.stopStream(entry.component.instance.audioStreamNode);
+      }
+      if (entry?.component?.instance?.videoStreamNode) {
+        this.streamService.stopStream(entry.component.instance.videoStreamNode);
+      }
+      if(entry?.connection) {
+        entry.connection.close();
+      }
+      console.log(entry);
+      if (entry?.component) {
+        entry.component.destroy();
+      }
+      console.log(this.pclients);
+      this.pclients = this.pclients.filter(e => e.user.name !== user.name);
+      console.log(this.pclients);
+    }
+  }
+
+  addPeer(user: User, component: ComponentRef<RemotePeerComponent>): PeerConnectionClient {
+    console.log('addPeer', user, component)
+    const pclient = this.call.createPeerClient();
+    // add media
+    pclient.addStream(this.localStream);
+    
+    // signaling out
+    pclient.signalingMessage.subscribe(m => {
+      // console.log(m);
+      this.socketService.sendSignalMessage(m, user.name);
+    });
+    
+    // signaling in 
+    this.socketService.getPrivateMessages().pipe(filter(m => m.type === MessageType.Signal && m.author === user.name)).subscribe(message => {
+      pclient.receiveSignalingMessage(message.message);
+    });
+
+    pclient.remoteStreamAdded.subscribe(stream => {
+      if (stream.kind === StreamType.Audio) {
+        this.streamService.setStream(component.instance.audioStreamNode.nativeElement, stream.track, false);
+      }
+      if (stream.kind === StreamType.Video) {
+        console.log('remoteStreamAdded', user);
+        this.streamService.setStream(component.instance.videoStreamNode.nativeElement, stream.track);
+      }
+    });
+
+    if (this.isInitiator) {
+      pclient.startAsCaller();
+      console.log('start as caller', user);
+    } else {
+      this.messageService.getPrivateMessages(this.room, MessageType.Signal).pipe(
+        first(),
+        map(m => m.messages.map(e => JSON.parse(e.message) as PeerConnectionClientSignalMessage))
+        ).subscribe(messages => {
+        console.log('start as callee', user, messages);
+        pclient.startAsCallee(messages);
+      });
+    }
+
+    // pclient.remoteHangUp.pipe(first()).subscribe(() => {
+    //   this.streamService.stopStream(component.instance.audioStreamNode);
+    //   this.streamService.stopStream(component.instance.videoStreamNode);
+    //   pclient.close();
+    // });
+
+    return pclient;
+  }
+
+
+  stopCall() {
+    this.streamService.stopStream(this.localStreamNode);
+    if (this.pclients && this.pclients.length) {
+      this.pclients.forEach(client => {
+        client.connection.close();
+      });
+    }
+    this.remotePeerHolder.clear();
+    this.pclients = [];
+    this.callService.updateTill();
+  }
+
+  async getRemotePeerFactory() {
+    const { RemotePeerComponent } = await import('./remote-peer/remote-peer.component');
+    return this.cfr.resolveComponentFactory(RemotePeerComponent);
+  }
+
+  async createRemotePeerComponent(): Promise<ComponentRef<RemotePeerComponent>> {
+    const factory = await this.getRemotePeerFactory();
+    const component = this.remotePeerHolder.createComponent(factory, null, this.injector);
+    this.changeDetectorRef.detectChanges();
+    return component;
+  }
+
+}
