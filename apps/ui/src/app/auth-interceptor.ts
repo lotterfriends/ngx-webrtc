@@ -12,15 +12,13 @@ export class AuthInterceptor implements HttpInterceptor {
 
   constructor(
     private userStorageServie: UserStorageService
-  ) {
-    this.user = this.userStorageServie.getCurrentUser();
+    ) {
   }
-
+  
   getToken() {
-    
     return btoa([this.user.name, this.user.secret].join(':'));
   }
-
+  
   addAuthHeader(req: HttpRequest<any>) {
     const token = this.getToken();
     return req.clone({
@@ -29,8 +27,9 @@ export class AuthInterceptor implements HttpInterceptor {
       },
     });
   }
-
+  
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    this.user = this.userStorageServie.getCurrentUser();
     if (this.user) {
       return next.handle(this.addAuthHeader(req))
     }

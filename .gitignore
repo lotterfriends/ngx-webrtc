@@ -3,3 +3,4 @@ dist/node_modules
 apps/ui/node_modules
 ui/dist
 apps/server/dist
+apps/server/.env

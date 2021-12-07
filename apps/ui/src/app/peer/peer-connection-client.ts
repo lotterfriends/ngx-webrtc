@@ -77,7 +77,8 @@ export class PeerConnectionClient {
 
   constructor(settings: PeerConnectionClientSettings) {
     this.settings = settings;
-    this.connection = new RTCPeerConnection();
+    this.log(this.settings.peerConnectionConfig);
+    this.connection = new RTCPeerConnection(this.settings.peerConnectionConfig);
     this.connection.onicecandidate = this.onIceCandidate.bind(this);
     this.connection.ontrack = this.onRemoteStreamAdded.bind(this);
     this.connection.onsignalingstatechange = this.onSignalingStateChange.bind(this);

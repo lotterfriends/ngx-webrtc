@@ -1,7 +1,7 @@
 <section class="start" *ngIf="showJoin">
 
   <div class="start-room">
-    <input [(ngModel)]="roomName" type="text" placeholder="Room Name" />
+    <input (keydown.enter)="join()" [(ngModel)]="roomName" type="text" placeholder="Room Name" />
     <button (click)="newRoom()">⟳</button>
   </div>
   

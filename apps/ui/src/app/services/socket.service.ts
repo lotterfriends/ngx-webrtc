@@ -14,25 +14,33 @@ import { User } from "../../../../../libs/models/user";
   providedIn: "root",
 })
 export class SocketService {
+
+  debug = false;
+
   constructor(
     private socket: Socket,
     private userStorageService: UserStorageService
   ) {
     this.socket.on('connect', () => {
       setTimeout(() => {
-        console.log('socket connected', this.socket);
+        this.log('socket connected', this.socket);
         this.isConnected.next(true);
       }, 500);
     });
 
     this.socket.on('disconnect', () => {
-      console.log('socket disconnected', this.socket);
+      this.log('socket disconnected', this.socket);
       this.isConnected.next(false);
     });
   }
 
   public isConnected: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  log(...args: any[]): void {
+    if (this.debug) {
+      console.log(...args);
+    }
+  }
 
   joinRoom(room: string) {
     this.socket.emit('join', { room });

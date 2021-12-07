@@ -17,6 +17,7 @@ button {
   text-align: center;
   box-shadow: 0 -0.1em 0px #005656 inset;
   text-shadow: 0 0 0.15em #000;
+  text-transform: capitalize;
 }
 
 button.round {

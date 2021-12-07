@@ -1,33 +1,61 @@
 import { Express, Request, Response } from "express";
-import * as path from "path";
+import { resolve } from "path";
+import { createHmac } from "crypto";
 import { MessageType, ServerUser } from "../../../libs/models";
 
 import { UserStorageService } from "./services/user-storage.service";
 import { MessageStorageService } from "./services/message-storage.service";
 
+
+const COTURN_SERVER = process.env['COTURN_SERVER'] as string;
+const COTURN_PORT = process.env['COTURN_PORT'] as string;
+const COTURN_SESSION_TTL_MINUTES = parseInt(process.env['COTURN_SESSION_TTL_MINUTES'] as string, 10);
+const COTURN_SERVER_SECRET = process.env['COTURN_SERVER_SECRET'] as string;
+
+
 const authenticate = (request: Request): ServerUser | null  => {
   const userService: UserStorageService = UserStorageService.Instance();
-  if (request?.headers?.authorization) {
-    const headerArr = request?.headers?.authorization.split(' ');
-    if (headerArr.length === 2 && headerArr[0] === 'Basic') {
-      const token: string = request?.headers?.authorization.split(' ')[1] as string;
-      const tokenContent = Buffer.from(token, 'base64').toString('ascii');
-      const [username, secret] = tokenContent.split(':');
-      if (username && secret) {
-        return userService.findUserWithSecretAndName(username, secret);
+  try {
+    if (request?.headers?.authorization) {
+      const [schema, token] = request?.headers?.authorization.split(' ');
+      if (schema && token && schema === 'Basic' && token.length) {
+        const tokenContent = Buffer.from(token, 'base64').toString('binary');
+        const [username, secret] = tokenContent.split(':');
+        if (username && secret) {
+          return userService.findUserWithSecretAndName(username, secret);
+        }
       }
     }
+  } catch(e) {
+    return null;
   }
   return null;
+}
+const getTURNCredentials = (username: string) => {
+
+  const ttlMintues = COTURN_SESSION_TTL_MINUTES;
+  const turnSecret = COTURN_SERVER_SECRET;
+
+  let unixTimeStamp = parseInt('' + Date.now()/1000, 10) + ttlMintues * 60;
+  let timestampAndUsername = [unixTimeStamp, username].join(':');
+  let password;
+  const hmac = createHmac('sha1', turnSecret);
+  hmac.setEncoding('base64');
+  hmac.write(timestampAndUsername);
+  hmac.end();
+  password = hmac.read();
+
+  return {
+      username: username,
+      password: password
+  };
 }
 
 export const initRoutes = (app: Express) => {
   const messageService: MessageStorageService = MessageStorageService.Instance();
-  // 
-
 
   app.get("/", (_req: Request, res: Response) => {
-    res.sendFile(path.resolve("./client/index.html"));
+    res.sendFile(resolve("./client/index.html"));
   });
 
   app.get("/history", (request: Request, res: Response) => {
@@ -53,6 +81,35 @@ export const initRoutes = (app: Express) => {
       const till = tillParam ? parseInt(tillParam, 10) : undefined;
 
       return res.status(200).json({ messages: messageService.getPrivateMessages(user.name, room, type, till) });
+    } else {
+      return res.status(401).json({message : 'no user token'});
+    }
+  });
+
+  app.get('/servers', (request: Request, res: Response) => {
+    const user = authenticate(request);
+    if (user) {
+
+      // Using more than two STUN/TURN servers slows down discovery
+      const servers: {urls: string | string[]}[] = [
+        { urls: 'stun:stun.l.google.com:19302' },
+        // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+        // { urls: 'stun:stun.services.mozilla.com' },
+      ];
+      
+      // private coturn server
+      // https://github.com/coturn/coturn
+      if (COTURN_SERVER) {
+        const cred = getTURNCredentials(user.name);
+        const server = {
+          urls: [`turn:${COTURN_SERVER}:${COTURN_PORT}`, `turn:${COTURN_SERVER}:${COTURN_PORT}?transport=tcp`],
+          username: cred.username,
+          credential: cred.password
+        };
+        servers.push(server);
+      }
+
+      return res.status(200).json(servers);
     } else {
       return res.status(401).json({message : 'no user token'});
     }

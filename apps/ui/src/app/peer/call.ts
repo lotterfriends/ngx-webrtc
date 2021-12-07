@@ -2,7 +2,12 @@ import { BehaviorSubject } from "rxjs";
 import { PeerConnectionClient } from "./peer-connection-client";
 
 export class Call {
-
+  
+  private servers: { urls: string | string[]; }[] = [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+    { urls: 'stun:stun.services.mozilla.com' },
+  ];
 
   public started$ = new BehaviorSubject<boolean>(false);
 
@@ -10,15 +15,15 @@ export class Call {
   }
   
   
+  public setServers(servers: { urls: string | string[]; }[]): void {
+    this.servers = servers;
+  }
+
   public createPeerClient(): PeerConnectionClient {
     
     const peerConnectionClient = new PeerConnectionClient({
       peerConnectionConfig: {
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
-          { urls: 'stun:stun.services.mozilla.com' },
-        ]
+        iceServers: this.servers
       }
     });
     

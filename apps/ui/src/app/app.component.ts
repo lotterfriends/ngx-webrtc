@@ -1,9 +1,8 @@
 import { Component, HostListener, ViewChild } from '@angular/core';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
+import { ServerService } from './services/server.service';
 import { SocketService } from './services/socket.service';
 import { UserStorageService } from './services/user-storage.service';
-
-
 
 @Component({
   selector: 'app-root',
@@ -11,11 +10,10 @@ import { UserStorageService } from './services/user-storage.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent {
-  title = 'video-chat-ui';
   public showJoin = true;
   public showChat= false;
   public roomName = this.genRoom();
-
+  private servers: {urls: string | string[]}[];
 
   @ViewChild('videoChat')
   private videoChatComponent!: VideoChatComponent;
@@ -33,6 +31,7 @@ export class AppComponent {
   constructor(
     private userStorageService: UserStorageService,
     private socketService: SocketService,
+    private serverService: ServerService
   ) {
 
     // ask for username if not set yet
@@ -41,8 +40,9 @@ export class AppComponent {
     }
 
     // get me when register/refresh is ready
-    this.socketService.onMe().subscribe(me => {
+    this.socketService.onMe().subscribe(async (me) => {
       this.userStorageService.setCurrentUser(me);
+      this.servers = await this.serverService.getServers().toPromise();
       this.shouldJoin();
     });
 
@@ -94,7 +94,7 @@ export class AppComponent {
     // join room
     this.socketService.joinRoom(this.roomName);
     setTimeout(() => {
-      this.videoChatComponent.startCall();
+      this.videoChatComponent.startCall(this.servers);
     });
 
 
@@ -106,7 +106,7 @@ export class AppComponent {
   public leave(): void {
     this.videoChatComponent.stopCall();
     this.socketService.leaveRoom();
-    history.pushState({}, this.title, location.origin);
+    history.pushState({}, null, location.origin);
     this.showChat = false;
     this.showJoin = true;
     this.newRoom();
