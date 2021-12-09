@@ -118,8 +118,20 @@ export class SocketService {
   }
 
   getUsersInRoom() {
+    this.socket.emit('request-userlist');
+  }
+
+  onUserlistChanged() {
     return new Observable<User[]>((observer) => {
       this.socket.on("userlist", (data: User[]) => {
+        observer.next(data);
+      });
+    });
+  }
+  
+  onUsersJoinedRoom() {
+    return new Observable<User[]>((observer) => {
+      this.socket.on("userJoinedRoom", (data: User[]) => {
         observer.next(data);
       });
     });

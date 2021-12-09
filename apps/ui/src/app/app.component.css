@@ -42,6 +42,7 @@
 }
 
 .room .room-sidebar {
+  border-left: 1px solid #323232;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -56,4 +57,12 @@
 
 .room .room-sidebar app-text-chat {
   flex-shrink: 1;
+  flex-grow: 1;
+}
+
+app-controls {
+  position: fixed;
+  bottom: 3em;
+  left: 50%;
+  transform: translateX(-50%);
 }

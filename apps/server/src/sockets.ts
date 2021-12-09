@@ -44,6 +44,12 @@ export const initSockets = (http: Server) => {
     socket.on('joined', () =>  {
       const room = socketToRoom.get(socket.id);
       // io.to(socketToRoom.get(socket.id)).emit("userlist", getUserInRoom(room));
+      io.emit("userJoinedRoom", getUserInRoom(room));
+      io.emit("userlist", getUserInRoom(room));
+    });
+
+    socket.on('request-userlist', () => {
+      const room = socketToRoom.get(socket.id);
       io.emit("userlist", getUserInRoom(room));
     });
 

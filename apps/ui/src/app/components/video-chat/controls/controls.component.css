@@ -1,0 +1,15 @@
+.toggle-sound .on-disabled,
+.toggle-video .on-disabled {
+  display: none
+}
+
+.toggle-sound.disabled .on-disabled,
+.toggle-video.disabled .on-disabled {
+  display: inherit;
+}
+
+.toggle-sound.disabled .on-enabled,
+.toggle-video.disabled .on-enabled{
+  display: none;
+}
+

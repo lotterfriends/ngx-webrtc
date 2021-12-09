@@ -28,7 +28,7 @@ export class VideoChatComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef,
     private cfr: ComponentFactoryResolver,
     private injector: Injector,
-    private callService: CallService
+    private callService: CallService,
   ) {
     this.call = new Call();
   }
@@ -59,11 +59,12 @@ export class VideoChatComponent implements OnInit {
     this.call.setServers(servers);
     navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
       this.localStream = stream;
-      this.streamService.setStream(this.localStreamNode.nativeElement, stream);
+      this.streamService.setLocalStream(stream);
+      this.streamService.setStreamInNode(this.localStreamNode.nativeElement, stream);
 
       this.log('joinedRoom');
 
-      this.socketService.getUsersInRoom().pipe(
+      this.socketService.onUsersJoinedRoom().pipe(
         untilDestroyed(this),
         distinctUntilChanged()
       ).subscribe(this.onUserJoined.bind(this));
@@ -105,10 +106,10 @@ export class VideoChatComponent implements OnInit {
     if (user.name !== this.self) {
       const entry = this.pclients.find(e => e.user.name === user.name);
       if (entry?.component?.instance?.audioStreamNode) {
-        this.streamService.stopStream(entry.component.instance.audioStreamNode);
+        this.streamService.stopStreamInNode(entry.component.instance.audioStreamNode);
       }
       if (entry?.component?.instance?.videoStreamNode) {
-        this.streamService.stopStream(entry.component.instance.videoStreamNode);
+        this.streamService.stopStreamInNode(entry.component.instance.videoStreamNode);
       }
       if(entry?.connection) {
         entry.connection.close();
@@ -140,13 +141,18 @@ export class VideoChatComponent implements OnInit {
       pclient.receiveSignalingMessage(message.message);
     });
 
+    this.streamService.replaceTrack$.pipe(filter(e => e !== null)).subscribe((track) => {
+      this.log('replaceTrack', track);
+      pclient.replaceTrack(track);
+    });
+
     pclient.remoteStreamAdded.subscribe(stream => {
       if (stream.kind === StreamType.Audio) {
-        this.streamService.setStream(component.instance.audioStreamNode.nativeElement, stream.track, false);
+        this.streamService.setStreamInNode(component.instance.audioStreamNode.nativeElement, stream.track, false);
       }
       if (stream.kind === StreamType.Video) {
         this.log('remoteStreamAdded', user);
-        this.streamService.setStream(component.instance.videoStreamNode.nativeElement, stream.track);
+        this.streamService.setStreamInNode(component.instance.videoStreamNode.nativeElement, stream.track);
       }
     });
 
@@ -174,7 +180,7 @@ export class VideoChatComponent implements OnInit {
 
 
   stopCall() {
-    this.streamService.stopStream(this.localStreamNode);
+    this.streamService.stopStreamInNode(this.localStreamNode);
     if (this.pclients && this.pclients.length) {
       this.pclients.forEach(client => {
         client.connection.close();

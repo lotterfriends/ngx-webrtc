@@ -180,6 +180,16 @@ export class PeerConnectionClient {
     }
   }
 
+  replaceTrack(track: MediaStreamTrack) {
+    console.log(track);
+    if (this.connection) {
+      const sender = this.connection.getSenders().find(function(s) {
+        return s.track.kind == track.kind;
+      });
+      sender.replaceTrack(track);
+    }
+  }
+
   public addStream(mediaSteam: MediaStream) {
     mediaSteam.getTracks().forEach(track => {
       this.addTrack(track);

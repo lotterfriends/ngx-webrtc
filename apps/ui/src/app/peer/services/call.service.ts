@@ -5,7 +5,6 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class CallService {
 
-  public muteMe = new EventEmitter<void>();
   private till: number;
   constructor() { }
 
@@ -16,4 +15,6 @@ export class CallService {
   getTill() {
     return this.till;
   }
+
+
 }

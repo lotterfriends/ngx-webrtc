@@ -10,7 +10,10 @@ import { VideoChatComponent } from './components/video-chat/video-chat.component
 import { RemotePeerComponent } from './components/video-chat/remote-peer/remote-peer.component';
 import { UserlistComponent } from './components/userlist/userlist.component';
 import { AuthInterceptor } from './auth-interceptor';
-import { ControlsComponent } from './components/controls/controls.component';
+import { ControlsComponent } from './components/video-chat/controls/controls.component';
+import { ToggleSoundDirective } from './peer/directives/toggle-sound.directive';
+import { ToggleVideoDirective } from './peer/directives/toggle-video.directive';
+import { ShareScreenDirective } from './peer/directives/share-screen.directive';
 
 const config: SocketIoConfig = { url: "http://localhost:3333", options: {} };
 
@@ -21,7 +24,10 @@ const config: SocketIoConfig = { url: "http://localhost:3333", options: {} };
     VideoChatComponent,
     RemotePeerComponent,
     UserlistComponent,
-    ControlsComponent
+    ControlsComponent,
+    ToggleSoundDirective,
+    ToggleVideoDirective,
+    ShareScreenDirective
   ],
   imports: [
     BrowserModule,

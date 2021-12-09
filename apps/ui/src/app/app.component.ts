@@ -2,6 +2,7 @@ import { Component, HostListener, ViewChild } from '@angular/core';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { ServerService } from './services/server.service';
 import { SocketService } from './services/socket.service';
+import { UiService } from './services/ui.service';
 import { UserStorageService } from './services/user-storage.service';
 
 @Component({
@@ -13,6 +14,8 @@ export class AppComponent {
   public showJoin = true;
   public showChat= false;
   public roomName = this.genRoom();
+  public uiShowUserlist = UiService.DEFAULTS.USERLIST_VISIBLE;
+  public uiShowChat = UiService.DEFAULTS.CHAT_VISIBLE;
   private servers: {urls: string | string[]}[];
 
   @ViewChild('videoChat')
@@ -31,8 +34,16 @@ export class AppComponent {
   constructor(
     private userStorageService: UserStorageService,
     private socketService: SocketService,
-    private serverService: ServerService
+    private serverService: ServerService,
+    private uiService: UiService
   ) {
+
+    this.uiService.isUserlistVisible.subscribe(isVisible => {
+      this.uiShowUserlist = isVisible;
+    });
+    this.uiService.isChatVisible.subscribe(isVisible => {
+      this.uiShowChat = isVisible;
+    });
 
     // ask for username if not set yet
     if (!this.userStorageService.getCurrentUser()) {
@@ -62,7 +73,6 @@ export class AppComponent {
         }
       }
     });
-
   }
 
   private shouldJoin() {
@@ -83,8 +93,6 @@ export class AppComponent {
   public newRoom(): void {
     this.roomName = this.genRoom();
   }
-
-  
 
   public join(): void {
     // update ui

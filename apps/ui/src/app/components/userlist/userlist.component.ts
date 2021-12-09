@@ -18,15 +18,20 @@ export class UserlistComponent implements OnInit {
     private socketService: SocketService,
     private cdr: ChangeDetectorRef
   ) {
-    this.socketService.getUsersInRoom().pipe(
+  }
+
+  ngOnInit(): void {
+    this.init();
+  }
+  
+
+  init() {
+    this.socketService.getUsersInRoom();
+    this.socketService.onUserlistChanged().pipe(
       untilDestroyed(this),
       distinctUntilChanged()
     ).subscribe(this.onUserJoined.bind(this));
   }
-
-  ngOnInit(): void {
-  }
-  
 
   onUserJoined(users: User) {
     this.users = users;

@@ -13,11 +13,13 @@
 
 <section class="room" *ngIf="roomName?.length && showChat">
   <div class="room-chat">
-    <div>Room: {{roomName}} <button (click)="leave()">leave</button></div>
-    <app-video-chat #videoChat [room]="roomName"></app-video-chat>
+    <div>Room: {{roomName}}</div>
+    <app-video-chat #videoChat [room]="roomName">
+      <app-controls (leave)="leave()"></app-controls>
+    </app-video-chat>
   </div>
-  <div class="room-sidebar">
-    <app-userlist></app-userlist>
-    <app-text-chat #textChat [room]="roomName"></app-text-chat>
+  <div class="room-sidebar" *ngIf="uiShowUserlist || uiShowChat">
+    <app-userlist *ngIf="uiShowUserlist"></app-userlist>
+    <app-text-chat *ngIf="uiShowChat" #textChat [room]="roomName"></app-text-chat>
   </div>
 </section>
