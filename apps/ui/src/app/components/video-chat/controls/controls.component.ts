@@ -11,6 +11,7 @@ export class ControlsComponent implements OnInit {
   public showUserlist = true;
 
   @Output() leave = new EventEmitter()
+  @Output() fullscreen = new EventEmitter()
 
   constructor(
     private uiService: UiService
@@ -29,6 +30,10 @@ export class ControlsComponent implements OnInit {
   
   toggleChat() {
     this.uiService.toggleShowChat();
+  }
+
+  toggleFullscreen() {
+    this.fullscreen.emit();
   }
 
   doLeave() {

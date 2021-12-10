@@ -1,4 +1,4 @@
-import { Component, HostListener, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { ServerService } from './services/server.service';
 import { SocketService } from './services/socket.service';
@@ -18,8 +18,8 @@ export class AppComponent {
   public uiShowChat = UiService.DEFAULTS.CHAT_VISIBLE;
   private servers: {urls: string | string[]}[];
 
-  @ViewChild('videoChat')
-  private videoChatComponent!: VideoChatComponent;
+  @ViewChild('videoChat') private videoChatComponent!: VideoChatComponent;
+  @ViewChild('room', { static: false }) room: ElementRef;
 
   @HostListener('window:popstate', ['$event']) popsate(event) {
     console.log(event);
@@ -118,6 +118,16 @@ export class AppComponent {
     this.showChat = false;
     this.showJoin = true;
     this.newRoom();
+  }
+
+  toggleFullscreen() {
+    if (this.room.nativeElement) {
+      if (window.innerHeight !== screen.height) {
+        this.room.nativeElement.requestFullscreen();
+      } else {
+        document.exitFullscreen();
+      }
+    }
   }
 
 }

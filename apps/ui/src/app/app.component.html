@@ -11,11 +11,11 @@
 
 </section>
 
-<section class="room" *ngIf="roomName?.length && showChat">
+<section class="room" *ngIf="roomName?.length && showChat" #room>
   <div class="room-chat">
     <!-- <div>Room: {{roomName}}</div> -->
     <app-video-chat #videoChat [room]="roomName">
-      <app-controls (leave)="leave()"></app-controls>
+      <app-controls (fullscreen)="toggleFullscreen()" (leave)="leave()"></app-controls>
     </app-video-chat>
   </div>
   <div class="room-sidebar" *ngIf="uiShowUserlist || uiShowChat">
