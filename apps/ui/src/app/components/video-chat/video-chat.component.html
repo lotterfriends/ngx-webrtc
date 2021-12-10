@@ -1,4 +1,6 @@
-<div class="video-chat-remote-peer-holder" #remotePeerHolder></div>
+<div class="video-chat-remote-peer-holder remote-peer-{{pclients.length}}">
+  <ng-container #remotePeerHolder></ng-container>
+</div>
 <div class="video-chat-self-holder">
   <video id="localStreamNode" class="mirror" playsinline muted #localStreamNode></video>
 </div>

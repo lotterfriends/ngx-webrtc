@@ -38,7 +38,7 @@ export class VideoChatComponent implements OnInit {
   @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
 
   private debug = true;
-  private pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
+  public pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
   private call: Call;
   private localStream: MediaStream;
   private isInitiator = false;

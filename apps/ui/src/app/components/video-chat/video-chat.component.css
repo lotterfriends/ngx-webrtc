@@ -22,8 +22,42 @@ video {
   position: absolute;
   bottom: 0;
   right: 0;
+  height: 150px;
 }
 
 .video-chat-self-holder video {
-  max-width: 150px;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-chat-remote-peer-holder.remote-peer-1 {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.remote-peer-1 ::ng-deep app-remote-peer {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+.video-chat-remote-peer-holder.remote-peer-2 {
+  position: inherit;
+  width: auto;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-around;
+}
+
+
+.remote-peer-2 ::ng-deep app-remote-peer {
+  /* max-width: 250px; */
+  display: block;
+  width: 50%;
+  height: 100%;
 }
