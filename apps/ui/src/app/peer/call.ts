@@ -19,12 +19,21 @@ export class Call {
     this.servers = servers;
   }
 
-  public createPeerClient(): PeerConnectionClient {
+  public async createPeerClient(): Promise<PeerConnectionClient> {
     
+    const cert = await RTCPeerConnection.generateCertificate({
+      name: "RSASSA-PKCS1-v1_5",
+      modulusLength: 2048,
+      publicExponent: new Uint8Array([1, 0, 1]),
+      hash: "SHA-256"
+    } as AlgorithmIdentifier);
+
     const peerConnectionClient = new PeerConnectionClient({
       peerConnectionConfig: {
-        iceServers: this.servers
-      }
+        iceServers: this.servers,
+        certificates: [cert]
+      },
+      videoSendCodec: 'VP9'
     });
     
     

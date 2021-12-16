@@ -92,7 +92,7 @@ export class VideoChatComponent implements OnInit {
         this.pclients.push({
           component,
           user,
-          connection: this.addPeer(user, component)
+          connection: await this.addPeer(user, component)
         });
         component.instance.setUser(user);
       }
@@ -124,9 +124,9 @@ export class VideoChatComponent implements OnInit {
     }
   }
 
-  addPeer(user: User, component: ComponentRef<RemotePeerComponent>): PeerConnectionClient {
+  async addPeer(user: User, component: ComponentRef<RemotePeerComponent>): Promise<PeerConnectionClient> {
     this.log('addPeer', user, component)
-    const pclient = this.call.createPeerClient();
+    const pclient = await this.call.createPeerClient();
     // add media
     pclient.addStream(this.localStream);
     
