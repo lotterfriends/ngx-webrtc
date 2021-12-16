@@ -25,34 +25,45 @@ export class MessageStorageService {
     return serverMessage;
   }
 
-  public getAllMessages(): ServerMessage[] {
+  public getAllMessages(room?: string, since?: number): ServerMessage[] {
+    let messages = this.messagesDB;
+    if (room) {
+      messages = messages.filter(e => e.room === room);
+    }
+    if (since) {
+      messages = messages.filter(e => e.time > since);
+    }
+    return messages;
+  }
+
+  public getAllPublicMessages(): ServerMessage[] {
     return this.messagesDB.filter(e => typeof e.for  === 'undefined');
   }
   
-  public getAllMessagesforRoom(room?: string, type?: MessageType, till?: number): ServerMessage[] {
+  public getAllMessagesforRoom(room?: string, type?: MessageType, since?: number): ServerMessage[] {
     if (!room) {
-      return this.getAllMessages();
+      return this.getAllPublicMessages();
     }
     let messages = this.messagesDB.filter(e => e.room === room && typeof e.for === 'undefined');
     if (type) {
       messages = messages.filter(e => e.type === type);
     }
-    if (till) {
-      messages = messages.filter(e => e.time > till);
+    if (since) {
+      messages = messages.filter(e => e.time > since);
     }
     return messages;
   }
 
-  public getPrivateMessages(username: string, room?: string, type?: MessageType, till?: number): ServerMessage[] {
+  public getPrivateMessages(username: string, room?: string, type?: MessageType, since?: number): ServerMessage[] {
     if (!room) {
       return this.messagesDB.filter(e => typeof e.for  === username);
     }
-    let messages = this.messagesDB.filter(e => e.room === room && typeof e.for === username);
+    let messages = this.messagesDB.filter(e => e.room === room && e.for === username);
     if (type) {
       messages = messages.filter(e => e.type === type);
     }
-    if (till) {
-      messages = messages.filter(e => e.time > till);
+    if (since) {
+      messages = messages.filter(e => e.time > since);
     }
     return messages;
   }

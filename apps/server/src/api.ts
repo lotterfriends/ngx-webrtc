@@ -63,10 +63,10 @@ export const initRoutes = (app: Express) => {
     if (user) {
       const room: string | undefined = request.query['room'] as string | undefined;
       const type: MessageType | undefined = request.query['type'] as MessageType | undefined;
-      const tillParam: string | undefined = request.query['till'] as string | undefined;
-      const till = tillParam ? parseInt(tillParam, 10) : undefined;
+      const sinceParam: string | undefined = request.query['since'] as string | undefined;
+      const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
   
-      return res.status(200).json({ messages: messageService.getAllMessagesforRoom(room, type, till) });
+      return res.status(200).json({ messages: messageService.getAllMessagesforRoom(room, type, since) });
     } else {
       return res.status(401).json({message : 'no user token'});
     }
@@ -77,10 +77,10 @@ export const initRoutes = (app: Express) => {
     if (user) {
       const room: string | undefined = request.query['room'] as string | undefined;
       const type: MessageType | undefined = request.query['type'] as MessageType | undefined;
-      const tillParam: string | undefined = request.query['till'] as string | undefined;
-      const till = tillParam ? parseInt(tillParam, 10) : undefined;
+      const sinceParam: string | undefined = request.query['since'] as string | undefined;
+      const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
 
-      return res.status(200).json({ messages: messageService.getPrivateMessages(user.name, room, type, till) });
+      return res.status(200).json({ messages: messageService.getPrivateMessages(user.name, room, type, since) });
     } else {
       return res.status(401).json({message : 'no user token'});
     }
@@ -114,4 +114,12 @@ export const initRoutes = (app: Express) => {
       return res.status(401).json({message : 'no user token'});
     }
   });
+
+  // app.get('/debug-messages', (request: Request, res: Response) => {
+  //   const room: string | undefined = request.query['room'] as string | undefined;
+  //   const sinceParam: string | undefined = request.query['since'] as string | undefined;
+  //   const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
+  //   const messages = messageService.getAllMessages(room, since);
+  //   return res.status(200).json(messages);
+  // });
 };

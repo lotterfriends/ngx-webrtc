@@ -121,6 +121,11 @@ export class VideoChatComponent implements OnInit {
       this.log(this.pclients);
       this.pclients = this.pclients.filter(e => e.user.name !== user.name);
       this.log(this.pclients);
+
+      // everyone else left, now I'm the initiator
+      if (!this.pclients.length) {
+        this.isInitiator = true;
+      }
     }
   }
 
@@ -160,7 +165,7 @@ export class VideoChatComponent implements OnInit {
       pclient.startAsCaller();
       this.log('start as caller', user);
     } else {
-      this.messageService.getPrivateMessages(this.room, MessageType.Signal).pipe(
+      this.messageService.getPrivateMessages(this.room, MessageType.Signal, this.callService.getSince()).pipe(
         first(),
         map(m => m.messages.map(e => JSON.parse(e.message) as PeerConnectionClientSignalMessage))
         ).subscribe(messages => {
@@ -188,7 +193,7 @@ export class VideoChatComponent implements OnInit {
     }
     this.remotePeerHolder.clear();
     this.pclients = [];
-    this.callService.updateTill();
+    this.callService.updateSince();
   }
 
   async getRemotePeerFactory() {

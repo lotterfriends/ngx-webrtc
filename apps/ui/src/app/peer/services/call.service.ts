@@ -5,15 +5,19 @@ import { EventEmitter, Injectable } from '@angular/core';
 })
 export class CallService {
 
-  private till: number;
+  private since: number;
   constructor() { }
 
-  updateTill() {
-    this.till = Date.now();
+  updateSince() {
+    this.since = Date.now();
+    sessionStorage.setItem('since', '' +this.since);
   }
 
-  getTill() {
-    return this.till;
+  getSince() {
+    if (!this.since && sessionStorage.getItem('since')) {
+      this.since = parseInt(sessionStorage.getItem('since'), 10);
+    }
+    return this.since;
   }
 
 
