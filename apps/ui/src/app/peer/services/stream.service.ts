@@ -8,8 +8,9 @@ import { StreamType } from '../peer-connection-client';
 export class StreamService {
 
 
-  private localStream$ = new BehaviorSubject<MediaStream>(null);
+  public localStream$ = new BehaviorSubject<MediaStream>(null);
   public replaceTrack$ = new BehaviorSubject<MediaStreamTrack>(null);
+  public audioOutput$ = new BehaviorSubject<string>(null);
 
   constructor() { }
 
@@ -62,6 +63,16 @@ export class StreamService {
     }
   }
 
+  public replaceTrackInStream(stream: MediaStream, track: MediaStreamTrack) {
+    if (track.kind === StreamType.Video) {
+      stream.getVideoTracks().forEach(e => stream.removeTrack(e));
+    }
+    if (track.kind === StreamType.Audio) {
+      stream.getAudioTracks().forEach(e => stream.removeTrack(e));
+    }
+    stream.addTrack(track);
+  }
+
   public setLocalStream(stream: MediaStream) {
     this.localStream$.next(stream);
   }
@@ -105,5 +116,36 @@ export class StreamService {
 
   public getAudioTrackForStream(stream: MediaStream): MediaStreamTrack {
     return stream.getAudioTracks()[0];
+  }
+
+  public static getAspectRatio(width: number, height: number) {
+
+    function gcd(a, b) {
+      return b ? gcd(b, a % b) : a;
+    }
+
+    const divisor = gcd(width, height);
+    return `${width / divisor}x${height / divisor}`;
+  };
+
+  public getMediaDevices(): Promise<MediaDeviceInfo[]> {
+    return navigator.mediaDevices.enumerateDevices()
+    // .then(function(devices) {
+    //   var cam = devices.find(function(device) {
+    //     return device.kind === 'videoinput';
+    //   });
+    //   var mic = devices.find(function(device) {
+    //     return device.kind === 'audioinput';
+    //   });
+    //   var constraints = {
+    //     video: cam && mediaConstraints.video,
+    //     audio: mic && mediaConstraints.audio
+    //   };
+    //   return navigator.mediaDevices.getUserMedia(constraints);
+    // });
+  }
+
+  public setAudioOutput(deviceId: string) {
+    this.audioOutput$.next(deviceId);
   }
 }

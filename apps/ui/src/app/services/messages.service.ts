@@ -24,9 +24,9 @@ export class MessagesService {
     );
   }
 
-  public getPrivateMessages(room: string, type?: MessageType, since?: number): Observable<MessagesHistoryResponse> {
+  public getPrivateMessages(room: string, type?: MessageType, from?: string, since?: number): Observable<MessagesHistoryResponse> {
     return this.http.get<MessagesHistoryResponse>(
-      `${this.BASE_ENDPOINT}/private-messages?room=${room}${type ? `&type=${type}`: ''}${since ? `&since=${since}`: ''}`
+      `${this.BASE_ENDPOINT}/private-messages?room=${room}${type ? `&type=${type}`: ''}${from ? `&from=${from}`: ''}${since ? `&since=${since}`: ''}`
     );
   }
 }

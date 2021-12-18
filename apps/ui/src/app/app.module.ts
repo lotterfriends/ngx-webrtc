@@ -14,6 +14,8 @@ import { ControlsComponent } from './components/video-chat/controls/controls.com
 import { ToggleSoundDirective } from './peer/directives/toggle-sound.directive';
 import { ToggleVideoDirective } from './peer/directives/toggle-video.directive';
 import { ShareScreenDirective } from './peer/directives/share-screen.directive';
+import { DialogComponent } from './components/dialog/dialog.component';
+import { VideoChatSettingsDialogComponent } from './components/video-chat/video-chat-settings-dialog/video-chat-settings-dialog.component';
 
 const config: SocketIoConfig = { url: "http://localhost:3333", options: {} };
 
@@ -27,7 +29,9 @@ const config: SocketIoConfig = { url: "http://localhost:3333", options: {} };
     ControlsComponent,
     ToggleSoundDirective,
     ToggleVideoDirective,
-    ShareScreenDirective
+    ShareScreenDirective,
+    DialogComponent,
+    VideoChatSettingsDialogComponent
   ],
   imports: [
     BrowserModule,

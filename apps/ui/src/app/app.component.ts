@@ -1,5 +1,6 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
+import { ChannelHistoryService } from './services/channel-history.service';
 import { ServerService } from './services/server.service';
 import { SocketService } from './services/socket.service';
 import { UiService } from './services/ui.service';
@@ -35,13 +36,14 @@ export class AppComponent {
     private userStorageService: UserStorageService,
     private socketService: SocketService,
     private serverService: ServerService,
-    private uiService: UiService
+    private uiService: UiService,
+    public channelHistoryService: ChannelHistoryService
   ) {
 
-    this.uiService.isUserlistVisible.subscribe(isVisible => {
+    this.uiService.isUserlistVisible$.subscribe(isVisible => {
       this.uiShowUserlist = isVisible;
     });
-    this.uiService.isChatVisible.subscribe(isVisible => {
+    this.uiService.isChatVisible$.subscribe(isVisible => {
       this.uiShowChat = isVisible;
     });
 
@@ -94,20 +96,22 @@ export class AppComponent {
     this.roomName = this.genRoom();
   }
 
-  public join(): void {
+  public join(roomName?: string): void {
+    const room = roomName ? roomName : this.roomName;
+    this.channelHistoryService.addChannelToHistory(room);
     // update ui
     this.showChat = true;
     this.showJoin = false;
 
     // join room
-    this.socketService.joinRoom(this.roomName);
+    this.socketService.joinRoom(room);
     setTimeout(() => {
       this.videoChatComponent.startCall(this.servers);
     });
 
 
     // update url
-    history.pushState({room: this.roomName}, `room ${this.roomName}`, `${this.roomName}`);
+    history.pushState({room: room}, `room ${room}`, `${room}`);
 
   }
 

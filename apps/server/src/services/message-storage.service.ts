@@ -54,13 +54,16 @@ export class MessageStorageService {
     return messages;
   }
 
-  public getPrivateMessages(username: string, room?: string, type?: MessageType, since?: number): ServerMessage[] {
+  public getPrivateMessages(username: string, room?: string, type?: MessageType, from?: string, since?: number): ServerMessage[] {
     if (!room) {
       return this.messagesDB.filter(e => typeof e.for  === username);
     }
     let messages = this.messagesDB.filter(e => e.room === room && e.for === username);
     if (type) {
       messages = messages.filter(e => e.type === type);
+    }
+    if (from) {
+      messages = messages.filter(e => e.author === from);
     }
     if (since) {
       messages = messages.filter(e => e.time > since);

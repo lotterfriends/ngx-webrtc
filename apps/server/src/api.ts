@@ -77,10 +77,11 @@ export const initRoutes = (app: Express) => {
     if (user) {
       const room: string | undefined = request.query['room'] as string | undefined;
       const type: MessageType | undefined = request.query['type'] as MessageType | undefined;
+      const from: string | undefined = request.query['from'] as string | undefined;
       const sinceParam: string | undefined = request.query['since'] as string | undefined;
       const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
 
-      return res.status(200).json({ messages: messageService.getPrivateMessages(user.name, room, type, since) });
+      return res.status(200).json({ messages: messageService.getPrivateMessages(user.name, room, type, from, since) });
     } else {
       return res.status(401).json({message : 'no user token'});
     }

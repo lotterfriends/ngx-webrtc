@@ -8,6 +8,7 @@ body {
 }
 
 button {
+  cursor: pointer;
   background-color: teal;
   border: 0 none;
   padding: .25em .5em;
@@ -26,7 +27,8 @@ button.round {
 
 input,
 input:focus,
-input:active { 
+input:active {
+  background-color: #fff;
   border: 0 none;
   border-radius: .25em;
   padding-left:.5em;
@@ -34,7 +36,23 @@ input:active {
   padding-bottom: .25em;
 }
 
-input:focus {
+select,
+select:focus,
+select:active {
+  background-color: #fff;
+  border: 1px solid #323232;
+  border-radius: .25em;
+  padding-left:.5em;
+  padding-top: .25em;
+  padding-bottom: .25em;
+}
+
+input:focus,
+select:focus {
   outline: 0 none;
   box-shadow: 0 0 .5em teal;
+}
+
+a {
+  color: teal;
 }

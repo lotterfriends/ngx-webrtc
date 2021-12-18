@@ -1,6 +1,6 @@
 
-<div class="peer" *ngIf="user">
+<div class="peer" *ngIf="user" (click)="fit=!fit" [ngClass]="fit ? 'fit' : 'not-fit'">
   <span class="name">{{user.name}}</span>
-  <video id="videoStreamNode" playsinline #videoStreamNode></video>
+  <video (loadedmetadata)="setSize($event)" id="videoStreamNode" playsinline #videoStreamNode></video>
   <audio #audioStreamNode></audio>
 </div>

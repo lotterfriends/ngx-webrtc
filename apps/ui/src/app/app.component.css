@@ -15,15 +15,39 @@
   display: flex;
   align-items: center;
   flex-direction: column;
+}
+
+.start-join {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
   font-size: 30px;
 }
 
-.start-room {
+.start-join-room {
   margin-bottom: 1em;
 }
 
-.start-room button {  
+.start-join-room button {  
   margin-left: .5em;
+}
+
+.start-history {
+  margin-top: 1em;
+}
+
+.start-history ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.start-history ul li {
+  margin-bottom: .5em;
+}
+
+.start-history ul li:last-of-type {
+  margin-bottom: 0;
 }
 
 .room {

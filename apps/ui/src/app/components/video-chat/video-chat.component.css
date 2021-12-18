@@ -30,6 +30,20 @@ video {
   object-fit: cover;
 }
 
+.video-chat-remote-peer-holder.remote-peer-0 + .video-chat-self-holder {
+  top: 0;
+  left: 0; 
+  height: auto;
+  width: 100%;
+  text-align: center;
+}
+
+.video-chat-remote-peer-holder.remote-peer-0 + .video-chat-self-holder video {
+  max-width: inherit;
+  height: 100%;
+}
+
+
 .video-chat-remote-peer-holder.remote-peer-1 {
   position: relative;
   width: 100%;

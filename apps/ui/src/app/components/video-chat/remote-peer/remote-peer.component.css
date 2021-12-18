@@ -14,7 +14,20 @@
 }
 
 .peer video {
-  object-fit: cover;
   width: 100%;
+}
+
+.peer.fit video {
+  object-fit: cover;
   height: 100%;
+}
+
+.peer.not-fit video.landscape {
+  height: 100%;
+  width: auto;
+}
+
+.peer.not-fit video.portrait {
+  width: 100%;
+  height: auto;
 }

@@ -31,6 +31,10 @@ export class ControlsComponent implements OnInit {
   toggleChat() {
     this.uiService.toggleShowChat();
   }
+  
+  toggleVideoSettingsDialog() {
+    this.uiService.toggleShowVideoSettingsDialog();
+  }
 
   toggleFullscreen() {
     this.fullscreen.emit();

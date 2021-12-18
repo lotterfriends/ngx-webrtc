@@ -9,17 +9,29 @@ export class UiService {
   public static readonly DEFAULTS = {
     USERLIST_VISIBLE: false,
     CHAT_VISIBLE: false,
+    VIDEO_SETTINGS_DIALOG_VISIBLE: false,
   };
 
-  public isUserlistVisible = new BehaviorSubject(UiService.DEFAULTS.USERLIST_VISIBLE);
-  public isChatVisible = new BehaviorSubject(UiService.DEFAULTS.CHAT_VISIBLE);
+  public isUserlistVisible$ = new BehaviorSubject(UiService.DEFAULTS.USERLIST_VISIBLE);
+  public isChatVisible$ = new BehaviorSubject(UiService.DEFAULTS.CHAT_VISIBLE);
+  public isVideoSettingsDialogVisible$ = new BehaviorSubject(UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE);
   constructor() { }
 
   toggleShowUserlist() {
-    this.isUserlistVisible.next(!this.isUserlistVisible.getValue());
+    this.isUserlistVisible$.next(!this.isUserlistVisible$.getValue());
   }
   
   toggleShowChat() {
-    this.isChatVisible.next(!this.isChatVisible.getValue());
+    this.isChatVisible$.next(!this.isChatVisible$.getValue());
+  }
+ 
+  toggleShowVideoSettingsDialog() {
+    this.isVideoSettingsDialogVisible$.next(!this.isVideoSettingsDialogVisible$.getValue());
+  }
+  hideVideoSettingsDialog() {
+    this.isVideoSettingsDialogVisible$.next(false);
+  }
+  showVideoSettingsDialog() {
+    this.isVideoSettingsDialogVisible$.next(true);
   }
 }

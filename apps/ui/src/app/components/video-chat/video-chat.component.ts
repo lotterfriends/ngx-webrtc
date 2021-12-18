@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, Injector, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged, filter, first, map } from 'rxjs/operators';
+import { distinctUntilChanged, filter, first, map, tap } from 'rxjs/operators';
 import { MessageType } from "../../../../../../libs/models/message-type";
 import { User } from "../../../../../../libs/models/user";
 import { Call } from 'src/app/peer/call';
@@ -37,12 +37,12 @@ export class VideoChatComponent implements OnInit {
   @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
   @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
 
-  private debug = true;
+  private debug = false;
   public pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
   private call: Call;
   private localStream: MediaStream;
   private isInitiator = false;
-  private self;
+  private self
 
   ngOnInit(): void {
     this.log('init');
@@ -57,21 +57,22 @@ export class VideoChatComponent implements OnInit {
   public startCall(servers: {urls: string | string[]}[]) {
     this.log('startCall');
     this.call.setServers(servers);
-    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then((stream) => {
-      this.localStream = stream;
-      this.streamService.setLocalStream(stream);
-      this.streamService.setStreamInNode(this.localStreamNode.nativeElement, stream);
+    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(this.onLocalStream.bind(this));
+  }
 
-      this.log('joinedRoom');
+  private onLocalStream(stream: MediaStream) {
+    this.localStream = stream;
+    this.streamService.setLocalStream(stream);
+    this.streamService.setStreamInNode(this.localStreamNode.nativeElement, stream);
 
-      this.socketService.onUsersJoinedRoom().pipe(
-        untilDestroyed(this),
-        distinctUntilChanged()
-      ).subscribe(this.onUserJoined.bind(this));
-  
-      this.socketService.joinedRoom();
+    this.log('joinedRoom');
 
-    });
+    this.socketService.onUsersJoinedRoom().pipe(
+      untilDestroyed(this),
+      distinctUntilChanged()
+    ).subscribe(this.onUserJoined.bind(this));
+
+    this.socketService.joinedRoom();
   }
 
   private filterConnectedUsers(user: User) {
@@ -142,16 +143,34 @@ export class VideoChatComponent implements OnInit {
     });
     
     // signaling in 
-    this.socketService.getPrivateMessages().pipe(filter(m => m.type === MessageType.Signal && m.author === user.name)).subscribe(message => {
+    this.socketService.getPrivateMessages().pipe(
+      untilDestroyed(this),
+      filter(m => m.type === MessageType.Signal && m.author === user.name)
+    ).subscribe(message => {
       pclient.receiveSignalingMessage(message.message);
     });
 
-    this.streamService.replaceTrack$.pipe(filter(e => e !== null)).subscribe((track) => {
+    this.streamService.replaceTrack$.pipe(
+      untilDestroyed(this),
+      filter(e => e !== null)
+    ).subscribe((track) => {
       this.log('replaceTrack', track);
       pclient.replaceTrack(track);
     });
 
-    pclient.remoteStreamAdded.subscribe(stream => {
+    // change audio output
+    this.streamService.audioOutput$.pipe(
+      untilDestroyed(this),
+      filter(e => e !== null)
+    ).subscribe(deviceId => {
+      this.pclients.forEach(client => {
+        client.component?.instance?.audioStreamNode?.nativeElement?.setSinkId(deviceId);
+      });
+    });
+
+    pclient.remoteStreamAdded.pipe(
+      untilDestroyed(this),
+    ).subscribe(stream => {
       if (stream.kind === StreamType.Audio) {
         this.streamService.setStreamInNode(component.instance.audioStreamNode.nativeElement, stream.track, false);
       }
@@ -161,11 +180,17 @@ export class VideoChatComponent implements OnInit {
       }
     });
 
+
+    pclient.signalState$.pipe(
+      untilDestroyed(this),
+      filter(e => e !== null)
+    ).subscribe(console.log);
+
     if (this.isInitiator) {
       pclient.startAsCaller();
       this.log('start as caller', user);
     } else {
-      this.messageService.getPrivateMessages(this.room, MessageType.Signal, this.callService.getSince()).pipe(
+      this.messageService.getPrivateMessages(this.room, MessageType.Signal, user.name, this.callService.getSince()).pipe(
         first(),
         map(m => m.messages.map(e => JSON.parse(e.message) as PeerConnectionClientSignalMessage))
         ).subscribe(messages => {
@@ -186,6 +211,7 @@ export class VideoChatComponent implements OnInit {
 
   stopCall() {
     this.streamService.stopStreamInNode(this.localStreamNode);
+    this.streamService.setLocalStream(null);
     if (this.pclients && this.pclients.length) {
       this.pclients.forEach(client => {
         client.connection.close();
