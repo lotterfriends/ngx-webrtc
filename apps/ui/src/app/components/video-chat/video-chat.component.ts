@@ -57,7 +57,7 @@ export class VideoChatComponent implements OnInit {
   public startCall(servers: {urls: string | string[]}[]) {
     this.log('startCall');
     this.call.setServers(servers);
-    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(this.onLocalStream.bind(this));
+    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(this.onLocalStream.bind(this), console.error);
   }
 
   private onLocalStream(stream: MediaStream) {
@@ -163,8 +163,8 @@ export class VideoChatComponent implements OnInit {
       untilDestroyed(this),
       filter(e => e !== null)
     ).subscribe(deviceId => {
-      this.pclients.forEach(client => {
-        client.component?.instance?.audioStreamNode?.nativeElement?.setSinkId(deviceId);
+      this.pclients.forEach(async client => {
+        await client.component?.instance?.audioStreamNode?.nativeElement?.setSinkId(deviceId);
       });
     });
 

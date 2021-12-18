@@ -70,18 +70,28 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   initDeviceList(_stream) {
     this.streamService.getMediaDevices().then(devices => {
-      this.devicesGoups.push({
-        kind: DeviceType.AudioInput,
-        devices: devices.filter(d => d.kind === DeviceType.AudioInput)
-      });
-      this.devicesGoups.push({
-        kind: DeviceType.AudioOutput,
-        devices: devices.filter(d => d.kind === DeviceType.AudioOutput)
-      });
-      this.devicesGoups.push({
-        kind: DeviceType.VideoInput,
-        devices: devices.filter(d => d.kind === DeviceType.VideoInput)
-      });
+      console.log(devices);
+      const audioInput = devices.filter(d => d.kind === DeviceType.AudioInput);
+      const audioOutput = devices.filter(d => d.kind === DeviceType.AudioOutput);
+      const videoinput = devices.filter(d => d.kind === DeviceType.VideoInput);
+      if (audioInput.length) {
+        this.devicesGoups.push({
+          kind: DeviceType.AudioInput,
+          devices: audioInput
+        });
+      }
+      if (audioOutput.length) {
+        this.devicesGoups.push({
+          kind: DeviceType.AudioOutput,
+          devices: audioOutput
+        });
+      }
+      if (videoinput.length) {
+        this.devicesGoups.push({
+          kind: DeviceType.VideoInput,
+          devices: videoinput
+        });
+      }
     });
   }
 
