@@ -181,10 +181,10 @@ export class VideoChatComponent implements OnInit {
     });
 
 
-    pclient.signalState$.pipe(
-      untilDestroyed(this),
-      filter(e => e !== null)
-    ).subscribe(console.log);
+    // pclient.signalState$.pipe(
+    //   untilDestroyed(this),
+    //   filter(e => e !== null)
+    // ).subscribe(console.log);
 
     if (this.isInitiator) {
       pclient.startAsCaller();
