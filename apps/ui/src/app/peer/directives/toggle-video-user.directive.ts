@@ -20,7 +20,6 @@ export class ToggleVideoUserDirective {
       console.log('user not set');
       return;
     }
-    console.log(this.appToggleVideoUser);
     if (this.appToggleVideoUser?.connection) {
       this.appToggleVideoUser.connection.requestMuteVideo();
       this.isEnabled = !this.isEnabled;

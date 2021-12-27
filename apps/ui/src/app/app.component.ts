@@ -22,8 +22,7 @@ export class AppComponent {
   @ViewChild('videoChat') private videoChatComponent!: VideoChatComponent;
   @ViewChild('room', { static: false }) room: ElementRef;
 
-  @HostListener('window:popstate', ['$event']) popsate(event) {
-    console.log(event);
+  @HostListener('window:popstate', ['$event']) popsate(_event) {
     if (location.pathname && location.pathname.length > 6) {
       this.roomName = location.pathname.substring(1);
       this.join();
@@ -60,9 +59,8 @@ export class AppComponent {
     });
 
     // on error start with a fresh register
-    this.socketService.onRegisterError().subscribe(x => {
-      console.log(x);
-      if (x.code === 'USERNAME_TAKEN') {
+    this.socketService.onRegisterError().subscribe(error => {
+      if (error.code === 'USERNAME_TAKEN') {
         this.userStorageService.removeCurrentUser();
         alert('The Usernname you chooese is taken, please choose a different one');
         this.userStorageService.setCurrentUsername(prompt('enter username') || 'Anon' + this.getRandom(6));

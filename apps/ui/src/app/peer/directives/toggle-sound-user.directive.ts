@@ -20,7 +20,6 @@ export class ToggleSoundUserDirective {
       console.log('user not set');
       return;
     }
-    console.log(this.appToggleSoundUser);
     if (this.appToggleSoundUser?.connection) {
       this.appToggleSoundUser.connection.requestMuteSound();
       this.isEnabled = !this.isEnabled;
