@@ -60,7 +60,13 @@ export class AppComponent {
     });
 
     // on error start with a fresh register
-    this.socketService.onRefreshError().subscribe(x => {
+    this.socketService.onRegisterError().subscribe(x => {
+      console.log(x);
+      if (x.code === 'USERNAME_TAKEN') {
+        this.userStorageService.removeCurrentUser();
+        alert('The Usernname you chooese is taken, please choose a different one');
+        this.userStorageService.setCurrentUsername(prompt('enter username') || 'Anon' + this.getRandom(6));
+      }
       this.socketService.register();
     });
 
@@ -122,6 +128,7 @@ export class AppComponent {
     this.showChat = false;
     this.showJoin = true;
     this.newRoom();
+    console.clear();
   }
 
   toggleFullscreen() {

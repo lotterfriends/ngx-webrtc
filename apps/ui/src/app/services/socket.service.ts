@@ -109,10 +109,10 @@ export class SocketService {
     });
   }
   
-  onRefreshError() {
-    return new Observable<string[]>((observer) => {
-      this.socket.on("refresh-error", (data: string[]) => {
-        observer.next(data);
+  onRegisterError() {
+    return new Observable<{code?: string, message?: string}>((observer) => {
+      this.socket.on("register-error", (error: {code?: string, message?: string}) => {
+        observer.next(error);
       });
     });
   }

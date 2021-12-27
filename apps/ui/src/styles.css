@@ -25,9 +25,9 @@ button.round {
   border-radius: 50%;
 }
 
-input,
-input:focus,
-input:active {
+input:not([type=range]),
+input:focus:not([type=range]),
+input:active:not([type=range]) {
   background-color: #fff;
   border: 0 none;
   border-radius: .25em;
@@ -47,7 +47,7 @@ select:active {
   padding-bottom: .25em;
 }
 
-input:focus,
+input:focus:not([type=range]),
 select:focus {
   outline: 0 none;
   box-shadow: 0 0 .5em teal;

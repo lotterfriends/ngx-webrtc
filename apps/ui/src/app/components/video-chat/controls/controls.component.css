@@ -1,15 +1,24 @@
-.toggle-sound .on-disabled,
-.toggle-video .on-disabled {
+.on-disabled {
   display: none
 }
 
-.toggle-sound.disabled .on-disabled,
-.toggle-video.disabled .on-disabled {
+.disabled .on-disabled {
   display: inherit;
 }
 
-.toggle-sound.disabled .on-enabled,
-.toggle-video.disabled .on-enabled{
+.disabled .on-enabled {
   display: none;
 }
 
+.leave {
+  background-color: darkred;
+  box-shadow: 0 -0.1em 0px #440404 inset;
+}
+
+button {
+  margin-right: .25em;
+}
+
+button:last-of-type {
+  margin-right: 0;
+}

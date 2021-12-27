@@ -23,4 +23,8 @@ export class UserStorageService {
     return window.sessionStorage.getItem("user") ? (JSON.parse(window.sessionStorage.getItem("user"))as ServerUser) : null;
   }
 
+  removeCurrentUser() {
+    window.sessionStorage.removeItem("username");
+  }
+
 }

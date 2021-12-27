@@ -68,6 +68,8 @@ export const initSockets = (http: Server) => {
         const user = userService.storeUser({socketId: socket.id, name: username});
         io.to(socket.id).emit('me', user);
         io.to(socketToRoom.get(socket.id)).emit("users", ...socketToUsers.values());
+      } else {
+        io.to(socket.id).emit('register-error', {code: 'USERNAME_TAKEN'});
       }
     });
     
@@ -78,7 +80,7 @@ export const initSockets = (http: Server) => {
         io.to(socket.id).emit('me', refreshedUser);
         io.to(socketToRoom.get(socket.id)).emit("users", ...socketToUsers.values());
       } else {
-        io.to(socket.id).emit('refresh-error');
+        io.to(socket.id).emit('register-error', {code: 'TOKEN_ERROR'});
       }
     });
 

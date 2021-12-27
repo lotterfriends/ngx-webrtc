@@ -1,4 +1,4 @@
-import { Directive, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Directive, HostListener } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent, merge } from 'rxjs';
 import { take } from 'rxjs/operators';
@@ -17,7 +17,8 @@ export class ShareScreenDirective {
   private desktopStream: MediaStream;
   private isEnabled = false;
   constructor(
-    private streamService: StreamService
+    private streamService: StreamService,
+    private cdr: ChangeDetectorRef
   ) { }
 
 
@@ -43,12 +44,13 @@ export class ShareScreenDirective {
           take(1)
         )
         .subscribe(() => {
-          if (!this.isEnabled) {
+          if (this.isEnabled) {
             this.stopShareScreen();
           }
         });
 
       this.isEnabled = !this.isEnabled;
+      this.cdr.detectChanges();
     }
   }
 
@@ -60,6 +62,7 @@ export class ShareScreenDirective {
       });
     }
     this.isEnabled = !this.isEnabled;
+    this.cdr.detectChanges();
   }
 
 }

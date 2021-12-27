@@ -1,5 +1,5 @@
 import { EventEmitter } from "@angular/core";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Subject } from "rxjs";
 import { SdpUtils } from "./sdp-utils";
 
 export interface SdpSettings {
@@ -39,6 +39,8 @@ export enum PeerConnectionClientSignalMessageType {
   Answer = "answer",
   Offer = "offer",
   Bye = "bye",
+  RequestMuteSound = 'request-mute-sound',
+  RequestMuteVideo = 'request-mute-video'
 }
 
 
@@ -55,13 +57,15 @@ export interface StreamTrack {
 
 export class PeerConnectionClient {
   
-  private debug = false;
+  private startTime: number;
+  private debug = true;
   private started = false;
   private isInitiator = false;
   private hasRemoteSdp = false;
   private messageQueue: PeerConnectionClientSignalMessage[] = []
   private connection: RTCPeerConnection | null;
   private settings: PeerConnectionClientSettings;
+  private isNegotiating: boolean = false;
   public signalingMessage = new EventEmitter<PeerConnectionClientSignalMessage>();
   public seeNewCandidate$ = new BehaviorSubject<{location: string, candidate: string} | null>(null);
   public remoteStreamAdded = new EventEmitter<StreamTrack>(null);
@@ -69,6 +73,9 @@ export class PeerConnectionClient {
   public error$ = new BehaviorSubject<{source: string, error?: Error} | null>(null);
   public remotesDpSet = new BehaviorSubject<MediaStreamTrack | null>(null);
   public remoteHangUp = new EventEmitter<void>();
+  public muteMySound = new EventEmitter<void>();
+  public muteMyVideo = new EventEmitter<void>();
+  public negotiationNeededTriggered = new Subject<boolean>();
   public iceConnectionState$ = new BehaviorSubject<RTCIceConnectionState| null>(null);
   private readonly DEFAULT_SDP_OFFER_OPTIONS: RTCOfferOptions = {
     offerToReceiveAudio: true,
@@ -76,6 +83,7 @@ export class PeerConnectionClient {
   }
 
   constructor(settings: PeerConnectionClientSettings) {
+    this.startTime = performance.now();
     this.settings = settings;
     this.log(this.settings.peerConnectionConfig);
     this.connection = new RTCPeerConnection(this.settings.peerConnectionConfig);
@@ -83,6 +91,7 @@ export class PeerConnectionClient {
     this.connection.ontrack = this.onRemoteStreamAdded.bind(this);
     this.connection.onsignalingstatechange = this.onSignalingStateChange.bind(this);
     this.connection.oniceconnectionstatechange = this.onIceConnectionStateChange.bind(this);
+    this.connection.onnegotiationneeded = this.onnegotiationneeded.bind(this);
   }
 
   startAsCaller(offerOptions: RTCOfferOptions = {}): boolean {
@@ -112,10 +121,12 @@ export class PeerConnectionClient {
   startAsCallee(initialMessages: string[] | PeerConnectionClientSignalMessage[]): boolean {
     this.log('startAsCallee', initialMessages);
     if (!this.connection) {
+      this.error('startAsCallee()', 'no connection')
       return false;
     }
 
     if (this.started) {
+      this.error('startAsCallee()', 'not started')
       return false;
     }
 
@@ -148,6 +159,26 @@ export class PeerConnectionClient {
     });
     this.connection.close();
     this.connection = null;
+  }
+
+  requestMuteSound(): void {
+    this.log('requestMuteSound');
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.RequestMuteSound
+    });
+  }
+
+  requestMuteVideo(): void {
+    this.log('requestMuteVideo');
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.RequestMuteVideo
+    });
   }
 
 
@@ -260,7 +291,7 @@ export class PeerConnectionClient {
   }
 
   receiveSignalingMessage(message: string | PeerConnectionClientSignalMessage) {
-    // this.log('receiveSignalingMessage', message);
+    this.log('receiveSignalingMessage', message);
     let messageObj: PeerConnectionClientSignalMessage;
     if (typeof message === 'string') {
       try {
@@ -282,15 +313,25 @@ export class PeerConnectionClient {
       this.messageQueue.push(messageObj);
     } else if (messageObj.type === PeerConnectionClientSignalMessageType.Bye) {
       this.remoteHangUp.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteSound) {
+      this.muteMySound.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteVideo) {
+      this.muteMyVideo.emit();
     }
     this.drainMessageQueue();
   };
 
 
   processSignalingMessage(message: PeerConnectionClientSignalMessage) {
-    // this.log('processSignalingMessage', message);
+    this.log('processSignalingMessage', message);
     if (!this.connection) {
       return;
+    }
+    if (message.type === PeerConnectionClientSignalMessageType.RequestMuteSound) {
+      this.muteMySound.emit();
+    }
+    if (message.type === PeerConnectionClientSignalMessageType.RequestMuteVideo) {
+      this.muteMyVideo.emit();
     }
     if (message.type === PeerConnectionClientSignalMessageType.Offer && !this.isInitiator) {
       if (this.connection.signalingState !== 'stable') {
@@ -380,18 +421,29 @@ export class PeerConnectionClient {
     }
     this.log('ICE connection state changed to: ' + this.connection.iceConnectionState);
 
-    // if (this.connection.iceConnectionState === 'completed') {
-    //   this.log('ICE complete time: ' +
-    //       (window.performance.now() - this.startTime_).toFixed(0) + 'ms.');
-    // }
+    if (this.connection.iceConnectionState === 'completed') {
+      this.log('ICE complete time: ' +
+          (window.performance.now() - this.startTime).toFixed(0) + 'ms.');
+    }
 
     this.iceConnectionState$.next(this.connection.iceConnectionState);
+  }
+  
+ 
+  onnegotiationneeded() {
+    if (!this.connection) {
+      return;
+    }
+    this.log('onnegotiationneeded');
+    this.negotiationNeededTriggered.next(true);
+    
   }
   
   onSignalingStateChange() {
     if (!this.connection) {
       return;
     }
+    this.isNegotiating = (this.connection.signalingState !== "stable");
     this.log('Signaling state changed to: ' + this.connection.signalingState);
     this.signalState$.next(this.connection.signalingState);
   }
@@ -435,6 +487,11 @@ export class PeerConnectionClient {
   log(...args: any[]): void {
     if (this.debug) {
       console.log(...args);
+    }
+  }
+  error(...args: any[]): void {
+    if (this.debug) {
+      console.error(...args);
     }
   }
 

@@ -11,11 +11,13 @@ import { RemotePeerComponent } from './components/video-chat/remote-peer/remote-
 import { UserlistComponent } from './components/userlist/userlist.component';
 import { AuthInterceptor } from './auth-interceptor';
 import { ControlsComponent } from './components/video-chat/controls/controls.component';
-import { ToggleSoundDirective } from './peer/directives/toggle-sound.directive';
-import { ToggleVideoDirective } from './peer/directives/toggle-video.directive';
+import { ToggleSoundSelfDirective } from './peer/directives/toggle-sound-self.directive';
+import { ToggleVideoSelfDirective } from './peer/directives/toggle-video-self.directive';
 import { ShareScreenDirective } from './peer/directives/share-screen.directive';
 import { DialogComponent } from './components/dialog/dialog.component';
 import { VideoChatSettingsDialogComponent } from './components/video-chat/video-chat-settings-dialog/video-chat-settings-dialog.component';
+import { ToggleSoundUserDirective } from './peer/directives/toggle-sound-user.directive';
+import { ToggleVideoUserDirective } from './peer/directives/toggle-video-user.directive';
 
 const config: SocketIoConfig = { url: "http://localhost:3333", options: {} };
 
@@ -27,8 +29,10 @@ const config: SocketIoConfig = { url: "http://localhost:3333", options: {} };
     RemotePeerComponent,
     UserlistComponent,
     ControlsComponent,
-    ToggleSoundDirective,
-    ToggleVideoDirective,
+    ToggleSoundSelfDirective,
+    ToggleVideoSelfDirective,
+    ToggleSoundUserDirective,
+    ToggleVideoUserDirective,
     ShareScreenDirective,
     DialogComponent,
     VideoChatSettingsDialogComponent

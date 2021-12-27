@@ -1,16 +1,28 @@
 
-<button appToggleSound class="toggle-sound">
+<button appToggleSoundSelf class="toggle-sound">
   <span class="on-enabled">Mute Audio</span>
   <span class="on-disabled">Unmute Audio</span>
 </button>
 
-<button appToggleVideo class="toggle-video">
+<button appToggleVideoSelf class="toggle-video">
   <span class="on-enabled">Mute Video</span>
   <span class="on-disabled">Unmute Video</span>
 </button>
-<button appShareScreen>Share Screen</button>
-<button (click)="toggleFullscreen()">fullscreen</button>
+<button appShareScreen>
+  <span class="on-enabled">Stop Share Screen</span>
+  <span class="on-disabled">Share Screen</span>
+</button>
+<button (click)="toggleFullscreen()">
+  <span *ngIf="!inFullscreen">fullscreen</span>
+  <span *ngIf="inFullscreen">exit fullscreen</span>
+</button>
 <button (click)="toggleVideoSettingsDialog()">Settings</button>
-<button (click)="toggleUserlist()">Userlist</button>
-<button (click)="toggleChat()">Chat</button>
-<button (click)="doLeave()">leave</button>
+<button (click)="toggleUserlist()">
+  <span *ngIf="!userlistVisisble">Show Userlist</span>
+  <span *ngIf="userlistVisisble">Hide Userlist</span>
+</button>
+<button (click)="toggleChat()">
+  <span *ngIf="!chatVisisble">show Chat</span>
+  <span *ngIf="chatVisisble">hide Chat</span>
+</button>
+<button class="leave" (click)="doLeave()">leave</button>

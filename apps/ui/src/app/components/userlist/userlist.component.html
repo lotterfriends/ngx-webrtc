@@ -1,4 +1,23 @@
 <h3>Userlist</h3>
 <ul>
-  <li *ngFor="let user of users">{{user.name}}</li>
+  <li *ngFor="let user of callService.users$ | async">
+    <span class="line">
+      <span>{{user.user.name}}</span>
+      <span *ngIf="user.hasCam" title="has camera"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16 16c0 1.104-.896 2-2 2h-12c-1.104 0-2-.896-2-2v-8c0-1.104.896-2 2-2h12c1.104 0 2 .896 2 2v8zm8-10l-6 4.223v3.554l6 4.223v-12z"/></svg></span>
+      <span *ngIf="user.hasMic" title="has microphone"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16 11c0 2.209-1.791 4-4 4s-4-1.791-4-4v-7c0-2.209 1.791-4 4-4s4 1.791 4 4v7zm4-2v2c0 4.418-3.582 8-8 8s-8-3.582-8-8v-2h2v2c0 3.309 2.691 6 6 6s6-2.691 6-6v-2h2zm-7 13v-2h-2v2h-4v2h10v-2h-4z"/></svg></span>
+    </span>
+    <span class="line">
+      Volumen Local
+    </span>
+    <span class="line">
+      <input (input)="changeVolume($event, user)" type="range" min="0" max="1" step="0.1" [value]="user.volume"> 
+      {{user.volume*100}}%
+      <button *ngIf="user.volume === 0" (click)="unmute(user)">unmute</button>
+      <button *ngIf="user.volume > 0" (click)="mute(user)">mute</button>
+    </span>
+    <span class="line">
+      <button [appToggleSoundUser]="user">mute for all</button>
+      <button [appToggleVideoUser]="user">disable video for all</button>
+    </span>
+  </li>
 </ul>

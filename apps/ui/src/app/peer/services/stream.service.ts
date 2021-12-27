@@ -1,4 +1,4 @@
-import { ElementRef, Injectable } from '@angular/core';
+import { ElementRef, EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { StreamType } from '../peer-connection-client';
 
@@ -11,10 +11,12 @@ export class StreamService {
   public localStream$ = new BehaviorSubject<MediaStream>(null);
   public replaceTrack$ = new BehaviorSubject<MediaStreamTrack>(null);
   public audioOutput$ = new BehaviorSubject<string>(null);
+  public localStreamStatusChanged = new EventEmitter<MediaStream | MediaStreamTrack>();
 
   constructor() { }
 
   public setStreamInNode(node: HTMLVideoElement, stream: MediaStream | MediaStreamTrack, muted = true) {
+    const _self = this;
     if (node) {
 
       // play when ready
@@ -24,6 +26,7 @@ export class StreamService {
           video.removeEventListener('canplay', onCanPlay);
           video.play();
         }
+        _self.localStreamStatusChanged.emit(stream);
       });
 
       let tmpStream;
@@ -46,31 +49,43 @@ export class StreamService {
     } 
   }
 
-  public toggleMuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType) {
-    if (stream instanceof MediaStreamTrack) {
-      stream.enabled = !stream.enabled;
-    } else {
-      if (type === StreamType.Audio) {
-        stream.getAudioTracks().forEach(track => {
-          track.enabled = !track.enabled;
-        });
-      }
-      if (type === StreamType.Video) {
-        stream.getVideoTracks().forEach(track => {
-          track.enabled = !track.enabled;
-        });
+  public toggleMuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType, value?: boolean) {
+    console.log('toggleMuteStream()', stream, type, value);
+    if(stream) {
+      if (stream instanceof MediaStreamTrack) {
+        stream.enabled = typeof value !== 'undefined' ? value : !stream.enabled;
+      } else {
+        if (type === StreamType.Audio) {
+          stream.getAudioTracks().forEach(track => {
+            track.enabled = typeof value !== 'undefined' ? value : !track.enabled;
+          });
+        }
+        if (type === StreamType.Video) {
+          stream.getVideoTracks().forEach(track => {
+            track.enabled = typeof value !== 'undefined' ? value : !track.enabled;
+          });
+        }
       }
     }
+    this.localStreamStatusChanged.emit(stream);
+  }
+  
+  public muteStream(stream: MediaStream | MediaStreamTrack, type: StreamType) {
+    this.toggleMuteStream(stream, type, false);
+  }
+  
+  public unmuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType) {
+    this.toggleMuteStream(stream, type, true);
   }
 
   public replaceTrackInStream(stream: MediaStream, track: MediaStreamTrack) {
     if (track.kind === StreamType.Video) {
-      stream.getVideoTracks().forEach(e => stream.removeTrack(e));
+      stream?.getVideoTracks().forEach(e => stream.removeTrack(e));
     }
     if (track.kind === StreamType.Audio) {
-      stream.getAudioTracks().forEach(e => stream.removeTrack(e));
+      stream?.getAudioTracks().forEach(e => stream.removeTrack(e));
     }
-    stream.addTrack(track);
+    stream?.addTrack(track);
   }
 
   public setLocalStream(stream: MediaStream) {
@@ -89,8 +104,24 @@ export class StreamService {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio);
   }
   
+  public muteLocalAudioStream() {
+    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio, false);
+  }
+  
+  public unmuteLocalAudioStream() {
+    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio, true);
+  }
+  
   public toggleMuteLocalVideoStream() {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video);
+  }
+  
+  public muteLocalVideoStream() {
+    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video, false);
+  }
+  
+  public unmuteLocalVideoStream() {
+    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video, true);
   }
 
   async getScreenCapture(): Promise<MediaStream | null> {
@@ -111,11 +142,11 @@ export class StreamService {
   }
 
   public getVideoTrackForStream(stream: MediaStream): MediaStreamTrack {
-    return stream.getVideoTracks()[0];
+    return stream?.getVideoTracks()[0];
   }
 
   public getAudioTrackForStream(stream: MediaStream): MediaStreamTrack {
-    return stream.getAudioTracks()[0];
+    return stream?.getAudioTracks()[0];
   }
 
   public static getAspectRatio(width: number, height: number) {

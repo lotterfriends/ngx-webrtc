@@ -1,11 +1,37 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { ComponentRef, Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { RemotePeerComponent } from 'src/app/components/video-chat/remote-peer/remote-peer.component';
+import { User } from '../../../../../../libs/models';
+import { PeerConnectionClient } from '../peer-connection-client';
+
+export interface UserInCall {
+  user: User,
+  hasCam: boolean,
+  hasMic: boolean,
+  volume: number,
+  audioMuted: boolean,
+  videoMuted: boolean
+  connection: PeerConnectionClient,
+  node: ComponentRef<RemotePeerComponent>
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class CallService {
 
+  // TODO: add option to configure this
+  private identifier = 'name';
+  public users$ = new BehaviorSubject<UserInCall[]>([]);
   private since: number;
+  private servers: { urls: string | string[]; }[] = [
+    { urls: 'stun:stun.l.google.com:19302' },
+    { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+    { urls: 'stun:stun.services.mozilla.com' },
+  ];
+
+  public started$ = new BehaviorSubject<boolean>(false);
+
   constructor() { }
 
   updateSince() {
@@ -20,5 +46,79 @@ export class CallService {
     return this.since;
   }
 
+
+  public addUser(user: User, connection: PeerConnectionClient, node: ComponentRef<RemotePeerComponent>) {
+    const users = this.getUsers();
+    users.push({
+      user,
+      hasCam: false,
+      hasMic: false,
+      volume: 1,
+      audioMuted: false,
+      videoMuted: false,
+      connection,
+      node
+    });
+    this.users$.next(users);
+  }
+
+  public removeUser(user: User) {
+    let users = this.getUsers();
+    users = users.filter(e => e.user[this.identifier] !== user[this.identifier]);
+    this.users$.next(users);
+  }
+
+  public userHasCam(user: User) {
+    let users = this.getUsers();
+    users.find(e => e.user[this.identifier] === user[this.identifier]).hasCam = true;
+    this.users$.next(users);
+  }
+
+  public userHasMic(user: User) {
+    let users = this.getUsers();
+    users.find(e => e.user[this.identifier] === user[this.identifier]).hasMic = true;
+    this.users$.next(users);
+  }
+
+  public getUsers(): UserInCall[] {
+    return this.users$.getValue();
+  }
+  
+  public getUser(user: User): UserInCall {
+    return this.getUsers().find(e => e.user[this.identifier] === user[this.identifier]);
+  }
+
+
+  public setServers(servers: { urls: string | string[]; }[]): void {
+    this.servers = servers;
+  }
+
+  public async createPeerClient(): Promise<PeerConnectionClient> {
+    
+    // using user certificate algorithm result in random fails 
+    const cert = await RTCPeerConnection.generateCertificate({
+      name: "ECDSA",
+      namedCurve: "P-256"
+    } as AlgorithmIdentifier);
+
+    const peerConnectionClient = new PeerConnectionClient({
+      peerConnectionConfig: {
+        iceServers: this.servers,
+        certificates: [cert]
+      },
+      // videoSendCodec: 'VP9'
+    });
+    
+    
+    return peerConnectionClient;
+  }
+
+  public start(): void {
+    this.started$.next(true);
+  }
+
+  public stop(): void {
+    this.started$.next(false);
+  }
 
 }

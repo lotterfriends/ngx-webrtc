@@ -9,7 +9,9 @@ import { UiService } from 'src/app/services/ui.service';
 })
 export class ControlsComponent implements OnInit {
   public showUserlist = true;
-
+  public inFullscreen = false;
+  public userlistVisisble = UiService.DEFAULTS.USERLIST_VISIBLE;
+  public chatVisisble = UiService.DEFAULTS.CHAT_VISIBLE;
   @Output() leave = new EventEmitter()
   @Output() fullscreen = new EventEmitter()
 
@@ -18,18 +20,16 @@ export class ControlsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-
-    // this.uiService.isUserlistVisible.subscribe(isVisible => {
-    //   this.showUserlist = isVisible;
-    // });
   }
 
   toggleUserlist() {
     this.uiService.toggleShowUserlist();
+    this.userlistVisisble = !this.userlistVisisble;
   }
   
   toggleChat() {
     this.uiService.toggleShowChat();
+    this.chatVisisble = !this.chatVisisble;
   }
   
   toggleVideoSettingsDialog() {
@@ -38,6 +38,7 @@ export class ControlsComponent implements OnInit {
 
   toggleFullscreen() {
     this.fullscreen.emit();
+    this.inFullscreen = !this.inFullscreen;
   }
 
   doLeave() {
