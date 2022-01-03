@@ -39,8 +39,12 @@ export enum PeerConnectionClientSignalMessageType {
   Answer = "answer",
   Offer = "offer",
   Bye = "bye",
-  RequestMuteSound = 'request-mute-sound',
-  RequestMuteVideo = 'request-mute-video'
+  RequestMuteAudio = 'request-mute-audio',
+  RequestMuteVideo = 'request-mute-video',
+  AudioMuted = 'audio-muted',
+  AudioUnmuted = 'audio-unmuted',
+  VideoMuted = 'video-muted',
+  VideoUnmuted = 'video-unmuted',
 }
 
 
@@ -66,6 +70,7 @@ export class PeerConnectionClient {
   private connection: RTCPeerConnection | null;
   private settings: PeerConnectionClientSettings;
   private isNegotiating: boolean = false;
+  private id = this.getRandom(6);
   public signalingMessage = new EventEmitter<PeerConnectionClientSignalMessage>();
   public seeNewCandidate$ = new BehaviorSubject<{location: string, candidate: string} | null>(null);
   public remoteStreamAdded = new EventEmitter<StreamTrack>(null);
@@ -73,8 +78,12 @@ export class PeerConnectionClient {
   public error$ = new BehaviorSubject<{source: string, error?: Error} | null>(null);
   public remotesDpSet = new BehaviorSubject<MediaStreamTrack | null>(null);
   public remoteHangUp = new EventEmitter<void>();
-  public muteMySound = new EventEmitter<void>();
+  public muteMyAudio = new EventEmitter<void>();
   public muteMyVideo = new EventEmitter<void>();
+  public userMuteVideo = new EventEmitter<void>();
+  public userUnmuteVideo = new EventEmitter<void>();
+  public userMuteAudio = new EventEmitter<void>();
+  public userUnmuteAudio = new EventEmitter<void>();
   public negotiationNeededTriggered = new Subject<boolean>();
   public iceConnectionState$ = new BehaviorSubject<RTCIceConnectionState| null>(null);
   private readonly DEFAULT_SDP_OFFER_OPTIONS: RTCOfferOptions = {
@@ -161,13 +170,49 @@ export class PeerConnectionClient {
     this.connection = null;
   }
 
-  requestMuteSound(): void {
-    this.log('requestMuteSound');
+  audioMuted(): void {
     if (!this.connection) {
       return;
     }
     this.signalingMessage.emit({
-      type: PeerConnectionClientSignalMessageType.RequestMuteSound
+      type: PeerConnectionClientSignalMessageType.AudioMuted
+    });
+  }
+
+  audioUnmuted(): void {
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.AudioUnmuted
+    });
+  }
+
+  videoMuted(): void {
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.VideoMuted
+    });
+  }
+
+  videoUnmuted(): void {
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.VideoUnmuted
+    });
+  }
+
+  requestMuteAudio(): void {
+    this.log('requestMuteAudio');
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.RequestMuteAudio
     });
   }
 
@@ -313,10 +358,18 @@ export class PeerConnectionClient {
       this.messageQueue.push(messageObj);
     } else if (messageObj.type === PeerConnectionClientSignalMessageType.Bye) {
       this.remoteHangUp.emit();
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteSound) {
-      this.muteMySound.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteAudio) {
+      this.muteMyAudio.emit();
     } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteVideo) {
       this.muteMyVideo.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.AudioMuted) {
+      this.userMuteAudio.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.AudioUnmuted) {
+      this.userUnmuteAudio.emit(); 
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.VideoMuted) {
+      this.userMuteVideo.emit();
+    }  else if (messageObj.type === PeerConnectionClientSignalMessageType.VideoUnmuted) {
+      this.userUnmuteVideo.emit();
     }
     this.drainMessageQueue();
   };
@@ -327,11 +380,23 @@ export class PeerConnectionClient {
     if (!this.connection) {
       return;
     }
-    if (message.type === PeerConnectionClientSignalMessageType.RequestMuteSound) {
-      this.muteMySound.emit();
+    if (message.type === PeerConnectionClientSignalMessageType.RequestMuteAudio) {
+      this.muteMyAudio.emit();
     }
     if (message.type === PeerConnectionClientSignalMessageType.RequestMuteVideo) {
       this.muteMyVideo.emit();
+    }
+    if (message.type === PeerConnectionClientSignalMessageType.AudioMuted) {
+      this.userMuteAudio.emit();
+    }
+    if (message.type === PeerConnectionClientSignalMessageType.AudioUnmuted) {
+      this.userUnmuteAudio.emit();
+    }
+    if (message.type === PeerConnectionClientSignalMessageType.VideoMuted) {
+      this.userMuteVideo.emit();
+    }
+    if (message.type === PeerConnectionClientSignalMessageType.VideoUnmuted) {
+      this.userUnmuteVideo.emit();
     }
     if (message.type === PeerConnectionClientSignalMessageType.Offer && !this.isInitiator) {
       if (this.connection.signalingState !== 'stable') {
@@ -394,6 +459,7 @@ export class PeerConnectionClient {
   // When we receive messages from GAE registration and from the WSS connection,
   // we add them to a queue and drain it if conditions are right.
   drainMessageQueue() {
+    console.log('drainMessageQueue');
     // It's possible that we finish registering and receiving messages from WSS
     // before our peer connection is created or started. We need to wait for the
     // peer connection to be created and started before processing messages.
@@ -428,8 +494,7 @@ export class PeerConnectionClient {
 
     this.iceConnectionState$.next(this.connection.iceConnectionState);
   }
-  
- 
+
   onnegotiationneeded() {
     if (!this.connection) {
       return;
@@ -486,13 +551,17 @@ export class PeerConnectionClient {
 
   log(...args: any[]): void {
     if (this.debug) {
-      console.log(...args);
+      console.log(this.id, ...args);
     }
   }
   error(...args: any[]): void {
     if (this.debug) {
-      console.error(...args);
+      console.error(this.id, ...args);
     }
+  }
+
+  private getRandom(size: number): string {
+    return `${Math.round(Math.random() * parseInt(`1${(1e15 + 0 + '').slice(-size)}`, 10))}`;
   }
 
 }

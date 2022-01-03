@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Component({
   selector: 'app-dialog',
@@ -13,6 +13,13 @@ export class DialogComponent implements OnInit {
   @Input() title: string;
   @Output() showChange = new EventEmitter<boolean>();
   ngOnInit(): void {
+  }
+
+  @HostListener('document:keydown', ['$event'])
+  handleKeyboardEvent(event: KeyboardEvent): void {
+    if (this.show && event.key === 'Escape') {
+      this.onHide();
+    }
   }
 
   onHide() {

@@ -17,6 +17,11 @@ ul li {
   padding: .25em;
   background: rgba(255,255,255,.1);
   border-radius: .25em;
+  margin-bottom: .25em;
+}
+
+ul li:last-of-type {
+  margin-bottom: 0;
 }
 
 ul li .line {
@@ -30,4 +35,16 @@ svg {
   height: 16px;
   width: 16px;
   margin: 0 .2em;
+}
+
+.on-disabled {
+  display: none
+}
+
+.disabled .on-disabled {
+  display: inherit;
+}
+
+.disabled .on-enabled {
+  display: none;
 }

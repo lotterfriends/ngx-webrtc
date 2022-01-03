@@ -68,6 +68,21 @@ export class VideoChatComponent implements OnInit {
       }
     });
 
+    this.streamService.localAudioStreamStatusChanged.pipe(
+      untilDestroyed(this),
+    ).subscribe(localAudioEnabled => {
+      this.pclients.forEach(e => {
+        localAudioEnabled ? e.connection.audioUnmuted() : e.connection.audioMuted();
+      });
+    });
+    
+    this.streamService.localVideoStreamStatusChanged.pipe(
+      untilDestroyed(this),
+      ).subscribe(localVideoEnabled => {
+        this.pclients.forEach(e => {
+          localVideoEnabled ? e.connection.videoUnmuted() : e.connection.videoMuted();
+        });
+    });
   }
 
   public startCall(servers: {urls: string | string[]}[]) {
@@ -77,7 +92,7 @@ export class VideoChatComponent implements OnInit {
   }
 
   private getMediaAndStart() {
-    navigator.mediaDevices.getUserMedia({video: true, audio: true}).then(this.onLocalStream.bind(this));
+    this.streamService.tryGetUserMedia().then(this.onLocalStream.bind(this), this.onNoStream.bind(this));
   }
 
   private onLocalStream(stream: MediaStream) {
@@ -87,6 +102,16 @@ export class VideoChatComponent implements OnInit {
 
     this.log('joinedRoom');
 
+    this.socketService.onUsersJoinedRoom().pipe(
+      untilDestroyed(this),
+      distinctUntilChanged()
+    ).subscribe(this.onUserJoined.bind(this));
+
+    this.socketService.joinedRoom();
+    this.callService.start();
+  }
+
+  private onNoStream() {
     this.socketService.onUsersJoinedRoom().pipe(
       untilDestroyed(this),
       distinctUntilChanged()
@@ -162,7 +187,9 @@ export class VideoChatComponent implements OnInit {
     this.log('addPeer', user, component)
     const pclient = await this.callService.createPeerClient();
     // add media
-    pclient.addStream(this.localStream);
+    if (this.localStream) {
+      pclient.addStream(this.localStream);
+    }
     
     // signaling out
     pclient.signalingMessage.subscribe(m => {
@@ -191,45 +218,47 @@ export class VideoChatComponent implements OnInit {
     pclient.remoteStreamAdded.pipe(
       untilDestroyed(this),
     ).subscribe(stream => {
+      this.log('remoteStreamAdded', user);
       if (stream.kind === StreamType.Audio) {
         this.streamService.setStreamInNode(component.instance.audioStreamNode.nativeElement, stream.track, false);
         this.callService.userHasMic(user);
       }
       if (stream.kind === StreamType.Video) {
-        this.log('remoteStreamAdded', user);
         this.streamService.setStreamInNode(component.instance.videoStreamNode.nativeElement, stream.track);
         this.callService.userHasCam(user);
       }
     });
 
-    // pclient.signalState$.pipe(
-    //   untilDestroyed(this),
-    //   filter(e => e !== null)
-    // ).subscribe(console.log);
+    if (this.localStream) {
+      pclient.negotiationNeededTriggered.pipe(
+        untilDestroyed(this)
+      ).subscribe(this.startPeerConnection.apply(this, [pclient, user]));
+    } else {
+      this.startPeerConnection(pclient, user);
+    }
 
-    pclient.negotiationNeededTriggered.subscribe(e => {
+    pclient.muteMyAudio.pipe(untilDestroyed(this)).subscribe(() => {
+      this.streamService.muteLocalAudioStream();
+    });
 
-      if (this.isInitiator) {
-        pclient.startAsCaller();
-        this.log('start as caller', user);
-      } else {
-        this.messageService.getPrivateMessages(this.room, MessageType.Signal, user.name, this.callService.getSince()).pipe(
-          first(),
-          map(m => m.messages.map(e => JSON.parse(e.message) as PeerConnectionClientSignalMessage))
-          ).subscribe(messages => {
-          this.log('start as callee', user, messages);
-          pclient.startAsCallee(messages);
-        });
-      }
+    pclient.muteMyVideo.pipe(untilDestroyed(this)).subscribe(() => {
+      this.streamService.muteLocalVideoStream();
+    });
 
-      pclient.muteMySound.pipe(untilDestroyed(this)).subscribe(() => {
-        this.streamService.muteLocalAudioStream();
-      });
+    pclient.userMuteAudio.pipe(untilDestroyed(this)).subscribe(() => {
+      this.callService.userAudioMuted(user);
+    });
 
-      pclient.muteMyVideo.pipe(untilDestroyed(this)).subscribe(() => {
-        this.streamService.muteLocalVideoStream();
-      });
-
+    pclient.userUnmuteAudio.pipe(untilDestroyed(this)).subscribe(() => {
+      this.callService.userAudioUnmuted(user);
+    });
+  
+    pclient.userUnmuteVideo.pipe(untilDestroyed(this)).subscribe(() => {
+      this.callService.userVideoUnmuted(user);
+    });
+    
+    pclient.userMuteVideo.pipe(untilDestroyed(this)).subscribe(() => {
+      this.callService.userVideoMuted(user);
     });
 
 
@@ -240,6 +269,21 @@ export class VideoChatComponent implements OnInit {
     // });
 
     return pclient;
+  }
+
+  startPeerConnection(pclient: PeerConnectionClient, user: User) {
+    if (this.isInitiator) {
+      pclient.startAsCaller();
+      this.log('start as caller', user);
+    } else {
+      this.messageService.getPrivateMessages(this.room, MessageType.Signal, user.name, this.callService.getSince()).pipe(
+        first(),
+        map(m => m.messages.map(e => JSON.parse(e.message) as PeerConnectionClientSignalMessage))
+      ).subscribe(messages => {
+        this.log('start as callee', user, messages);
+        pclient.startAsCallee(messages);
+      });
+    }
   }
 
 

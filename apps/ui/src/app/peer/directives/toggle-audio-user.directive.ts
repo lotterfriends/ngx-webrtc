@@ -1,27 +1,27 @@
 import { Directive, HostListener, Input } from '@angular/core';
 
 @Directive({
-  selector: '[appToggleSoundUser]',
+  selector: '[appToggleAudioUser]',
   host: {
     '[class.enabled]': 'isEnabled',
     '[class.disabled]': '!isEnabled',
   }
 })
-export class ToggleSoundUserDirective {
+export class ToggleAudioUserDirective {
 
   public isEnabled = true;
 
-  @Input() appToggleSoundUser;
+  @Input() appToggleAudioUser;
 
   constructor() { }
 
   @HostListener('click', ['$event']) onClick($event){
-    if (!this.appToggleSoundUser) {
+    if (!this.appToggleAudioUser) {
       console.log('user not set');
       return;
     }
-    if (this.appToggleSoundUser?.connection) {
-      this.appToggleSoundUser.connection.requestMuteSound();
+    if (this.appToggleAudioUser?.connection) {
+      this.appToggleAudioUser.connection.requestMuteAudio();
       this.isEnabled = !this.isEnabled;
     }
   }

@@ -80,6 +80,30 @@ export class CallService {
     this.users$.next(users);
   }
 
+  public userAudioMuted(user: User) {
+    let users = this.getUsers();
+    users.find(e => e.user[this.identifier] === user[this.identifier]).audioMuted = true;
+    this.users$.next(users);
+  }
+
+  public userAudioUnmuted(user: User) {
+    let users = this.getUsers();
+    users.find(e => e.user[this.identifier] === user[this.identifier]).audioMuted = false;
+    this.users$.next(users);
+  }
+  
+  public userVideoMuted(user: User) {
+    let users = this.getUsers();
+    users.find(e => e.user[this.identifier] === user[this.identifier]).videoMuted = true;
+    this.users$.next(users);
+  }
+
+  public userVideoUnmuted(user: User) {
+    let users = this.getUsers();
+    users.find(e => e.user[this.identifier] === user[this.identifier]).videoMuted = false;
+    this.users$.next(users);
+  }
+
   public getUsers(): UserInCall[] {
     return this.users$.getValue();
   }
@@ -105,8 +129,7 @@ export class CallService {
       peerConnectionConfig: {
         iceServers: this.servers,
         certificates: [cert]
-      },
-      // videoSendCodec: 'VP9'
+      }
     });
     
     

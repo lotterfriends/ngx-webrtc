@@ -12,6 +12,10 @@ export class StreamService {
   public replaceTrack$ = new BehaviorSubject<MediaStreamTrack>(null);
   public audioOutput$ = new BehaviorSubject<string>(null);
   public localStreamStatusChanged = new EventEmitter<MediaStream | MediaStreamTrack>();
+  public localAudioStreamStatusChanged = new EventEmitter<boolean>();
+  public localVideoStreamStatusChanged = new EventEmitter<boolean>();
+  public hasVideo = false;
+  public hasAudio = false;
 
   constructor() { }
 
@@ -53,16 +57,21 @@ export class StreamService {
     console.log('toggleMuteStream()', stream, type, value);
     if(stream) {
       if (stream instanceof MediaStreamTrack) {
-        stream.enabled = typeof value !== 'undefined' ? value : !stream.enabled;
+        const targetValue = typeof value !== 'undefined' ? value : !stream.enabled;
+        stream.enabled = targetValue;
       } else {
         if (type === StreamType.Audio) {
           stream.getAudioTracks().forEach(track => {
-            track.enabled = typeof value !== 'undefined' ? value : !track.enabled;
+            const targetValue = typeof value !== 'undefined' ? value : !track.enabled;
+            track.enabled = targetValue;
+            this.localAudioStreamStatusChanged.emit(targetValue);
           });
         }
         if (type === StreamType.Video) {
           stream.getVideoTracks().forEach(track => {
-            track.enabled = typeof value !== 'undefined' ? value : !track.enabled;
+            const targetValue = typeof value !== 'undefined' ? value : !track.enabled;
+            track.enabled = targetValue;
+            this.localVideoStreamStatusChanged.emit(targetValue);
           });
         }
       }
@@ -161,22 +170,56 @@ export class StreamService {
 
   public getMediaDevices(): Promise<MediaDeviceInfo[]> {
     return navigator.mediaDevices.enumerateDevices()
-    // .then(function(devices) {
-    //   var cam = devices.find(function(device) {
-    //     return device.kind === 'videoinput';
-    //   });
-    //   var mic = devices.find(function(device) {
-    //     return device.kind === 'audioinput';
-    //   });
-    //   var constraints = {
-    //     video: cam && mediaConstraints.video,
-    //     audio: mic && mediaConstraints.audio
-    //   };
-    //   return navigator.mediaDevices.getUserMedia(constraints);
-    // });
   }
 
   public setAudioOutput(deviceId: string) {
     this.audioOutput$.next(deviceId);
+  }
+
+  public tryGetUserMedia() {
+    const mediaConstraints = {
+      audio: true,
+      video: true
+    };
+
+    return new Promise((resolve, reject) => {
+      
+      navigator.mediaDevices.getUserMedia(mediaConstraints).then(a => {
+        // console.log('>>> a >>>', a);
+        this.hasAudio = true;
+        this.hasVideo = true;
+        resolve(a);
+      }, b => {
+        // console.log('>>> b >>>', b, b.code);
+        let cam = true, mic = true;
+        if (b.message.indexOf('Starting videoinput failed') > -1) {
+          console.log('videoinput used by another software');
+          cam = false;
+        }
+        navigator.mediaDevices.enumerateDevices().then((devices) => {
+          cam = cam && devices.find(function(device) {
+            return device.kind === 'videoinput';
+          }) !== null;
+          mic = devices.find(function(device) {
+            return device.kind === 'audioinput';
+          }) !== null;
+          const constraints = {
+            video: cam && mediaConstraints.video,
+            audio: mic && mediaConstraints.audio
+          };
+          // console.log('>>>', constraints);
+          navigator.mediaDevices.getUserMedia(constraints).then(a => {
+            this.hasAudio = true;
+            resolve(a)
+          }, reject);
+        }, (f) => {
+          // console.log('>>> f >>>', f);
+          reject(f);
+        })
+      }).catch(e => {
+        // console.log('>>> e >>>', e);
+        reject(e);
+      });
+    });
   }
 }

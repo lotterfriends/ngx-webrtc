@@ -109,10 +109,10 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
   isSelected(device: MediaDeviceInfo, kind: DeviceType): boolean {
     const stream = this.streamService.getLocalStream();
     if (stream) {
-      if(kind === DeviceType.VideoInput) {
+      if(kind === DeviceType.VideoInput && this.streamService.hasVideo) {
         return this.streamService.getVideoTrackForStream(this.streamService.getLocalStream()).getSettings().deviceId === device.deviceId;
       }
-      if(kind === DeviceType.AudioInput) {
+      if(kind === DeviceType.AudioInput && this.streamService.hasAudio) {
         return this.streamService.getAudioTrackForStream(this.streamService.getLocalStream()).getSettings().deviceId === device.deviceId;
       }
     }

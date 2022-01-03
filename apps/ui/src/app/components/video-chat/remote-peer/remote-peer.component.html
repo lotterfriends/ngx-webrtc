@@ -1,6 +1,9 @@
 
 <div class="peer" *ngIf="user" (click)="fit=!fit" [ngClass]="fit ? 'fit' : 'not-fit'">
-  <span class="name">{{user.name}}</span>
-  <video (loadedmetadata)="setSize($event)" id="videoStreamNode" playsinline #videoStreamNode></video>
+  <span class="name">{{user.user.name}}</span>
+  <video [class.hide]="!user.hasCam || user.videoMuted" (loadedmetadata)="setSize($event)" id="videoStreamNode" playsinline #videoStreamNode></video>
   <audio #audioStreamNode></audio>
+  <div [class.hide]="user.hasCam && !user.videoMuted" class="no-video">
+    <app-avatar  [name]="user.user.name"></app-avatar>
+  </div>
 </div>

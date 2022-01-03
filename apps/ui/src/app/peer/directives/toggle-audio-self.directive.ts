@@ -1,19 +1,18 @@
 import { ChangeDetectorRef, Directive, HostListener } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged } from 'rxjs/operators';
 import { StreamType } from '../peer-connection-client';
 import { CallService } from '../services/call.service';
 import { StreamService } from '../services/stream.service';
 
 @UntilDestroy()
 @Directive({
-  selector: '[appToggleSoundSelf]',
+  selector: '[appToggleAudioSelf]',
   host: {
     '[class.enabled]': 'isEnabled',
     '[class.disabled]': '!isEnabled',
   }
 })
-export class ToggleSoundSelfDirective {
+export class ToggleAudioSelfDirective {
 
   public isEnabled = true;
 
