@@ -22,3 +22,9 @@ button {
 button:last-of-type {
   margin-right: 0;
 }
+
+svg {
+  fill: #fff;
+  width: 10px;
+  height: 10px;
+}

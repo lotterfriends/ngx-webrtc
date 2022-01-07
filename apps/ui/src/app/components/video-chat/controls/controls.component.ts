@@ -1,6 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
-import { UiService } from 'src/app/services/ui.service';
+import { Component, OnInit, ChangeDetectionStrategy, Output, EventEmitter, ChangeDetectorRef } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UiService, ViewMode } from 'src/app/services/ui.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-controls',
   templateUrl: './controls.component.html',
@@ -12,14 +14,26 @@ export class ControlsComponent implements OnInit {
   public inFullscreen = false;
   public userlistVisisble = UiService.DEFAULTS.USERLIST_VISIBLE;
   public chatVisisble = UiService.DEFAULTS.CHAT_VISIBLE;
+  public viewMode = UiService.DEFAULTS.VIEW_MODE;
+  public viewModes = ViewMode;
+  public viewModesList = Object.values(ViewMode);
   @Output() leave = new EventEmitter()
   @Output() fullscreen = new EventEmitter()
 
   constructor(
-    private uiService: UiService
+    private uiService: UiService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
+
+    this.uiService.viewMode$.pipe(
+      untilDestroyed(this)
+    ).subscribe(mode => {
+      this.viewMode = mode;
+      this.cdr.detectChanges();
+    });
+
   }
 
   toggleUserlist() {
@@ -43,6 +57,10 @@ export class ControlsComponent implements OnInit {
 
   doLeave() {
     this.leave.emit();
+  }
+
+  setViewMode(mode: ViewMode) {
+    this.uiService.setViewMode(mode);
   }
 
 }

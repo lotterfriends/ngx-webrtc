@@ -21,6 +21,10 @@ button {
   text-transform: capitalize;
 }
 
+button:disabled {
+  cursor: default;
+}
+
 button.round {
   border-radius: 50%;
 }

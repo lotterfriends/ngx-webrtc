@@ -5,6 +5,7 @@
   border-radius: 50%;
   font-size: 6em;
   box-shadow: 0 0 10px #000, 0 0 40px rgb(70 68 68 / 59%) inset;
+  text-transform: uppercase;
 }
 
 p {

@@ -10,6 +10,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { UserStorageService } from 'src/app/services/user-storage.service';
 import { RemotePeerComponent } from './remote-peer/remote-peer.component';
 import { CallService } from 'src/app/peer/services/call.service';
+import { UiService } from 'src/app/services/ui.service';
 
 @UntilDestroy()
 @Component({
@@ -33,19 +34,32 @@ export class VideoChatComponent implements OnInit {
     private cfr: ComponentFactoryResolver,
     private injector: Injector,
     private callService: CallService,
+    private uiService: UiService
   ) {
   }
 
   @Input('room') room!: string;
   @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
   @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
+  @ViewChild('holder', { static: false }) public holder: ElementRef;
 
   private debug = true;
   public pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
+  public viewMode = UiService.DEFAULTS.VIEW_MODE;
   private localStream: MediaStream;
+  public localVideoEnabled = false;
   private isInitiator = false;
   private self;
   private users;
+  private sizing = {
+    margin: 10,
+    ratios: ['4:3', '16:9', '1:1', '1:2'],
+    selectedRatioIndex: 0,
+    ratio: () => {
+      const ratio = this.sizing.ratios[this.sizing.selectedRatioIndex].split(":");
+      return parseInt(ratio[1]) / parseInt(ratio[0]);
+    }
+  }
 
   ngOnInit(): void {
     this.log('init');
@@ -79,10 +93,18 @@ export class VideoChatComponent implements OnInit {
     this.streamService.localVideoStreamStatusChanged.pipe(
       untilDestroyed(this),
       ).subscribe(localVideoEnabled => {
+        this.localVideoEnabled = localVideoEnabled;
         this.pclients.forEach(e => {
           localVideoEnabled ? e.connection.videoUnmuted() : e.connection.videoMuted();
         });
     });
+
+    this.uiService.viewMode$.pipe(
+      untilDestroyed(this)
+    ).subscribe(mode => {
+      this.viewMode = mode;
+    });
+
   }
 
   public startCall(servers: {urls: string | string[]}[]) {
@@ -96,6 +118,7 @@ export class VideoChatComponent implements OnInit {
   }
 
   private onLocalStream(stream: MediaStream) {
+    this.localVideoEnabled = true;
     this.localStream = stream;
     this.streamService.setLocalStream(stream);
     this.streamService.setStreamInNode(this.localStreamNode.nativeElement, stream);
@@ -148,6 +171,7 @@ export class VideoChatComponent implements OnInit {
         });
         this.callService.addUser(user, connection, component);
         component.instance.setUser(user);
+        this.resize();
       }
     } else {
       this.isInitiator = true;
@@ -180,6 +204,7 @@ export class VideoChatComponent implements OnInit {
       if (!this.pclients.length) {
         this.isInitiator = true;
       }
+      this.resize();
     }
   }
 
@@ -312,6 +337,58 @@ export class VideoChatComponent implements OnInit {
     const component = this.remotePeerHolder.createComponent(factory, null, this.injector);
     this.changeDetectorRef.detectChanges();
     return component;
+  }
+
+  @HostListener('window:resize')
+  public onWinResize() {
+    this.resize();
+  }
+
+  dimensions() {
+    return {
+      holderWidth: this.holder.nativeElement.offsetWidth - (this.sizing.margin * 2),
+      holderHeight: this.holder.nativeElement.offsetHeight - (this.sizing.margin * 2)
+    }
+  }
+
+  resizer(width) {
+    // for (const child of [...document.querySelectorAll('.video-container')]) {
+    const components = this.pclients.map(e => e.component);
+    for (const child of components) {
+      const node = child.instance.elementRef.nativeElement;
+      node.style.margin = this.sizing.margin + 'px';
+      node.style.width = width + 'px';
+      node.style.height = (width * this.sizing.ratio()) + 'px';
+      node.setAttribute('data-aspect', this.sizing.ratios[this.sizing.selectedRatioIndex]);
+    }
+  }
+
+  area(holderWidth, holderHeight, increment) {
+    let elementWidth = 0;
+    let elementHeight = increment * this.sizing.ratio() + (this.sizing.margin * 2);
+    for (let index = 0; index < this.holder.nativeElement.children.length; index++) {
+      if ((elementWidth + increment) > holderWidth) {
+        elementWidth = 0;
+        elementHeight = elementHeight + (increment * this.sizing.ratio()) + (this.sizing.margin * 2);
+      }
+      elementWidth = elementWidth + increment + (this.sizing.margin * 2);
+    }
+    return (elementHeight > holderHeight || increment > holderWidth) ? false : increment;
+  }
+
+  resize() {
+    const {holderWidth, holderHeight} = this.dimensions();
+    let max = 0
+    let i = 1
+    while (i < holderWidth) {
+      if (!this.area(holderWidth, holderHeight, i)) {
+        max = i - 1;
+        break;
+      }
+      i++;
+    }
+    max = max - (this.sizing.margin * 2);
+    this.resizer(max);
   }
 
   log(...args: any[]): void {

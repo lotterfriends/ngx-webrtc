@@ -15,11 +15,12 @@ export class RemotePeerComponent implements OnInit {
   
   @ViewChild('videoStreamNode', { static: false }) public videoStreamNode: ElementRef;
   @ViewChild('audioStreamNode', { static: false }) public audioStreamNode: ElementRef;
-  
   constructor(
     private cdr: ChangeDetectorRef,
-    private callService: CallService
-  ) { }
+    private callService: CallService,
+    public elementRef: ElementRef
+  ) {
+  }
   
   ngOnInit(): void {
   }

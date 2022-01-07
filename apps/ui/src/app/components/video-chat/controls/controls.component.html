@@ -25,4 +25,14 @@
   <span *ngIf="!chatVisisble">show Chat</span>
   <span *ngIf="chatVisisble">hide Chat</span>
 </button>
+<button [disabled]="viewMode === viewModes.Grid" (click)="setViewMode(viewModes.Grid)">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M6 6h-6v-6h6v6zm9-6h-6v6h6v-6zm9 0h-6v6h6v-6zm-18 9h-6v6h6v-6zm9 0h-6v6h6v-6zm9 0h-6v6h6v-6zm-18 9h-6v6h6v-6zm9 0h-6v6h6v-6zm9 0h-6v6h6v-6z"/></svg>
+</button>
+<button [disabled]="viewMode === viewModes.Presenting" (click)="setViewMode(viewModes.Presenting)">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M18 18h6v6h-6v-6zm-9 6h6v-6h-6v6zm-9 0h6v-6h-6v6zm0-8h24v-16h-24v16z"/></svg>
+</button>
+<button  [disabled]="viewMode === viewModes.Talking" (click)="setViewMode(viewModes.Talking)">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M16 11c0 2.209-1.791 4-4 4s-4-1.791-4-4v-7c0-2.209 1.791-4 4-4s4 1.791 4 4v7zm4-2v2c0 4.418-3.582 8-8 8s-8-3.582-8-8v-2h2v2c0 3.309 2.691 6 6 6s6-2.691 6-6v-2h2zm-7 13v-2h-2v2h-4v2h10v-2h-4z"/></svg>
+</button>
+
 <button class="leave" (click)="doLeave()">leave</button>
