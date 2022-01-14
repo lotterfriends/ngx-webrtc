@@ -1,4 +1,4 @@
-import { ComponentRef, Injectable } from '@angular/core';
+import { ComponentRef, EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { RemotePeerComponent } from 'src/app/components/video-chat/remote-peer/remote-peer.component';
 import { User } from '../../../../../../libs/models';
@@ -113,7 +113,6 @@ export class CallService {
     const currentUser = this.findUser(users, user);
     if (currentUser) {
       currentUser.shareScreen = true;
-      currentUser.spotlight = true;
       this.users$.next(users);
     }
   }
@@ -123,10 +122,8 @@ export class CallService {
     const currentUser = this.findUser(users, user);
     if (currentUser) {
       currentUser.shareScreen = false;
-      currentUser.spotlight = false;
       this.users$.next(users);
     }
-  }
     this.users$.next(users);
   }
 

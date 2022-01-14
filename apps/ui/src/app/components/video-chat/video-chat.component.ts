@@ -10,7 +10,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { UserStorageService } from 'src/app/services/user-storage.service';
 import { RemotePeerComponent } from './remote-peer/remote-peer.component';
 import { CallService } from 'src/app/peer/services/call.service';
-import { UiService } from 'src/app/services/ui.service';
+import { UiService, ViewMode } from 'src/app/services/ui.service';
 
 @UntilDestroy()
 @Component({
