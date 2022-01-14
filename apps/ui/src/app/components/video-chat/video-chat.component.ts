@@ -37,6 +37,18 @@ export class VideoChatComponent implements OnInit {
     private uiService: UiService
   ) {
   }
+  ngAfterViewInit(): void {
+    this.uiService.isChatVisible$.pipe(
+      untilDestroyed(this)
+    ).subscribe(() => {
+      this.resize();
+    });
+    this.uiService.isUserlistVisible$.pipe(
+      untilDestroyed(this)
+    ).subscribe(() => {
+      this.resize();
+    });
+  }
 
   @Input('room') room!: string;
   @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
@@ -361,10 +373,9 @@ export class VideoChatComponent implements OnInit {
   }
 
   resizer(width) {
-    // for (const child of [...document.querySelectorAll('.video-container')]) {
     const components = this.pclients.map(e => e.component);
     for (const child of components) {
-      const node = child.instance.elementRef.nativeElement;
+      const node: HTMLElement = child.instance.elementRef.nativeElement;
       node.style.margin = this.sizing.margin + 'px';
       node.style.width = width + 'px';
       node.style.height = (width * this.sizing.ratio()) + 'px';
@@ -386,6 +397,17 @@ export class VideoChatComponent implements OnInit {
   }
 
   resize() {
+    setTimeout(() => {
+      if (this.viewMode === ViewMode.Grid) {
+        this.resizeGrid();
+      } else {
+        this.removeSize();
+      }
+    });
+  }
+
+  resizeGrid() {
+    this.log('resizeGrid');
     const {holderWidth, holderHeight} = this.dimensions();
     let max = 0
     let i = 1
@@ -398,6 +420,18 @@ export class VideoChatComponent implements OnInit {
     }
     max = max - (this.sizing.margin * 2);
     this.resizer(max);
+  }
+
+  removeSize() {
+    this.log('removeSize');
+    const components = this.pclients.map(e => e.component);
+    for (const child of components) {
+      const node: HTMLElement = child.instance.elementRef.nativeElement;
+      node.style.margin =  '';
+      node.style.width = '';
+      node.style.height = '';
+      node.removeAttribute('data-aspect');
+    }
   }
 
   log(...args: any[]): void {
