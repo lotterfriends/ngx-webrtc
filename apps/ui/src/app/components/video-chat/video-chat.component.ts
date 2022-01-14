@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, HostListener, Injector, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactoryResolver, ComponentRef, ElementRef, HostListener, Injector, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, filter, first, map, tap } from 'rxjs/operators';
 import { MessageType } from "../../../../../../libs/models/message-type";
@@ -10,7 +10,7 @@ import { SocketService } from 'src/app/services/socket.service';
 import { UserStorageService } from 'src/app/services/user-storage.service';
 import { RemotePeerComponent } from './remote-peer/remote-peer.component';
 import { CallService } from 'src/app/peer/services/call.service';
-import { UiService } from 'src/app/services/ui.service';
+import { UiService, ViewMode } from 'src/app/services/ui.service';
 
 @UntilDestroy()
 @Component({
@@ -18,7 +18,7 @@ import { UiService } from 'src/app/services/ui.service';
   templateUrl: './video-chat.component.html',
   styleUrls: ['./video-chat.component.css']
 })
-export class VideoChatComponent implements OnInit {
+export class VideoChatComponent implements OnInit, AfterViewInit {
 
   @HostListener('window:beforeunload', ['$event'])
   onClose() {
@@ -38,6 +38,12 @@ export class VideoChatComponent implements OnInit {
   ) {
   }
   ngAfterViewInit(): void {
+    this.uiService.viewMode$.pipe(
+      untilDestroyed(this)
+    ).subscribe(mode => {
+      this.viewMode = mode;
+      this.resize();
+    });
     this.uiService.isChatVisible$.pipe(
       untilDestroyed(this)
     ).subscribe(() => {
@@ -52,6 +58,7 @@ export class VideoChatComponent implements OnInit {
 
   @Input('room') room!: string;
   @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
+  @ViewChild('spotlightStreamNode', { static: false }) spotlightStreamNode: ElementRef;
   @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
   @ViewChild('holder', { static: false }) public holder: ElementRef;
 
@@ -61,6 +68,7 @@ export class VideoChatComponent implements OnInit {
   private localStream: MediaStream;
   public localVideoEnabled = false;
   private isInitiator = false;
+  public showSpotlight = false;
   private self;
   private users;
   private sizing = {
@@ -114,6 +122,9 @@ export class VideoChatComponent implements OnInit {
     this.callService.startShareScreen.pipe(
       untilDestroyed(this),
     ).subscribe(() => {
+      this.uiService.setViewMode(ViewMode.Presenting);
+      this.streamService.setStreamInNode(this.spotlightStreamNode.nativeElement, this.streamService.localShareScreenStream$.getValue());
+      this.showSpotlight = true;
       this.pclients.forEach(e => {
         e.connection.startShareScreen();
       });
@@ -121,11 +132,25 @@ export class VideoChatComponent implements OnInit {
     this.callService.stopShareScreen.pipe(
       untilDestroyed(this),
     ).subscribe(() => {
+      this.uiService.setViewMode(ViewMode.Grid);
       this.pclients.forEach(e => {
         e.connection.stopShareScreen();
       });
+      this.showSpotlight = false;
     });
-
+    
+    this.callService.users$.pipe(untilDestroyed(this)).subscribe(users => {
+      for(const user of users) {
+        if (user.spotlight) {
+          const videoNode: HTMLVideoElement = user.node.instance.videoStreamNode.nativeElement;
+          this.streamService.setStreamInNode(this.spotlightStreamNode.nativeElement, this.streamService.getVideoTrackForStream(videoNode.srcObject as MediaStream));
+          this.showSpotlight = true;
+        }
+      }
+      if (!users.filter(e => e.spotlight).length) {
+        this.showSpotlight = false;
+      }
+    })
   }
 
   public startCall(servers: {urls: string | string[]}[]) {
@@ -305,6 +330,18 @@ export class VideoChatComponent implements OnInit {
     
     pclient.userMuteVideo.pipe(untilDestroyed(this)).subscribe(() => {
       this.callService.userVideoMuted(user);
+    });
+
+    pclient.useShareScreen$.pipe(untilDestroyed(this)).subscribe((isStarted) => {
+      if (isStarted) {
+        // this.callService.addSpotlightOnUser(user); 
+        this.uiService.setViewMode(ViewMode.Presenting);
+        this.callService.userStartShareScreen(user);
+      } else {
+        this.uiService.setViewMode(ViewMode.Grid);
+        this.callService.userStopShareScreen(user);
+        // this.callService.removeSpotlightOnUser(user);
+      }
     });
 
 

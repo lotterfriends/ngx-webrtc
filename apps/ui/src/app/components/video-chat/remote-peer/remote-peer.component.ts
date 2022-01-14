@@ -1,8 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, ElementRef, ChangeDetectorRef, HostBinding } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { distinctUntilChanged } from 'rxjs/operators';
 import { CallService, UserInCall } from 'src/app/peer/services/call.service';
 import { StreamService } from 'src/app/peer/services/stream.service';
+import { UiService, ViewMode } from 'src/app/services/ui.service';
 import { User } from '../../../../../../../libs/models';
 
+@UntilDestroy()
 @Component({
   selector: 'app-remote-peer',
   templateUrl: './remote-peer.component.html',
@@ -12,17 +16,24 @@ import { User } from '../../../../../../../libs/models';
 export class RemotePeerComponent implements OnInit {
   public user: UserInCall;
   public fit = true;
-  
+
   @ViewChild('videoStreamNode', { static: false }) public videoStreamNode: ElementRef;
   @ViewChild('audioStreamNode', { static: false }) public audioStreamNode: ElementRef;
   constructor(
     private cdr: ChangeDetectorRef,
     private callService: CallService,
-    public elementRef: ElementRef
+    public elementRef: ElementRef,
+    private uiService: UiService
   ) {
   }
   
   ngOnInit(): void {
+    this.callService.users$.pipe(distinctUntilChanged(), untilDestroyed(this)).subscribe(users => {
+      if (this.user) {
+        this.user = this.callService.getUser(this.user.user);
+        this.cdr.detectChanges();
+      }
+    });
   }
   
   setUser(user: User): void {
@@ -42,6 +53,10 @@ export class RemotePeerComponent implements OnInit {
     }
   }
 
-  
+  setSpotlight() {
+    if (!this.user.videoMuted && this.uiService.viewMode$.getValue() !== ViewMode.Grid) {
+      this.callService.setUserSpotlight(this.user.user, true);
+    }
+  }
 
 }

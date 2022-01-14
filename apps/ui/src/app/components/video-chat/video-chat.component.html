@@ -1,12 +1,16 @@
-
-<div class="conference remote-peer-{{pclients.length}}" [class.remote-peer-x]="pclients.length">
-  <div class="video-chat-remote-peer-holder view-mode-{{viewMode}}" #holder>
-    <ng-container #remotePeerHolder></ng-container>
+<div class="view view-mode-{{viewMode}}">
+  <div class="conference remote-peer-{{pclients.length}}" [class.remote-peer-x]="pclients.length" [class.remote-peer-1-on-1]="pclients.length === 1">
+    <div class="video-chat-remote-peer-holder" #holder>
+      <ng-container #remotePeerHolder></ng-container>
+    </div>
+    <div class="video-chat-spotlight-holder" [class.hide]="!showSpotlight">
+      <video id="spotlightStreamNode" class="" playsinline muted #spotlightStreamNode></video>
+    </div>
   </div>
+  
+  <div class="video-chat-self-holder" [class.hide]="!localVideoEnabled">
+    <video id="localStreamNode" class="mirror" playsinline muted #localStreamNode></video>
+  </div>
+  <ng-content></ng-content>
+  <app-video-chat-settings-dialog></app-video-chat-settings-dialog>
 </div>
-
-<div class="video-chat-self-holder" [class.hide]="!localVideoEnabled">
-  <video id="localStreamNode" class="mirror" playsinline muted #localStreamNode></video>
-</div>
-<ng-content></ng-content>
-<app-video-chat-settings-dialog></app-video-chat-settings-dialog>

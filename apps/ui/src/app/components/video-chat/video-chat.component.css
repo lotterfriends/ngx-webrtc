@@ -1,4 +1,5 @@
-:host {
+:host,
+.view {
   width: 100%;
   height: 100%;
   display: flex;
@@ -53,12 +54,57 @@ video {
   display: flex;
   flex: 1;
   border-radius: 10px;
-  gap: 20px;
   max-height: 100%;
   max-width: 100%;
 }
 
-.video-chat-remote-peer-holder {
+.view-mode-presenting .conference {
+  flex-direction: column;
+}
+
+.view-mode-presenting .conference .video-chat-spotlight-holder {
+  height: 100%;
+  width: 100%;
+}
+
+.view-mode-presenting .conference .video-chat-spotlight-holder video {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+}
+
+.view-mode-presenting .video-chat-remote-peer-holder {
+  background: rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-content: flex-start;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  max-height: 150px;
+  gap: 10px;
+  padding: 5px 0;
+}
+
+.view-mode-presenting ::ng-deep app-remote-peer {
+  border-radius: 10px;
+  max-height: 100%;
+}
+
+.view-mode-presenting ::ng-deep app-remote-peer video,
+.view-mode-presenting ::ng-deep app-remote-peer .no-video {
+  height: 150px;
+  width: 270px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+
+.view-mode-grid .conference {
+  gap: 20px;
+}
+
+.view-mode-grid .video-chat-remote-peer-holder {
   display: flex;
   align-content: center;
   flex-wrap: wrap;
@@ -67,14 +113,14 @@ video {
   flex: 1;
 }
 
-.conference.remote-peer-1 ::ng-deep app-remote-peer {
+.view-mode-grid .conference.remote-peer-1 ::ng-deep app-remote-peer {
   width: 100% !important;
   height: 100% !important;
   border-radius: 0 !important;
   margin: 0 !important;
 }
 
-::ng-deep app-remote-peer {
+.view-mode-grid ::ng-deep app-remote-peer {
   position: relative;
   vertical-align: middle;
   align-self: center;
@@ -86,15 +132,22 @@ video {
   animation: show 0.2s ease;
 }
 
-::ng-deep app-remote-peer video,
-::ng-deep app-remote-peer .no-video {
+
+
+.view-mode-grid .remote-peer-1-on-1 ::ng-deep app-remote-peer video,
+.view-mode-grid .remote-peer-1-on-1 ::ng-deep app-remote-peer .no-video {
+  border-radius: 0;
+}
+
+
+.view-mode-grid ::ng-deep app-remote-peer video,
+.view-mode-grid ::ng-deep app-remote-peer .no-video {
   position: absolute;
   right: 0;
   object-fit: cover;
   bottom: 0;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
   overflow: hidden;
   left: 0;
   top: 0;

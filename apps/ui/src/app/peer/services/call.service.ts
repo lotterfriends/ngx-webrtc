@@ -1,4 +1,4 @@
-import { ComponentRef, Injectable } from '@angular/core';
+import { ComponentRef, EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { RemotePeerComponent } from 'src/app/components/video-chat/remote-peer/remote-peer.component';
 import { User } from '../../../../../../libs/models';
@@ -12,6 +12,7 @@ export interface UserInCall {
   audioMuted: boolean,
   videoMuted: boolean,
   shareScreen: boolean,
+  spotlight: boolean,
   connection: PeerConnectionClient,
   node: ComponentRef<RemotePeerComponent>
 }
@@ -60,8 +61,9 @@ export class CallService {
       audioMuted: false,
       videoMuted: false,
       shareScreen: false,
+      spotlight: false,
       connection,
-      node
+      node,
     });
     this.users$.next(users);
   }
@@ -127,12 +129,34 @@ export class CallService {
       this.users$.next(users);
     }
   }
+  public setUserSpotlight(paramUser: User, spotlight: boolean) {
+    let users = this.getUsers();
+    for (const user of users) {
+      if (user.user[this.identifier] === paramUser[this.identifier] && spotlight) {
+        user.spotlight = true;
+      } else {
+        user.spotlight = false;
+      }
+    }
     this.users$.next(users);
   }
-
+  
   private findUser(users: UserInCall[], user: User): UserInCall {
     return users.find(e => e.user[this.identifier] === user[this.identifier]);
   }
+
+  // public addSpotlightOnUser(user: User) {
+  //   const users = this.getUsers();
+  //   for(const currentUser of users) {
+  //     currentUser.node.instance.spotlight = currentUser.user[this.identifier] === user[this.identifier];
+  //   }
+  // }
+  
+  // public removeSpotlightOnUser(user: User) {
+  //   const users = this.getUsers();
+  //   users.find(e => e.user[this.identifier] === user[this.identifier]).node.instance.spotlight = false;
+  // }
+
   public getUsers(): UserInCall[] {
     return this.users$.getValue();
   }
