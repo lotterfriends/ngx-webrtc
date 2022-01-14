@@ -99,10 +99,19 @@ export class VideoChatComponent implements OnInit {
         });
     });
 
-    this.uiService.viewMode$.pipe(
-      untilDestroyed(this)
-    ).subscribe(mode => {
-      this.viewMode = mode;
+    this.callService.startShareScreen.pipe(
+      untilDestroyed(this),
+    ).subscribe(() => {
+      this.pclients.forEach(e => {
+        e.connection.startShareScreen();
+      });
+    });
+    this.callService.stopShareScreen.pipe(
+      untilDestroyed(this),
+    ).subscribe(() => {
+      this.pclients.forEach(e => {
+        e.connection.stopShareScreen();
+      });
     });
 
   }

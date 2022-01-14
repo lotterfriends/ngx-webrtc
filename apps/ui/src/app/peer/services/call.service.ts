@@ -10,7 +10,8 @@ export interface UserInCall {
   hasMic: boolean,
   volume: number,
   audioMuted: boolean,
-  videoMuted: boolean
+  videoMuted: boolean,
+  shareScreen: boolean,
   connection: PeerConnectionClient,
   node: ComponentRef<RemotePeerComponent>
 }
@@ -24,6 +25,8 @@ export class CallService {
   private identifier = 'name';
   public users$ = new BehaviorSubject<UserInCall[]>([]);
   private since: number;
+  public startShareScreen = new EventEmitter<void>();
+  public stopShareScreen = new EventEmitter<void>();
   private servers: { urls: string | string[]; }[] = [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
@@ -56,6 +59,7 @@ export class CallService {
       volume: 1,
       audioMuted: false,
       videoMuted: false,
+      shareScreen: false,
       connection,
       node
     });
@@ -70,40 +74,65 @@ export class CallService {
 
   public userHasCam(user: User) {
     let users = this.getUsers();
-    users.find(e => e.user[this.identifier] === user[this.identifier]).hasCam = true;
+    this.findUser(users, user).hasCam = true;
     this.users$.next(users);
   }
 
   public userHasMic(user: User) {
     let users = this.getUsers();
-    users.find(e => e.user[this.identifier] === user[this.identifier]).hasMic = true;
+    this.findUser(users, user).hasMic = true;
     this.users$.next(users);
   }
 
   public userAudioMuted(user: User) {
     let users = this.getUsers();
-    users.find(e => e.user[this.identifier] === user[this.identifier]).audioMuted = true;
+    this.findUser(users, user).audioMuted = true;
     this.users$.next(users);
   }
 
   public userAudioUnmuted(user: User) {
     let users = this.getUsers();
-    users.find(e => e.user[this.identifier] === user[this.identifier]).audioMuted = false;
+    this.findUser(users, user).audioMuted = false;
     this.users$.next(users);
   }
   
   public userVideoMuted(user: User) {
     let users = this.getUsers();
-    users.find(e => e.user[this.identifier] === user[this.identifier]).videoMuted = true;
+    this.findUser(users, user).videoMuted = true;
     this.users$.next(users);
   }
 
   public userVideoUnmuted(user: User) {
     let users = this.getUsers();
-    users.find(e => e.user[this.identifier] === user[this.identifier]).videoMuted = false;
+    this.findUser(users, user).videoMuted = false;
+    this.users$.next(users);
+  }
+ 
+  public userStartShareScreen(user: User) {
+    let users = this.getUsers();
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.shareScreen = true;
+      currentUser.spotlight = true;
+      this.users$.next(users);
+    }
+  }
+  
+  public userStopShareScreen(user: User) {
+    let users = this.getUsers();
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.shareScreen = false;
+      currentUser.spotlight = false;
+      this.users$.next(users);
+    }
+  }
     this.users$.next(users);
   }
 
+  private findUser(users: UserInCall[], user: User): UserInCall {
+    return users.find(e => e.user[this.identifier] === user[this.identifier]);
+  }
   public getUsers(): UserInCall[] {
     return this.users$.getValue();
   }
@@ -142,6 +171,10 @@ export class CallService {
 
   public stop(): void {
     this.started$.next(false);
+  }
+
+  public getUserIdentifier(): string {
+    return this.identifier;
   }
 
 }

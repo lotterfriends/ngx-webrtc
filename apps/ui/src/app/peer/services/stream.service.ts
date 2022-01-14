@@ -9,6 +9,7 @@ export class StreamService {
 
 
   public localStream$ = new BehaviorSubject<MediaStream>(null);
+  public localShareScreenStream$ = new BehaviorSubject<MediaStream>(null);
   public replaceTrack$ = new BehaviorSubject<MediaStreamTrack>(null);
   public audioOutput$ = new BehaviorSubject<string>(null);
   public localStreamStatusChanged = new EventEmitter<MediaStream | MediaStreamTrack>();
@@ -185,12 +186,10 @@ export class StreamService {
     return new Promise((resolve, reject) => {
       
       navigator.mediaDevices.getUserMedia(mediaConstraints).then(a => {
-        // console.log('>>> a >>>', a);
         this.hasAudio = true;
         this.hasVideo = true;
         resolve(a);
       }, b => {
-        // console.log('>>> b >>>', b, b.code);
         let cam = true, mic = true;
         if (b.message.indexOf('Starting videoinput failed') > -1) {
           console.log('videoinput used by another software');
@@ -207,17 +206,14 @@ export class StreamService {
             video: cam && mediaConstraints.video,
             audio: mic && mediaConstraints.audio
           };
-          // console.log('>>>', constraints);
           navigator.mediaDevices.getUserMedia(constraints).then(a => {
             this.hasAudio = true;
             resolve(a)
           }, reject);
         }, (f) => {
-          // console.log('>>> f >>>', f);
           reject(f);
         })
       }).catch(e => {
-        // console.log('>>> e >>>', e);
         reject(e);
       });
     });

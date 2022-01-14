@@ -45,6 +45,8 @@ export enum PeerConnectionClientSignalMessageType {
   AudioUnmuted = 'audio-unmuted',
   VideoMuted = 'video-muted',
   VideoUnmuted = 'video-unmuted',
+  StartShareScreen = 'start-share-screen',
+  StopShareScreen = 'stop-share-screen',
 }
 
 
@@ -76,6 +78,7 @@ export class PeerConnectionClient {
   public remoteStreamAdded = new EventEmitter<StreamTrack>(null);
   public signalState$ = new BehaviorSubject<RTCSignalingState | null>(null);
   public error$ = new BehaviorSubject<{source: string, error?: Error} | null>(null);
+  public useShareScreen$ = new BehaviorSubject<boolean>(false);
   public remotesDpSet = new BehaviorSubject<MediaStreamTrack | null>(null);
   public remoteHangUp = new EventEmitter<void>();
   public muteMyAudio = new EventEmitter<void>();
@@ -225,7 +228,26 @@ export class PeerConnectionClient {
       type: PeerConnectionClientSignalMessageType.RequestMuteVideo
     });
   }
+  
+  startShareScreen(): void {
+    this.log('startShareScreen');
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.StartShareScreen
+    });
+  }
 
+  stopShareScreen(): void {
+    this.log('startShareScreen');
+    if (!this.connection) {
+      return;
+    }
+    this.signalingMessage.emit({
+      type: PeerConnectionClientSignalMessageType.StopShareScreen
+    });
+  }
 
   getPeerConnectionStates(): {
     signalingState: RTCSignalingState,
@@ -335,6 +357,29 @@ export class PeerConnectionClient {
     }
   }
 
+
+  handleMessageEvents(messageObj: PeerConnectionClientSignalMessage): void {
+    if (messageObj.type === PeerConnectionClientSignalMessageType.Bye) {
+      this.remoteHangUp.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteAudio) {
+      this.muteMyAudio.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteVideo) {
+      this.muteMyVideo.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.AudioMuted) {
+      this.userMuteAudio.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.AudioUnmuted) {
+      this.userUnmuteAudio.emit(); 
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.VideoMuted) {
+      this.userMuteVideo.emit();
+    }  else if (messageObj.type === PeerConnectionClientSignalMessageType.VideoUnmuted) {
+      this.userUnmuteVideo.emit();
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.StartShareScreen) {
+      this.useShareScreen$.next(true);
+    } else if (messageObj.type === PeerConnectionClientSignalMessageType.StopShareScreen) {
+      this.useShareScreen$.next(false);
+    }
+  }
+
   receiveSignalingMessage(message: string | PeerConnectionClientSignalMessage) {
     this.log('receiveSignalingMessage', message);
     let messageObj: PeerConnectionClientSignalMessage;
@@ -354,23 +399,11 @@ export class PeerConnectionClient {
       this.hasRemoteSdp = true;
       // Always process offer before candidates.
       this.messageQueue.unshift(messageObj);
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.Candidate) {
-      this.messageQueue.push(messageObj);
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.Bye) {
-      this.remoteHangUp.emit();
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteAudio) {
-      this.muteMyAudio.emit();
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteVideo) {
-      this.muteMyVideo.emit();
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.AudioMuted) {
-      this.userMuteAudio.emit();
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.AudioUnmuted) {
-      this.userUnmuteAudio.emit(); 
-    } else if (messageObj.type === PeerConnectionClientSignalMessageType.VideoMuted) {
-      this.userMuteVideo.emit();
-    }  else if (messageObj.type === PeerConnectionClientSignalMessageType.VideoUnmuted) {
-      this.userUnmuteVideo.emit();
     }
+    if (messageObj.type === PeerConnectionClientSignalMessageType.Candidate) {
+      this.messageQueue.push(messageObj);
+    }
+    this.handleMessageEvents(messageObj);
     this.drainMessageQueue();
   };
 
@@ -380,24 +413,7 @@ export class PeerConnectionClient {
     if (!this.connection) {
       return;
     }
-    if (message.type === PeerConnectionClientSignalMessageType.RequestMuteAudio) {
-      this.muteMyAudio.emit();
-    }
-    if (message.type === PeerConnectionClientSignalMessageType.RequestMuteVideo) {
-      this.muteMyVideo.emit();
-    }
-    if (message.type === PeerConnectionClientSignalMessageType.AudioMuted) {
-      this.userMuteAudio.emit();
-    }
-    if (message.type === PeerConnectionClientSignalMessageType.AudioUnmuted) {
-      this.userUnmuteAudio.emit();
-    }
-    if (message.type === PeerConnectionClientSignalMessageType.VideoMuted) {
-      this.userMuteVideo.emit();
-    }
-    if (message.type === PeerConnectionClientSignalMessageType.VideoUnmuted) {
-      this.userUnmuteVideo.emit();
-    }
+    this.handleMessageEvents(message);
     if (message.type === PeerConnectionClientSignalMessageType.Offer && !this.isInitiator) {
       if (this.connection.signalingState !== 'stable') {
         this.log('ERROR: remote offer received in unexpected state: ' + this.connection.signalingState);
