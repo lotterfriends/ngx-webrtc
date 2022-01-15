@@ -1,13 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged, filter } from 'rxjs/operators';
-import { User } from "../../../../../../libs/models/user";
-import { SocketService } from 'src/app/services/socket.service';
+import { StreamType } from 'src/app/peer/peer-connection-client';
 import { CallService, UserInCall } from 'src/app/peer/services/call.service';
+import { StreamService } from 'src/app/peer/services/stream.service';
 import { UserStorageService } from 'src/app/services/user-storage.service';
 import { ServerUser } from '../../../../../../libs/models';
-import { StreamService } from 'src/app/peer/services/stream.service';
-import { StreamType } from 'src/app/peer/peer-connection-client';
+import { User } from "../../../../../../libs/models/user";
 
 @UntilDestroy()
 @Component({
@@ -24,7 +22,6 @@ export class UserlistComponent implements OnInit {
   public self: ServerUser;
 
   constructor(
-    private socketService: SocketService,
     public callService: CallService,
     private cdr: ChangeDetectorRef,
     private userService: UserStorageService,
@@ -34,43 +31,40 @@ export class UserlistComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.self = this.userService.getCurrentUser();
+    this.init();
+  }
 
-    this.callService.started$.pipe(untilDestroyed(this)).subscribe(isStarted => {
-      if(isStarted) {
-        this.streamService.localStreamStatusChanged.pipe(
-          untilDestroyed(this),
-        ).subscribe(stream => {
-          if (stream){
-            if (stream instanceof MediaStreamTrack && stream.kind === StreamType.Audio) {
-              this.selfAudioMuted = !stream.enabled;
-            }
-            if (stream instanceof MediaStream && stream.getAudioTracks().length) {
-              const track = stream.getAudioTracks()[0];
-              this.selfAudioMuted = !track.enabled;
-            }
-            if (stream instanceof MediaStreamTrack && stream.kind === StreamType.Video) {
-              this.selfVideoMuted = !stream.enabled;
-            }
-            if (stream instanceof MediaStream && stream.getVideoTracks().length) {
-              const track = stream.getVideoTracks()[0];
-              this.selfVideoMuted = !track.enabled;
-            }
-            this.cdr.detectChanges();
-          }
-          
-        });
-      }
-    });
+  private init(): void {
+    this.self = this.userService.getCurrentUser();
+    this.callService.started$.pipe(untilDestroyed(this)).subscribe(this.onChatStarted.bind(this));
   }
   
+  onChatStarted(isStarted: boolean): void {
+    if(isStarted) {
+      this.streamService.localStreamStatusChanged.pipe(
+        untilDestroyed(this),
+      ).subscribe(this.onLocalStreamStatusChanged.bind(this));
+    }
+  }
 
-  init() {
-    this.socketService.getUsersInRoom();
-    this.socketService.onUserlistChanged().pipe(
-      untilDestroyed(this),
-      distinctUntilChanged()
-    ).subscribe(this.onUserJoined.bind(this));
+  onLocalStreamStatusChanged(stream: MediaStream | MediaStreamTrack): void {
+    if (stream){
+      if (stream instanceof MediaStreamTrack && stream.kind === StreamType.Audio) {
+        this.selfAudioMuted = !stream.enabled;
+      }
+      if (stream instanceof MediaStream && stream.getAudioTracks().length) {
+        const track = this.streamService.getAudioTrackForStream(stream);
+        this.selfAudioMuted = !track.enabled;
+      }
+      if (stream instanceof MediaStreamTrack && stream.kind === StreamType.Video) {
+        this.selfVideoMuted = !stream.enabled;
+      }
+      if (stream instanceof MediaStream && stream.getVideoTracks().length) {
+        const track = this.streamService.getVideoTrackForStream(stream);
+        this.selfVideoMuted = !track.enabled;
+      }
+      this.cdr.detectChanges();
+    }
   }
 
   onUserJoined(users: User) {
