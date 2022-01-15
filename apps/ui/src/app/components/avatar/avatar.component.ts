@@ -14,16 +14,13 @@ export class AvatarComponent implements OnInit {
   }
 
   generateColorForText(text) {
-    var sl = [', 100%, 40%', ', 100%, 41%'];
-    var hash = 0;
-    var i;
-    var chr;
-    var len;
+    let sl: string[] = [', 100%, 40%', ', 100%, 41%'];
+    let hash: number = 0;
     if (text.length == 0) {
       return hash;
     }
-    for (i = 0, len = text.length; i < len; i++) {
-      chr = text.charCodeAt(i);
+    for (let i = 0, len = text.length; i < len; i++) {
+      let chr = text.charCodeAt(i);
       hash = ((hash << 5) - hash) + chr;
       hash |= 0; // Convert to 32bit integer
     }
