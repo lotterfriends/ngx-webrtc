@@ -1,5 +1,4 @@
-import { Express, Request, Response } from "express";
-import { resolve } from "path";
+import { Request, Response, Router } from "express";
 import { createHmac } from "crypto";
 import { MessageType, ServerUser } from "../../../libs/models";
 
@@ -51,76 +50,72 @@ const getTURNCredentials = (username: string) => {
   };
 }
 
-export const initRoutes = (app: Express) => {
-  const messageService: MessageStorageService = MessageStorageService.Instance();
+export const apiRouter = Router()
+const messageService: MessageStorageService = MessageStorageService.Instance();
 
-  app.get("/", (_req: Request, res: Response) => {
-    res.sendFile(resolve("./client/index.html"));
-  });
 
-  app.get("/history", (request: Request, res: Response) => {
-    const user = authenticate(request);
-    if (user) {
-      const room: string | undefined = request.query['room'] as string | undefined;
-      const type: MessageType | undefined = request.query['type'] as MessageType | undefined;
-      const sinceParam: string | undefined = request.query['since'] as string | undefined;
-      const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
-  
-      return res.status(200).json({ messages: messageService.getAllMessagesforRoom(room, type, since) });
-    } else {
-      return res.status(401).json({message : 'no user token'});
+apiRouter.get("/history", (request: Request, res: Response) => {
+  const user = authenticate(request);
+  if (user) {
+    const room: string | undefined = request.query['room'] as string | undefined;
+    const type: MessageType | undefined = request.query['type'] as MessageType | undefined;
+    const sinceParam: string | undefined = request.query['since'] as string | undefined;
+    const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
+
+    return res.status(200).json({ messages: messageService.getAllMessagesforRoom(room, type, since) });
+  } else {
+    return res.status(401).json({message : 'no user token'});
+  }
+});
+
+apiRouter.get("/private-messages", (request: Request, res: Response) => {
+  const user = authenticate(request);
+  if (user) {
+    const room: string | undefined = request.query['room'] as string | undefined;
+    const type: MessageType | undefined = request.query['type'] as MessageType | undefined;
+    const from: string | undefined = request.query['from'] as string | undefined;
+    const sinceParam: string | undefined = request.query['since'] as string | undefined;
+    const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
+
+    return res.status(200).json({ messages: messageService.getPrivateMessages(user.name, room, type, from, since) });
+  } else {
+    return res.status(401).json({message : 'no user token'});
+  }
+});
+
+apiRouter.get('/servers', (request: Request, res: Response) => {
+  const user = authenticate(request);
+  if (user) {
+
+    // Using more than two STUN/TURN servers slows down discovery
+    const servers: {urls: string | string[]}[] = [
+      { urls: 'stun:stun.l.google.com:19302' },
+      // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
+      // { urls: 'stun:stun.services.mozilla.com' },
+    ];
+    
+    // private coturn server
+    // https://github.com/coturn/coturn
+    if (COTURN_SERVER) {
+      const cred = getTURNCredentials(user.name);
+      const server = {
+        urls: [`turn:${COTURN_SERVER}:${COTURN_PORT}`, `turn:${COTURN_SERVER}:${COTURN_PORT}?transport=tcp`],
+        username: cred.username,
+        credential: cred.password
+      };
+      servers.push(server);
     }
-  });
 
-  app.get("/private-messages", (request: Request, res: Response) => {
-    const user = authenticate(request);
-    if (user) {
-      const room: string | undefined = request.query['room'] as string | undefined;
-      const type: MessageType | undefined = request.query['type'] as MessageType | undefined;
-      const from: string | undefined = request.query['from'] as string | undefined;
-      const sinceParam: string | undefined = request.query['since'] as string | undefined;
-      const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
+    return res.status(200).json(servers);
+  } else {
+    return res.status(401).json({message : 'no user token'});
+  }
+});
 
-      return res.status(200).json({ messages: messageService.getPrivateMessages(user.name, room, type, from, since) });
-    } else {
-      return res.status(401).json({message : 'no user token'});
-    }
-  });
-
-  app.get('/servers', (request: Request, res: Response) => {
-    const user = authenticate(request);
-    if (user) {
-
-      // Using more than two STUN/TURN servers slows down discovery
-      const servers: {urls: string | string[]}[] = [
-        { urls: 'stun:stun.l.google.com:19302' },
-        // { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
-        // { urls: 'stun:stun.services.mozilla.com' },
-      ];
-      
-      // private coturn server
-      // https://github.com/coturn/coturn
-      if (COTURN_SERVER) {
-        const cred = getTURNCredentials(user.name);
-        const server = {
-          urls: [`turn:${COTURN_SERVER}:${COTURN_PORT}`, `turn:${COTURN_SERVER}:${COTURN_PORT}?transport=tcp`],
-          username: cred.username,
-          credential: cred.password
-        };
-        servers.push(server);
-      }
-
-      return res.status(200).json(servers);
-    } else {
-      return res.status(401).json({message : 'no user token'});
-    }
-  });
-
-  // app.get('/debug-messages', (request: Request, res: Response) => {
-  //   const room: string | undefined = request.query['room'] as string | undefined;
-  //   const sinceParam: string | undefined = request.query['since'] as string | undefined;
-  //   const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
-  //   const messages = messageService.getAllMessages(room, since);
-  //   return res.status(200).json(messages);
-  // });
-};
+// apiRouter.get('/debug-messages', (request: Request, res: Response) => {
+//   const room: string | undefined = request.query['room'] as string | undefined;
+//   const sinceParam: string | undefined = request.query['since'] as string | undefined;
+//   const since = sinceParam ? parseInt(sinceParam, 10) : undefined;
+//   const messages = messageService.getAllMessages(room, since);
+//   return res.status(200).json(messages);
+// });

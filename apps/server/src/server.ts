@@ -1,8 +1,8 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import cors from "cors";
-
+import { resolve } from 'path';
 import { initSockets } from "./sockets";
-import { initRoutes } from "./api";
+import { apiRouter } from "./api";
 
 (() => {
   const app = express();
@@ -10,7 +10,11 @@ import { initRoutes } from "./api";
   app.set("port", process.env['PORT'] || 3333);
   const http = require("http").Server(app);
   initSockets(http);
-  initRoutes(app);
+
+  app.use('/api', apiRouter);
+  app.get("/", (_req: Request, res: Response) => {
+    res.sendFile(resolve("./client/index.html"));
+  });
 
   http.listen(app.get("port"), () => {
     console.log(`listening on *:${app.get("port")}`);

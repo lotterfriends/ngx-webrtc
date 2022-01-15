@@ -39,7 +39,7 @@ export class CallService {
 
   updateSince() {
     this.since = Date.now();
-    sessionStorage.setItem('since', '' +this.since);
+    sessionStorage.setItem('since', `${this.since}`);
   }
 
   getSince() {
