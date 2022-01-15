@@ -13,11 +13,11 @@ export class AvatarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  generateColorForText(text) {
+  generateColorForText(text: string): string {
     let sl: string[] = [', 100%, 40%', ', 100%, 41%'];
     let hash: number = 0;
     if (text.length == 0) {
-      return hash;
+      return '#fff';
     }
     for (let i = 0, len = text.length; i < len; i++) {
       let chr = text.charCodeAt(i);
