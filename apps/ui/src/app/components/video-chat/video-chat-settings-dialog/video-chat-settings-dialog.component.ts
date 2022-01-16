@@ -21,19 +21,19 @@ enum DeviceType {
 export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   private hasStream = false;
-  private _showVideoSettingsDialog = UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE;
+  private showVideoSettingsDialogInternal = UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE;
   private onDeviceChangeListener;
   public set showVideoSettingsDialog(value){
-    if (this._showVideoSettingsDialog !== value && !value) {
+    if (this.showVideoSettingsDialogInternal !== value && !value) {
       this.uiService.hideVideoSettingsDialog();
     }
-    this._showVideoSettingsDialog = value;
+    this.showVideoSettingsDialogInternal = value;
   }
 
   public get showVideoSettingsDialog(): boolean {
-    return this._showVideoSettingsDialog;
+    return this.showVideoSettingsDialogInternal;
   }
-  devicesGoups:{kind: DeviceType, devices: MediaDeviceInfo[]}[] = [];
+  devicesGoups: {kind: DeviceType, devices: MediaDeviceInfo[]}[] = [];
 
   constructor(
     private uiService: UiService,
@@ -46,7 +46,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
       untilDestroyed(this),
       distinctUntilChanged()
     ).subscribe((isVisible) => {
-      this.showVideoSettingsDialog = isVisible
+      this.showVideoSettingsDialog = isVisible;
     });
 
 
@@ -56,10 +56,10 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
       untilDestroyed(this),
     ).subscribe(this.initDeviceList.bind(this));
 
-    // not possible with HostListener 
-    this.onDeviceChangeListener = navigator.mediaDevices.addEventListener('devicechange', _event => {
+    // not possible with HostListener
+    this.onDeviceChangeListener = navigator.mediaDevices.addEventListener('devicechange', () => {
       if (this.hasStream) {
-        this.initDeviceList(null);
+        this.initDeviceList();
       }
     });
   }
@@ -68,7 +68,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
     navigator.mediaDevices.removeEventListener('devicechange', this.onDeviceChangeListener);
   }
 
-  initDeviceList(_stream) {
+  initDeviceList(): void {
     this.streamService.getMediaDevices().then(devices => {
       // console.log(devices);
       const audioInput = devices.filter(d => d.kind === DeviceType.AudioInput);
@@ -95,24 +95,24 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
     });
   }
 
-  getLabelForDeviceType(type: DeviceType) {
+  getLabelForDeviceType(type: DeviceType): string {
     switch (type) {
       case DeviceType.AudioInput:
-        return 'Microphone'
+        return 'Microphone';
       case DeviceType.AudioOutput:
-        return 'Audio Output'
+        return 'Audio Output';
       case DeviceType.VideoInput:
-        return 'Camera'
+        return 'Camera';
     }
   }
 
   isSelected(device: MediaDeviceInfo, kind: DeviceType): boolean {
     const stream = this.streamService.getLocalStream();
     if (stream) {
-      if(kind === DeviceType.VideoInput && this.streamService.hasVideo) {
+      if (kind === DeviceType.VideoInput && this.streamService.hasVideo) {
         return this.streamService.getVideoTrackForStream(this.streamService.getLocalStream()).getSettings().deviceId === device.deviceId;
       }
-      if(kind === DeviceType.AudioInput && this.streamService.hasAudio) {
+      if (kind === DeviceType.AudioInput && this.streamService.hasAudio) {
         return this.streamService.getAudioTrackForStream(this.streamService.getLocalStream()).getSettings().deviceId === device.deviceId;
       }
     }
@@ -123,7 +123,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
     const deviceId = (event.target as HTMLSelectElement).value;
     if (kind === DeviceType.VideoInput) {
       navigator.mediaDevices.getUserMedia({ video: {
-        deviceId: deviceId
+        deviceId
       }}).then((stream) => {
         const track = this.streamService.getVideoTrackForStream(stream);
         this.streamService.replaceTrack(track);
@@ -132,7 +132,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
     }
     if (kind === DeviceType.AudioInput) {
       navigator.mediaDevices.getUserMedia({ audio: {
-        deviceId: deviceId
+        deviceId
       }}).then((stream) => {
         const track = this.streamService.getAudioTrackForStream(stream);
         this.streamService.replaceTrack(track);

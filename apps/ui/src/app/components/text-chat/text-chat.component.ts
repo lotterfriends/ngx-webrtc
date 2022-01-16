@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild, ElementRef, Input } from "@angular/core";
-import { SocketService } from "src/app/services/socket.service";
-import { MessagesService } from "../../services/messages.service";
-import { first } from "rxjs/operators";
-import { Message } from "../../../../../../libs/models/message";
-import { MessageType } from "../../../../../../libs/models/message-type";
-import { ServerMessage } from "../../../../../../libs/models/server-message";
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { SocketService } from 'src/app/services/socket.service';
+import { MessagesService } from '../../services/messages.service';
+import { first } from 'rxjs/operators';
+import { Message } from '../../../../../../libs/models/message';
+import { MessageType } from '../../../../../../libs/models/message-type';
+import { ServerMessage } from '../../../../../../libs/models/server-message';
 
 @Component({
-  selector: "app-text-chat",
-  templateUrl: "./text-chat.component.html",
-  styleUrls: ["./text-chat.component.css"],
+  selector: 'app-text-chat',
+  templateUrl: './text-chat.component.html',
+  styleUrls: ['./text-chat.component.css'],
 })
-export class TextChatComponent implements OnInit {
+export class TextChatComponent implements OnInit, AfterViewChecked {
   constructor(
     private socketService: SocketService,
     private messagesService: MessagesService
@@ -19,14 +19,14 @@ export class TextChatComponent implements OnInit {
 
   messages: Message[] = [];
   users: string[] = [];
-  msg: string = '';
-  @ViewChild("scrollMe", { static: true })
+  msg = '';
+  @ViewChild('scrollMe', { static: true })
   private myScrollContainer!: ElementRef;
 
-  @ViewChild("messageField", { static: true })
+  @ViewChild('messageField', { static: true })
   private messageFieldRef!: ElementRef;
 
-  @Input('room') room!: string;
+  @Input() room!: string;
 
   private get messageField(): HTMLInputElement {
     return this.messageFieldRef.nativeElement;
@@ -44,10 +44,10 @@ export class TextChatComponent implements OnInit {
 
   public focusOnInput(user: string): void {
     this.messageField.value = '@' + user + ' ' + this.messageField.value;
-    this.messageField.focus()
+    this.messageField.focus();
   }
 
-  public sendMessage(message: string) {
+  public sendMessage(message: string): boolean {
     this.socketService.sendMessage(message);
     return true;
   }
@@ -73,7 +73,7 @@ export class TextChatComponent implements OnInit {
 
   private initSockets(): void {
     this.socketService.getMessages().subscribe((message: ServerMessage) => {
-      if (message.type == MessageType.Text) {
+      if (message.type === MessageType.Text) {
         this.messages.push(message);
       }
     });

@@ -1,21 +1,19 @@
-import { Directive, HostListener, Input } from '@angular/core';
+import { Directive, HostBinding, HostListener, Input } from '@angular/core';
+import { UserInCall } from '../services/call.service';
 
 @Directive({
   selector: '[appToggleVideoUser]',
-  host: {
-    '[class.enabled]': 'isEnabled',
-    '[class.disabled]': '!isEnabled',
-  }
 })
 export class ToggleVideoUserDirective {
 
-  public isEnabled = true;
+  @Input() appToggleVideoUser: UserInCall;
+  @HostBinding('class.disabled') public isDisabled = true;
+  @HostBinding('class.enabled') public isEnabled = false;
+  @HostListener('click', ['$event']) onClick(): void{
+    this.toggleUserVideo();
+  }
 
-  @Input() appToggleVideoUser;
-
-  constructor() { }
-
-  @HostListener('click', ['$event']) onClick($event){
+  toggleUserVideo(): void {
     if (!this.appToggleVideoUser) {
       console.log('user not set');
       return;
@@ -23,6 +21,7 @@ export class ToggleVideoUserDirective {
     if (this.appToggleVideoUser?.connection) {
       this.appToggleVideoUser.connection.requestMuteVideo();
       this.isEnabled = !this.isEnabled;
+      this.isDisabled = !this.isDisabled;
     }
   }
 

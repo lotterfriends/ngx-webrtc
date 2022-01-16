@@ -1,19 +1,20 @@
 import { ComponentRef, EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { RemotePeerComponent } from 'src/app/components/video-chat/remote-peer/remote-peer.component';
 import { User } from '../../../../../../libs/models';
+import { RemotePeerComponentInterface } from '../interfaces/remote-peer-component-interface';
 import { PeerConnectionClient } from '../peer-connection-client';
 
+// TODO abtract user interface
 export interface UserInCall {
-  user: User,
-  hasCam: boolean,
-  hasMic: boolean,
-  volume: number,
-  audioMuted: boolean,
-  videoMuted: boolean,
-  shareScreen: boolean,
-  connection: PeerConnectionClient,
-  node: ComponentRef<RemotePeerComponent>
+  user: User;
+  hasCam: boolean;
+  hasMic: boolean;
+  volume: number;
+  audioMuted: boolean;
+  videoMuted: boolean;
+  shareScreen: boolean;
+  connection: PeerConnectionClient;
+  node: ComponentRef<RemotePeerComponentInterface>;
 }
 
 @Injectable({
@@ -50,7 +51,7 @@ export class CallService {
   }
 
 
-  public addUser(user: User, connection: PeerConnectionClient, node: ComponentRef<RemotePeerComponent>) {
+  public addUser(user: User, connection: PeerConnectionClient, node: ComponentRef<RemotePeerComponentInterface>) {
     const users = this.getUsers();
     users.push({
       user,
@@ -73,52 +74,52 @@ export class CallService {
   }
 
   public userHasCam(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     this.findUser(users, user).hasCam = true;
     this.users$.next(users);
   }
 
   public userHasMic(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     this.findUser(users, user).hasMic = true;
     this.users$.next(users);
   }
 
   public userAudioMuted(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     this.findUser(users, user).audioMuted = true;
     this.users$.next(users);
   }
 
   public userAudioUnmuted(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     this.findUser(users, user).audioMuted = false;
     this.users$.next(users);
   }
-  
+
   public userVideoMuted(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     this.findUser(users, user).videoMuted = true;
     this.users$.next(users);
   }
 
   public userVideoUnmuted(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     this.findUser(users, user).videoMuted = false;
     this.users$.next(users);
   }
- 
+
   public userStartShareScreen(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     const currentUser = this.findUser(users, user);
     if (currentUser) {
       currentUser.shareScreen = true;
       this.users$.next(users);
     }
   }
-  
+
   public userStopShareScreen(user: User) {
-    let users = this.getUsers();
+    const users = this.getUsers();
     const currentUser = this.findUser(users, user);
     if (currentUser) {
       currentUser.shareScreen = false;
@@ -133,7 +134,7 @@ export class CallService {
   public getUsers(): UserInCall[] {
     return this.users$.getValue();
   }
-  
+
   public getUser(user: User): UserInCall {
     return this.getUsers().find(e => e.user[this.identifier] === user[this.identifier]);
   }
@@ -144,11 +145,11 @@ export class CallService {
   }
 
   public async createPeerClient(): Promise<PeerConnectionClient> {
-    
-    // using user certificate algorithm result in random fails 
+
+    // using user certificate algorithm result in random fails
     const cert = await RTCPeerConnection.generateCertificate({
-      name: "ECDSA",
-      namedCurve: "P-256"
+      name: 'ECDSA',
+      namedCurve: 'P-256'
     } as AlgorithmIdentifier);
 
     const peerConnectionClient = new PeerConnectionClient({
@@ -157,8 +158,8 @@ export class CallService {
         certificates: [cert]
       }
     });
-    
-    
+
+
     return peerConnectionClient;
   }
 

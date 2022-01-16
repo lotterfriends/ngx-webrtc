@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Directive, HostListener } from '@angular/core';
+import { ChangeDetectorRef, Directive, HostBinding, HostListener } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { StreamType } from '../peer-connection-client';
 import { CallService } from '../services/call.service';
@@ -7,51 +7,56 @@ import { StreamService } from '../services/stream.service';
 @UntilDestroy()
 @Directive({
   selector: '[appToggleAudioSelf]',
-  host: {
-    '[class.enabled]': 'isEnabled',
-    '[class.disabled]': '!isEnabled',
-  }
 })
 export class ToggleAudioSelfDirective {
 
-  public isEnabled = true;
+  @HostBinding('class.disabled') public isDisabled = true;
+  @HostBinding('class.enabled') public isEnabled = false;
+  @HostListener('click', ['$event']) onClick(): void{
+    this.toggleMute();
+  }
 
   constructor(
     private streamService: StreamService,
     private callService: CallService,
     private cdr: ChangeDetectorRef
   ) {
+    this.init();
+  }
 
-    this.callService.started$.pipe(untilDestroyed(this)).subscribe(isStarted => {
-      if(isStarted) {
-        this.streamService.localStreamStatusChanged.pipe(
-          untilDestroyed(this),
-        ).subscribe(stream => {
-          if (stream){
-            if (stream instanceof MediaStreamTrack && stream.kind === StreamType.Audio) {
-              this.updateStatusWithTrack(stream);
-            }
-            if (stream instanceof MediaStream && stream.getAudioTracks().length) {
-              const track = stream.getAudioTracks()[0];
-              this.updateStatusWithTrack(track);
-            }
-          }
-          
-        });
+  init(): void {
+    this.callService.started$.pipe(
+      untilDestroyed(this)
+    ).subscribe(this.onStart.bind(this));
+  }
+
+  onStart(isStarted: boolean): void {
+    if (isStarted) {
+      this.streamService.localStreamStatusChanged.pipe(
+        untilDestroyed(this),
+      ).subscribe(this.onLocalStreamStatusChanged.bind(this));
+    }
+  }
+
+  onLocalStreamStatusChanged(stream: MediaStream | MediaStreamTrack): void {
+    if (stream){
+      if (stream instanceof MediaStreamTrack && stream.kind === StreamType.Audio) {
+        this.updateStatusWithTrack(stream);
       }
-    });
+      if (stream instanceof MediaStream && stream.getAudioTracks().length) {
+        const track = this.streamService.getAudioTrackForStream(stream); 
+        this.updateStatusWithTrack(track);
+      }
+    }
   }
 
-  @HostListener('click', ['$event']) onClick(_event){
-    this.toggleMute();
-  }
-  
-  toggleMute() {
+  toggleMute(): void {
     this.streamService.toggleMuteLocalAudioStream();
   }
 
   private updateStatusWithTrack(track: MediaStreamTrack): void {
     this.isEnabled = track.enabled;
+    this.isDisabled = !track.enabled;
     this.cdr.detectChanges();
   }
 

@@ -20,7 +20,7 @@ import { ToggleAudioUserDirective } from './peer/directives/toggle-audio-user.di
 import { ToggleVideoUserDirective } from './peer/directives/toggle-video-user.directive';
 import { AvatarComponent } from './components/avatar/avatar.component';
 
-const config: SocketIoConfig = { url: "http://localhost:3333", options: {} };
+const config: SocketIoConfig = { url: 'http://localhost:3333', options: {} };
 
 @NgModule({
   declarations: [

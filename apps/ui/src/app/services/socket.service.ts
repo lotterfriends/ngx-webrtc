@@ -1,17 +1,17 @@
-import { Injectable } from "@angular/core";
-import { Socket } from "ngx-socket-io";
-import { BehaviorSubject, Observable } from "rxjs";
-import { PeerConnectionClientSignalMessage } from "../peer/peer-connection-client";
-import { UserStorageService } from "./user-storage.service";
-import { Message } from "../../../../../libs/models/message";
-import { MessageType } from "../../../../../libs/models/message-type";
-import { ServerMessage } from "../../../../../libs/models/server-message";
-import { ServerUser } from "../../../../../libs/models/server-user";
-import { User } from "../../../../../libs/models/user";
+import { Injectable } from '@angular/core';
+import { Socket } from 'ngx-socket-io';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { PeerConnectionClientSignalMessage } from '../peer/peer-connection-client';
+import { UserStorageService } from './user-storage.service';
+import { Message } from '../../../../../libs/models/message';
+import { MessageType } from '../../../../../libs/models/message-type';
+import { ServerMessage } from '../../../../../libs/models/server-message';
+import { ServerUser } from '../../../../../libs/models/server-user';
+import { User } from '../../../../../libs/models/user';
 
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class SocketService {
 
@@ -42,41 +42,41 @@ export class SocketService {
     }
   }
 
-  joinRoom(room: string) {
+  joinRoom(room: string): void {
     this.socket.emit('join', { room });
   }
 
-  joinedRoom() {
+  joinedRoom(): void {
     this.socket.emit('joined');
   }
 
-  leaveRoom() {
+  leaveRoom(): void {
     this.socket.emit('leave');
   }
 
 
   sendMessage(message: string): void {
-    this.socket.emit("message", {
+    this.socket.emit('message', {
       message,
       type: MessageType.Text
     } as Message);
   }
 
-  sendSignalMessage(message: PeerConnectionClientSignalMessage, username: string) {
+  sendSignalMessage(message: PeerConnectionClientSignalMessage, username: string): void {
     this.sendPrivateMessage(JSON.stringify(message), username, MessageType.Signal);
   }
-  
-  sendPrivateMessage(message: string, username: string, type?: MessageType) {
+
+  sendPrivateMessage(message: string, username: string, type?: MessageType): void {
     this.socket.emit('message', {
       type: type ? type : MessageType.Text,
       for: username,
-      message: message
+      message
     });
   }
 
   getMessages(): Observable<ServerMessage> {
     return new Observable((observer) => {
-      this.socket.on("message", (data: ServerMessage) => {
+      this.socket.on('message', (data: ServerMessage) => {
         observer.next(data);
       });
     });
@@ -84,78 +84,78 @@ export class SocketService {
 
   getPrivateMessages(): Observable<ServerMessage> {
     return new Observable((observer) => {
-      this.socket.on("private-message", (data: ServerMessage) => {
+      this.socket.on('private-message', (data: ServerMessage) => {
         observer.next(data);
       });
     });
   }
 
-  register() {
+  register(): void {
     const username = this.userStorageService.getCurrentUsername();
     if (username) {
-      this.socket.emit("register", username);
+      this.socket.emit('register', username);
     }
   }
 
-  refresh(user: ServerUser) {
-    this.socket.emit("refresh", user);
+  refresh(user: ServerUser): void {
+    this.socket.emit('refresh', user);
   }
 
-  getUsers() {
+  getUsers(): Observable<string[]> {
     return new Observable<string[]>((observer) => {
-      this.socket.on("users", (data: string[]) => {
+      this.socket.on('users', (data: string[]) => {
         observer.next(data);
       });
     });
   }
-  
-  onRegisterError() {
+
+  onRegisterError(): Observable<{code?: string, message?: string}> {
     return new Observable<{code?: string, message?: string}>((observer) => {
-      this.socket.on("register-error", (error: {code?: string, message?: string}) => {
+      this.socket.on('register-error', (error: {code?: string, message?: string}) => {
         observer.next(error);
       });
     });
   }
 
-  getUsersInRoom() {
+  getUsersInRoom(): void {
     this.socket.emit('request-userlist');
   }
 
-  onUserlistChanged() {
+  onUserlistChanged(): Observable<User[]> {
     return new Observable<User[]>((observer) => {
-      this.socket.on("userlist", (data: User[]) => {
-        observer.next(data);
-      });
-    });
-  }
-  
-  onUsersJoinedRoom() {
-    return new Observable<User[]>((observer) => {
-      this.socket.on("userJoinedRoom", (data: User[]) => {
+      this.socket.on('userlist', (data: User[]) => {
         observer.next(data);
       });
     });
   }
 
-  onUserLeftRoom() {
+  onUsersJoinedRoom(): Observable<User[]> {
+    return new Observable<User[]>((observer) => {
+      this.socket.on('userJoinedRoom', (data: User[]) => {
+        observer.next(data);
+      });
+    });
+  }
+
+  onUserLeftRoom(): Observable<User> {
     return new Observable<User>((observer) => {
-      this.socket.on("userLeftRoom", (data: User) => {
+      this.socket.on('userLeftRoom', (data: User) => {
         observer.next(data);
       });
     });
   }
 
-  onMe() {
+  onMe(): Observable<ServerUser> {
     return new Observable<ServerUser>((observer) => {
-      this.socket.on("me", (data: ServerUser) => {
+      this.socket.on('me', (data: ServerUser) => {
         observer.next(data);
       });
     });
   }
 
-  onLogout() {
+  onLogout(): Observable<string> {
     return new Observable<string>((observer) => {
-      this.socket.on("logout", (username: string) => {
+      this.socket.on('logout', (username: string) => {
         observer.next(username);
       });
     });

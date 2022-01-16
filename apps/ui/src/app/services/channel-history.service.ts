@@ -7,23 +7,23 @@ import { BehaviorSubject } from 'rxjs';
 export class ChannelHistoryService {
 
   public history$ = new BehaviorSubject<string[]>(this.history);
-  private _history: string[] = [];
+  private historyInternal: string[] = [];
   constructor() { }
 
   get history(): string[] {
-    if (!this._history) {
+    if (!this.historyInternal) {
       if (sessionStorage.getItem('history')) {
-        this._history = JSON.parse(sessionStorage.getItem('history')) as string[];
+        this.historyInternal = JSON.parse(sessionStorage.getItem('history')) as string[];
       } else {
-        this._history = [];
+        this.historyInternal = [];
       }
     }
-    return this._history;
+    return this.historyInternal;
   }
 
   addChannelToHistory(entry: string): string[] {
     if (!this.history.includes(entry)) {
-      this.history.push(entry)
+      this.history.push(entry);
       sessionStorage.setItem('history', JSON.stringify(this.history));
       this.history$.next(this.history);
     }

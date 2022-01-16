@@ -22,7 +22,7 @@ export class DialogComponent implements OnInit {
     }
   }
 
-  onHide() {
+  onHide(): void {
     this.show = !this.show;
     this.showChange.emit(this.show);
   }

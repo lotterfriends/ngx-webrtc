@@ -17,8 +17,8 @@ export class ControlsComponent implements OnInit {
   public viewMode = UiService.DEFAULTS.VIEW_MODE;
   public viewModes = ViewMode;
   public viewModesList = Object.values(ViewMode);
-  @Output() leave = new EventEmitter()
-  @Output() fullscreen = new EventEmitter()
+  @Output() leave = new EventEmitter();
+  @Output() fullscreen = new EventEmitter();
 
   constructor(
     private uiService: UiService,
@@ -36,30 +36,30 @@ export class ControlsComponent implements OnInit {
 
   }
 
-  toggleUserlist() {
+  toggleUserlist(): void {
     this.uiService.toggleShowUserlist();
     this.userlistVisisble = !this.userlistVisisble;
   }
-  
-  toggleChat() {
+
+  toggleChat(): void {
     this.uiService.toggleShowChat();
     this.chatVisisble = !this.chatVisisble;
   }
-  
-  toggleVideoSettingsDialog() {
+
+  toggleVideoSettingsDialog(): void {
     this.uiService.toggleShowVideoSettingsDialog();
   }
 
-  toggleFullscreen() {
+  toggleFullscreen(): void {
     this.fullscreen.emit();
     this.inFullscreen = !this.inFullscreen;
   }
 
-  doLeave() {
+  doLeave(): void {
     this.leave.emit();
   }
 
-  setViewMode(mode: ViewMode) {
+  setViewMode(mode: ViewMode): void {
     this.uiService.setViewMode(mode);
   }
 

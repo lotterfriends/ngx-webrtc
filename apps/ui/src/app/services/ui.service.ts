@@ -25,27 +25,27 @@ export class UiService {
   public viewMode$ = new BehaviorSubject<ViewMode>(UiService.DEFAULTS.VIEW_MODE);
   constructor() { }
 
-  toggleShowUserlist() {
+  toggleShowUserlist(): void {
     this.isUserlistVisible$.next(!this.isUserlistVisible$.getValue());
   }
-  
-  toggleShowChat() {
+
+  toggleShowChat(): void{
     this.isChatVisible$.next(!this.isChatVisible$.getValue());
   }
 
-  toggleShowVideoSettingsDialog() {
+  toggleShowVideoSettingsDialog(): void {
     this.isVideoSettingsDialogVisible$.next(!this.isVideoSettingsDialogVisible$.getValue());
   }
 
-  hideVideoSettingsDialog() {
+  hideVideoSettingsDialog(): void {
     this.isVideoSettingsDialogVisible$.next(false);
   }
 
-  showVideoSettingsDialog() {
+  showVideoSettingsDialog(): void {
     this.isVideoSettingsDialogVisible$.next(true);
   }
 
-  setViewMode(mode: ViewMode) {
+  setViewMode(mode: ViewMode): void {
     this.viewMode$.next(mode);
   }
 

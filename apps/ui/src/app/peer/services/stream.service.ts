@@ -7,6 +7,8 @@ import { StreamType } from '../peer-connection-client';
 })
 export class StreamService {
 
+  constructor() { }
+
 
   public localStream$ = new BehaviorSubject<MediaStream>(null);
   public localShareScreenStream$ = new BehaviorSubject<MediaStream>(null);
@@ -18,10 +20,17 @@ export class StreamService {
   public hasVideo = false;
   public hasAudio = false;
 
-  constructor() { }
+  public static getAspectRatio(width: number, height: number): string {
 
-  public setStreamInNode(node: HTMLVideoElement, stream: MediaStream | MediaStreamTrack, muted = true) {
-    const _self = this;
+    function gcd(a: number, b: number): number {
+      return b ? gcd(b, a % b) : a;
+    }
+
+    const divisor: number = gcd(width, height);
+    return `${width / divisor}x${height / divisor}`;
+  }
+  public setStreamInNode(node: HTMLVideoElement, stream: MediaStream | MediaStreamTrack, muted = true): void {
+    const self = this;
     if (node) {
 
       // play when ready
@@ -31,7 +40,7 @@ export class StreamService {
           video.removeEventListener('canplay', onCanPlay);
           video.play();
         }
-        _self.localStreamStatusChanged.emit(stream);
+        self.localStreamStatusChanged.emit(stream);
       });
 
       let tmpStream;
@@ -45,18 +54,18 @@ export class StreamService {
       node.muted = muted;
     }
   }
-  
-  public stopStreamInNode(node: ElementRef) {
+
+  public stopStreamInNode(node: ElementRef): void {
     node?.nativeElement?.pause();
     node?.nativeElement?.srcObject?.getTracks().forEach((t: MediaStreamTrack) => t.stop());
     if (node?.nativeElement?.srcObject) {
-      node.nativeElement.srcObject = new MediaStream()
-    } 
+      node.nativeElement.srcObject = new MediaStream();
+    }
   }
 
-  public toggleMuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType, value?: boolean) {
+  public toggleMuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType, value?: boolean): void {
     console.log('toggleMuteStream()', stream, type, value);
-    if(stream) {
+    if (stream) {
       if (stream instanceof MediaStreamTrack) {
         const targetValue = typeof value !== 'undefined' ? value : !stream.enabled;
         stream.enabled = targetValue;
@@ -79,16 +88,16 @@ export class StreamService {
     }
     this.localStreamStatusChanged.emit(stream);
   }
-  
-  public muteStream(stream: MediaStream | MediaStreamTrack, type: StreamType) {
+
+  public muteStream(stream: MediaStream | MediaStreamTrack, type: StreamType): void {
     this.toggleMuteStream(stream, type, false);
   }
-  
-  public unmuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType) {
+
+  public unmuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType): void {
     this.toggleMuteStream(stream, type, true);
   }
 
-  public replaceTrackInStream(stream: MediaStream, track: MediaStreamTrack) {
+  public replaceTrackInStream(stream: MediaStream, track: MediaStreamTrack): void {
     if (track.kind === StreamType.Video) {
       stream?.getVideoTracks().forEach(e => stream.removeTrack(e));
     }
@@ -98,7 +107,7 @@ export class StreamService {
     stream?.addTrack(track);
   }
 
-  public setLocalStream(stream: MediaStream) {
+  public setLocalStream(stream: MediaStream): void {
     this.localStream$.next(stream);
   }
 
@@ -110,27 +119,27 @@ export class StreamService {
     this.replaceTrack$.next(track);
   }
 
-  public toggleMuteLocalAudioStream() {
+  public toggleMuteLocalAudioStream(): void {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio);
   }
-  
-  public muteLocalAudioStream() {
+
+  public muteLocalAudioStream(): void {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio, false);
   }
-  
-  public unmuteLocalAudioStream() {
+
+  public unmuteLocalAudioStream(): void {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio, true);
   }
-  
-  public toggleMuteLocalVideoStream() {
+
+  public toggleMuteLocalVideoStream(): void {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video);
   }
-  
-  public muteLocalVideoStream() {
+
+  public muteLocalVideoStream(): void {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video, false);
   }
-  
-  public unmuteLocalVideoStream() {
+
+  public unmuteLocalVideoStream(): void {
     this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video, true);
   }
 
@@ -159,21 +168,11 @@ export class StreamService {
     return stream?.getAudioTracks()[0];
   }
 
-  public static getAspectRatio(width: number, height: number) {
-
-    function gcd(a, b) {
-      return b ? gcd(b, a % b) : a;
-    }
-
-    const divisor = gcd(width, height);
-    return `${width / divisor}x${height / divisor}`;
-  };
-
   public getMediaDevices(): Promise<MediaDeviceInfo[]> {
-    return navigator.mediaDevices.enumerateDevices()
+    return navigator.mediaDevices.enumerateDevices();
   }
 
-  public setAudioOutput(deviceId: string) {
+  public setAudioOutput(deviceId: string): void {
     this.audioOutput$.next(deviceId);
   }
 
@@ -184,7 +183,7 @@ export class StreamService {
     };
 
     return new Promise((resolve, reject) => {
-      
+
       navigator.mediaDevices.getUserMedia(mediaConstraints).then(a => {
         this.hasAudio = true;
         this.hasVideo = true;
@@ -196,10 +195,10 @@ export class StreamService {
           cam = false;
         }
         navigator.mediaDevices.enumerateDevices().then((devices) => {
-          cam = cam && devices.find(function(device) {
+          cam = cam && devices.find((device) => {
             return device.kind === 'videoinput';
           }) !== null;
-          mic = devices.find(function(device) {
+          mic = devices.find((device) => {
             return device.kind === 'audioinput';
           }) !== null;
           const constraints = {
@@ -208,11 +207,11 @@ export class StreamService {
           };
           navigator.mediaDevices.getUserMedia(constraints).then(a => {
             this.hasAudio = true;
-            resolve(a)
+            resolve(a);
           }, reject);
         }, (f) => {
           reject(f);
-        })
+        });
       }).catch(e => {
         reject(e);
       });

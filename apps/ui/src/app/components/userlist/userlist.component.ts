@@ -5,7 +5,7 @@ import { CallService, UserInCall } from 'src/app/peer/services/call.service';
 import { StreamService } from 'src/app/peer/services/stream.service';
 import { UserStorageService } from 'src/app/services/user-storage.service';
 import { ServerUser } from '../../../../../../libs/models';
-import { User } from "../../../../../../libs/models/user";
+import { User } from '../../../../../../libs/models/user';
 
 @UntilDestroy()
 @Component({
@@ -27,7 +27,7 @@ export class UserlistComponent implements OnInit {
     private userService: UserStorageService,
     private streamService: StreamService,
   ) {
-  
+
   }
 
   ngOnInit(): void {
@@ -38,9 +38,9 @@ export class UserlistComponent implements OnInit {
     this.self = this.userService.getCurrentUser();
     this.callService.started$.pipe(untilDestroyed(this)).subscribe(this.onChatStarted.bind(this));
   }
-  
+
   onChatStarted(isStarted: boolean): void {
-    if(isStarted) {
+    if (isStarted) {
       this.streamService.localStreamStatusChanged.pipe(
         untilDestroyed(this),
       ).subscribe(this.onLocalStreamStatusChanged.bind(this));
@@ -67,22 +67,23 @@ export class UserlistComponent implements OnInit {
     }
   }
 
-  onUserJoined(users: User) {
+  onUserJoined(users: User): void {
     this.users = users;
     this.cdr.detectChanges();
   }
 
-  changeVolume($event, user: UserInCall) {
-    user.volume=$event.target.value;
-    (user.node.instance.audioStreamNode.nativeElement as HTMLAudioElement).volume = $event.target.value;
+  changeVolume($event: Event, user: UserInCall): void {
+    const volume = parseInt(($event.target as HTMLInputElement).value, 10);
+    user.volume = volume;
+    (user.node.instance.audioStreamNode.nativeElement as HTMLAudioElement).volume = volume;
   }
 
-  unmute(user: UserInCall) {
+  unmute(user: UserInCall): void {
     user.volume = 1;
     (user.node.instance.audioStreamNode.nativeElement as HTMLAudioElement).volume = 1;
   }
-  
-  mute(user: UserInCall) {
+
+  mute(user: UserInCall): void {
     user.volume = 0;
     (user.node.instance.audioStreamNode.nativeElement as HTMLAudioElement).volume = 0;
   }

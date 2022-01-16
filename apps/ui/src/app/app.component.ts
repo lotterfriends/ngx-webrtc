@@ -13,7 +13,7 @@ import { UserStorageService } from './services/user-storage.service';
 })
 export class AppComponent {
   public showJoin = true;
-  public showChat= false;
+  public showChat = false;
   public roomName = this.genRoom();
   public uiShowUserlist = UiService.DEFAULTS.USERLIST_VISIBLE;
   public uiShowChat = UiService.DEFAULTS.CHAT_VISIBLE;
@@ -22,7 +22,7 @@ export class AppComponent {
   @ViewChild('videoChat') private videoChatComponent!: VideoChatComponent;
   @ViewChild('room', { static: false }) room: ElementRef;
 
-  @HostListener('window:popstate', ['$event']) popsate(_event) {
+  @HostListener('window:popstate', ['$event']) popsate(): void {
     if (location.pathname && location.pathname.length > 6) {
       this.roomName = location.pathname.substring(1);
       this.join();
@@ -71,7 +71,7 @@ export class AppComponent {
     // start when connected
     this.socketService.isConnected.subscribe((connected: boolean) => {
       if (connected) {
-        let user = this.userStorageService.getCurrentUser();
+        const user = this.userStorageService.getCurrentUser();
         if (user) {
           this.socketService.refresh(user);
         } else {
@@ -81,7 +81,7 @@ export class AppComponent {
     });
   }
 
-  private shouldJoin() {
+  private shouldJoin(): void {
     if (location.pathname && location.pathname.length > 6) {
       this.roomName = location.pathname.substring(1);
       this.join();
@@ -115,7 +115,7 @@ export class AppComponent {
 
 
     // update url
-    history.pushState({room: room}, `room ${room}`, `${room}`);
+    history.pushState({room}, `room ${room}`, `${room}`);
 
   }
 
@@ -129,7 +129,7 @@ export class AppComponent {
     console.clear();
   }
 
-  toggleFullscreen() {
+  toggleFullscreen(): void {
     if (this.room.nativeElement) {
       if (window.innerHeight !== screen.height) {
         this.room.nativeElement.requestFullscreen();
