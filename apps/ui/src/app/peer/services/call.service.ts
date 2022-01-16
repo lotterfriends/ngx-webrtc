@@ -38,12 +38,12 @@ export class CallService {
 
   constructor() { }
 
-  updateSince() {
+  updateSince(): void {
     this.since = Date.now();
     sessionStorage.setItem('since', `${this.since}`);
   }
 
-  getSince() {
+  getSince(): number {
     if (!this.since && sessionStorage.getItem('since')) {
       this.since = parseInt(sessionStorage.getItem('since'), 10);
     }
@@ -51,7 +51,7 @@ export class CallService {
   }
 
 
-  public addUser(user: User, connection: PeerConnectionClient, node: ComponentRef<RemotePeerComponentInterface>) {
+  public addUser(user: User, connection: PeerConnectionClient, node: ComponentRef<RemotePeerComponentInterface>): void {
     const users = this.getUsers();
     users.push({
       user,
@@ -67,49 +67,49 @@ export class CallService {
     this.users$.next(users);
   }
 
-  public removeUser(user: User) {
+  public removeUser(user: User): void {
     let users = this.getUsers();
     users = users.filter(e => e.user[this.identifier] !== user[this.identifier]);
     this.users$.next(users);
   }
 
-  public userHasCam(user: User) {
+  public userHasCam(user: User): void {
     const users = this.getUsers();
     this.findUser(users, user).hasCam = true;
     this.users$.next(users);
   }
 
-  public userHasMic(user: User) {
+  public userHasMic(user: User): void {
     const users = this.getUsers();
     this.findUser(users, user).hasMic = true;
     this.users$.next(users);
   }
 
-  public userAudioMuted(user: User) {
+  public userAudioMuted(user: User): void {
     const users = this.getUsers();
     this.findUser(users, user).audioMuted = true;
     this.users$.next(users);
   }
 
-  public userAudioUnmuted(user: User) {
+  public userAudioUnmuted(user: User): void {
     const users = this.getUsers();
     this.findUser(users, user).audioMuted = false;
     this.users$.next(users);
   }
 
-  public userVideoMuted(user: User) {
+  public userVideoMuted(user: User): void {
     const users = this.getUsers();
     this.findUser(users, user).videoMuted = true;
     this.users$.next(users);
   }
 
-  public userVideoUnmuted(user: User) {
+  public userVideoUnmuted(user: User): void {
     const users = this.getUsers();
     this.findUser(users, user).videoMuted = false;
     this.users$.next(users);
   }
 
-  public userStartShareScreen(user: User) {
+  public userStartShareScreen(user: User): void {
     const users = this.getUsers();
     const currentUser = this.findUser(users, user);
     if (currentUser) {
@@ -118,7 +118,7 @@ export class CallService {
     }
   }
 
-  public userStopShareScreen(user: User) {
+  public userStopShareScreen(user: User): void {
     const users = this.getUsers();
     const currentUser = this.findUser(users, user);
     if (currentUser) {

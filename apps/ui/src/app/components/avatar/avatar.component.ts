@@ -21,8 +21,10 @@ export class AvatarComponent implements OnInit {
     }
     for (let i = 0, len = text.length; i < len; i++) {
       const chr = text.charCodeAt(i);
+      /* tslint:disable:no-bitwise */
       hash = ((hash << 5) - hash) + chr;
       hash |= 0; // Convert to 32bit integer
+      /* tslint:enable:no-bitwise */
     }
     return 'hsl(' + ((hash % 360) * 15) + sl[Math.abs(parseInt(`${hash / 360}`, 10) % sl.length)] + ')';
   }

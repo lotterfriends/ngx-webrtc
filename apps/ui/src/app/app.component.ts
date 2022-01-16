@@ -84,7 +84,7 @@ export class AppComponent {
   private shouldJoin(): void {
     if (location.pathname && location.pathname.length > 6) {
       this.roomName = location.pathname.substring(1);
-      this.join();
+      this.join(null, true);
     }
   }
 
@@ -100,8 +100,13 @@ export class AppComponent {
     this.roomName = this.genRoom();
   }
 
-  public join(roomName?: string): void {
+  public join(roomName?: string, ask = false): void {
     const room = roomName ? roomName : this.roomName;
+    // with asking we can prevent that users join on the same time (watch mode with automatic reload)
+    // when users join on the same time it's unclear who is initiator
+    if (ask && !confirm(`do you want to join room "${this.roomName}"`)) {
+      location.href = location.origin;
+    }
     this.channelHistoryService.addChannelToHistory(room);
     // update ui
     this.showChat = true;
@@ -112,7 +117,6 @@ export class AppComponent {
     setTimeout(() => {
       this.videoChatComponent.startCall(this.servers);
     });
-
 
     // update url
     history.pushState({room}, `room ${room}`, `${room}`);

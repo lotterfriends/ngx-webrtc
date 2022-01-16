@@ -13,6 +13,9 @@ import { RemotePeerComponent } from './remote-peer/remote-peer.component';
 import { CallService } from 'src/app/peer/services/call.service';
 import { UiService, ViewMode } from 'src/app/services/ui.service';
 
+/**
+ * This is an example implementation of an video chat
+ */
 @UntilDestroy()
 @Component({
   selector: 'app-video-chat',
@@ -20,6 +23,36 @@ import { UiService, ViewMode } from 'src/app/services/ui.service';
   styleUrls: ['./video-chat.component.css']
 })
 export class VideoChatComponent implements OnInit, AfterViewInit {
+
+  private debug = true;
+  public pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
+  public viewMode = UiService.DEFAULTS.VIEW_MODE;
+  private localStream: MediaStream;
+  public localVideoEnabled = false;
+  private isInitiator = false;
+  private self: string;
+  private users: User[];
+  private identifier: string = this.callService.getUserIdentifier();
+  private sizing = {
+    margin: 10,
+    ratios: ['4:3', '16:9', '1:1', '1:2'],
+    selectedRatioIndex: 0,
+    ratio: () => {
+      const ratio = this.sizing.ratios[this.sizing.selectedRatioIndex].split(':');
+      return parseInt(ratio[1], 10) / parseInt(ratio[0], 10);
+    }
+  };
+
+  @Input() room!: string;
+  @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
+  @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
+  @ViewChild('holder', { static: false }) public holder: ElementRef;
+  @HostListener('window:resize') public onWinResize(): void {
+    this.resize();
+  }
+  @HostListener('window:beforeunload') onClose(): void {
+    this.stopCall();
+  }
 
   constructor(
     private userStorageService: UserStorageService,
@@ -31,47 +64,12 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     private injector: Injector,
     private callService: CallService,
     private uiService: UiService
-  ) {
-  }
+  ) {}
 
-  @Input() room!: string;
-  @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
-  @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
-  @ViewChild('holder', { static: false }) public holder: ElementRef;
 
-  private debug = true;
-  public pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
-  public viewMode = UiService.DEFAULTS.VIEW_MODE;
-  private localStream: MediaStream;
-  public localVideoEnabled = false;
-  private isInitiator = false;
-  private self;
-  private users;
-  private sizing = {
-    margin: 10,
-    ratios: ['4:3', '16:9', '1:1', '1:2'],
-    selectedRatioIndex: 0,
-    ratio: () => {
-      const ratio = this.sizing.ratios[this.sizing.selectedRatioIndex].split(':');
-      return parseInt(ratio[1], 10) / parseInt(ratio[0], 10);
-    }
-  };
-
-  @HostListener('window:beforeunload', ['$event'])
-  onClose(): void {
-    this.stopCall();
-  }
   ngAfterViewInit(): void {
-    this.uiService.isChatVisible$.pipe(
-      untilDestroyed(this)
-    ).subscribe(() => {
-      this.resize();
-    });
-    this.uiService.isUserlistVisible$.pipe(
-      untilDestroyed(this)
-    ).subscribe(() => {
-      this.resize();
-    });
+    this.uiService.isChatVisible$.pipe(untilDestroyed(this)).subscribe(this.resize.bind(this));
+    this.uiService.isUserlistVisible$.pipe(untilDestroyed(this)).subscribe(this.resize.bind(this));
   }
 
   ngOnInit(): void {
@@ -95,6 +93,8 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
       }
     });
 
+    // send stream events to peers
+
     this.streamService.localAudioStreamStatusChanged.pipe(
       untilDestroyed(this),
     ).subscribe(localAudioEnabled => {
@@ -111,6 +111,28 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
           localVideoEnabled ? e.connection.videoUnmuted() : e.connection.videoMuted();
         });
     });
+
+    // change audio output
+    this.streamService.audioOutput$.pipe(
+    untilDestroyed(this),
+      filter(e => e !== null)
+    ).subscribe(deviceId => {
+      this.pclients.forEach(async client => {
+        await client.component?.instance?.audioStreamNode?.nativeElement?.setSinkId(deviceId);
+      });
+    });
+
+    this.streamService.replaceTrack$.pipe(
+      untilDestroyed(this),
+      filter(e => e !== null)
+    ).subscribe((track) => {
+      this.log('replaceTrack', track);
+      this.pclients.forEach(async client => {
+        client.connection.replaceTrack(track);
+      });
+    });
+
+    // send call events to peers
 
     this.callService.startShareScreen.pipe(
       untilDestroyed(this),
@@ -167,7 +189,8 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
   }
 
   private filterConnectedUsers(user: User): boolean {
-    return user.name !== this.self && !this.pclients.map(e => e.user.name).includes(user.name);
+    return user[this.identifier] !== this.self &&
+      !this.pclients.map(e => e.user[this.identifier]).includes(user[this.identifier]);
   }
 
   private async onUserJoined(users: User[]): Promise<void> {
@@ -204,7 +227,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     this.log('onUserLeft', user);
     if (user.name !== this.self) {
       this.callService.removeUser(user);
-      const entry = this.pclients.find(e => e.user.name === user.name);
+      const entry = this.pclients.find(e => e.user[this.identifier] === user[this.identifier]);
       if (entry?.component?.instance?.audioStreamNode) {
         this.streamService.stopStreamInNode(entry.component.instance.audioStreamNode);
       }
@@ -219,7 +242,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
         entry.component.destroy();
       }
       this.log(this.pclients);
-      this.pclients = this.pclients.filter(e => e.user.name !== user.name);
+      this.pclients = this.pclients.filter(e => e.user[this.identifier] !== user[this.identifier]);
       this.log(this.pclients);
 
       // everyone else left, now I'm the initiator
@@ -230,7 +253,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  async addPeer(user: User, component: ComponentRef<RemotePeerComponent>): Promise<PeerConnectionClient> {
+  private async addPeer(user: User, component: ComponentRef<RemotePeerComponent>): Promise<PeerConnectionClient> {
     this.log('addPeer', user, component);
     const pclient = await this.callService.createPeerClient();
     // add media
@@ -242,24 +265,6 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     pclient.signalingMessage.subscribe(m => {
       // this.log(m);
       this.socketService.sendSignalMessage(m, user.name);
-    });
-
-    this.streamService.replaceTrack$.pipe(
-      untilDestroyed(this),
-      filter(e => e !== null)
-    ).subscribe((track) => {
-      this.log('replaceTrack', track);
-      pclient.replaceTrack(track);
-    });
-
-    // change audio output
-    this.streamService.audioOutput$.pipe(
-      untilDestroyed(this),
-      filter(e => e !== null)
-    ).subscribe(deviceId => {
-      this.pclients.forEach(async client => {
-        await client.component?.instance?.audioStreamNode?.nativeElement?.setSinkId(deviceId);
-      });
     });
 
     pclient.remoteStreamAdded.pipe(
@@ -318,7 +323,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     return pclient;
   }
 
-  startPeerConnection(pclient: PeerConnectionClient, user: User): void {
+  private startPeerConnection(pclient: PeerConnectionClient, user: User): void {
     if (this.isInitiator) {
       pclient.startAsCaller();
       this.log('start as caller', user);
@@ -333,8 +338,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-
-  stopCall(): void {
+  public stopCall(): void {
     this.callService.users$.next([]);
     this.streamService.stopStreamInNode(this.localStreamNode);
     this.streamService.setLocalStream(null);
@@ -349,30 +353,25 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     this.callService.stop();
   }
 
-  async getRemotePeerFactory(): Promise<ComponentFactory<RemotePeerComponent>> {
+  private async getRemotePeerFactory(): Promise<ComponentFactory<RemotePeerComponent>> {
     return this.cfr.resolveComponentFactory(RemotePeerComponent);
   }
 
-  async createRemotePeerComponent(): Promise<ComponentRef<RemotePeerComponent>> {
+  private async createRemotePeerComponent(): Promise<ComponentRef<RemotePeerComponent>> {
     const factory = await this.getRemotePeerFactory();
     const component = this.remotePeerHolder.createComponent(factory, null, this.injector);
     this.changeDetectorRef.detectChanges();
     return component;
   }
 
-  @HostListener('window:resize')
-  public onWinResize(): void {
-    this.resize();
-  }
-
-  dimensions(): {holderWidth: number, holderHeight: number } {
+  private dimensions(): {holderWidth: number, holderHeight: number } {
     return {
       holderWidth: this.holder.nativeElement.offsetWidth - (this.sizing.margin * 2),
       holderHeight: this.holder.nativeElement.offsetHeight - (this.sizing.margin * 2)
     };
   }
 
-  resizer(width: number): void {
+  private resizer(width: number): void {
     const components = this.pclients.map(e => e.component);
     for (const child of components) {
       const node: HTMLElement = child.instance.elementRef.nativeElement;
@@ -383,7 +382,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  area(holderWidth: number, holderHeight: number, increment: number): number | false {
+  private area(holderWidth: number, holderHeight: number, increment: number): number | false {
     let elementWidth = 0;
     let elementHeight = increment * this.sizing.ratio() + (this.sizing.margin * 2);
     [...this.holder.nativeElement.children].forEach((): void => {
@@ -396,7 +395,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     return (elementHeight > holderHeight || increment > holderWidth) ? false : increment;
   }
 
-  resize(): void {
+  private resize(): void {
     setTimeout(() => {
       if (this.viewMode === ViewMode.Grid) {
         this.resizeGrid();
@@ -406,7 +405,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     });
   }
 
-  resizeGrid(): void {
+  private resizeGrid(): void {
     this.log('resizeGrid');
     const {holderWidth, holderHeight} = this.dimensions();
     let max = 0;
@@ -422,7 +421,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     this.resizer(max);
   }
 
-  removeSize(): void {
+  private removeSize(): void {
     this.log('removeSize');
     const components = this.pclients.map(e => e.component);
     for (const child of components) {
@@ -434,7 +433,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     }
   }
 
-  log(...args: any[]): void {
+  private log(...args: any[]): void {
     if (this.debug) {
       console.log(...args);
     }
