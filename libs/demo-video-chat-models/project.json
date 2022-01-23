@@ -1,0 +1,15 @@
+{
+  "root": "libs/demo-video-chat-models",
+  "sourceRoot": "libs/demo-video-chat-models/src",
+  "projectType": "library",
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/demo-video-chat-models/**/*.ts"]
+      }
+    }
+  },
+  "tags": []
+}

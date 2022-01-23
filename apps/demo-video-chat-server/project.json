@@ -1,0 +1,52 @@
+{
+  "root": "apps/demo-video-chat-server",
+  "sourceRoot": "apps/demo-video-chat-server/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:build",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/demo-video-chat-server",
+        "main": "apps/demo-video-chat-server/src/main.ts",
+        "tsConfig": "apps/demo-video-chat-server/tsconfig.app.json",
+        "assets": ["apps/demo-video-chat-server/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/demo-video-chat-server/src/environments/environment.ts",
+              "with": "apps/demo-video-chat-server/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:execute",
+      "options": {
+        "buildTarget": "demo-video-chat-server:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/demo-video-chat-server/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/demo-video-chat-server"],
+      "options": {
+        "jestConfig": "apps/demo-video-chat-server/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

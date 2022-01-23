@@ -1,0 +1,91 @@
+:host {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  justify-content: space-around;
+}
+
+.hidden {
+  display: none;
+}
+
+.start {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.start-join {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  font-size: 30px;
+}
+
+.start-join-room {
+  margin-bottom: 1em;
+}
+
+.start-join-room button {  
+  margin-left: .5em;
+}
+
+.start-history {
+  margin-top: 1em;
+}
+
+.start-history ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.start-history ul li {
+  margin-bottom: .5em;
+}
+
+.start-history ul li:last-of-type {
+  margin-bottom: 0;
+}
+
+.room {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  justify-content: space-between;
+}
+
+.room .room-chat {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.room .room-sidebar {
+  border-left: 1px solid #323232;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 250px;
+  height: 100%;
+  overflow: hidden;
+}
+
+.room .room-sidebar ngx-webrtc-userlist {
+  flex-shrink: 3;
+}
+
+.room .room-sidebar ngx-webrtc-text-chat {
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+ngx-webrtc-controls {
+  position: fixed;
+  bottom: 3em;
+  left: 50%;
+  transform: translateX(-50%);
+}

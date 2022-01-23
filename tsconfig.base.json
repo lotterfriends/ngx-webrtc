@@ -1,13 +1,24 @@
 {
-    "compilerOptions": {
-        "baseUrl": "./",
-        "rootDir": ".", 
-        "paths": {
-            "@models": ["./libs/models/index.ts"],
-        },
-    },
-    "include": [
-        "./libs/**/*",
-        "./apps/**/*"
-    ]
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2017", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@ngx-webrtc/demo-video-chat-models": [
+        "libs/demo-video-chat-models/src/index.ts"
+      ]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
 }

@@ -1,0 +1,35 @@
+<section class="start" *ngIf="showJoin">
+
+  <div class="start-join">
+
+    <div class="start-join-room">
+      <input (keydown.enter)="join()" [(ngModel)]="roomName" type="text" placeholder="Room Name" />
+      <button (click)="newRoom()">⟳</button>
+    </div>
+    
+    <div>
+      <button (click)="join()">join</button>
+    </div>
+
+  </div>
+
+  <div class="start-history" *ngIf="(channelHistoryService.history$ | async) as history">
+    <ul>
+      <li *ngFor="let entry of history"><a href="javascript: void  0" (click)="join(entry)">{{entry}}</a></li>
+    </ul>
+  </div>
+
+</section>
+
+<section class="room" *ngIf="roomName?.length && showChat" #room>
+  <div class="room-chat">
+    <!-- <div>Room: {{roomName}}</div> -->
+    <ngx-webrtc-video-chat #videoChat [room]="roomName">
+      <ngx-webrtc-controls (fullscreen)="toggleFullscreen()" (leave)="leave()"></ngx-webrtc-controls>
+    </ngx-webrtc-video-chat>
+  </div>
+  <div class="room-sidebar" *ngIf="uiShowUserlist || uiShowChat">
+    <ngx-webrtc-userlist *ngIf="uiShowUserlist"></ngx-webrtc-userlist>
+    <ngx-webrtc-text-chat *ngIf="uiShowChat" #textChat [room]="roomName"></ngx-webrtc-text-chat>
+  </div>
+</section>

@@ -1,0 +1,98 @@
+{
+  "projectType": "application",
+  "root": "apps/demo-video-chat-client",
+  "sourceRoot": "apps/demo-video-chat-client/src",
+  "prefix": "ngx-webrtc",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/demo-video-chat-client",
+        "index": "apps/demo-video-chat-client/src/index.html",
+        "main": "apps/demo-video-chat-client/src/main.ts",
+        "polyfills": "apps/demo-video-chat-client/src/polyfills.ts",
+        "tsConfig": "apps/demo-video-chat-client/tsconfig.app.json",
+        "assets": [
+          "apps/demo-video-chat-client/src/favicon.ico",
+          "apps/demo-video-chat-client/src/assets"
+        ],
+        "styles": [
+          "node_modules/normalize.css/normalize.css",
+          "apps/demo-video-chat-client/src/styles.css"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/demo-video-chat-client/src/environments/environment.ts",
+              "with": "apps/demo-video-chat-client/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "demo-video-chat-client:build:production"
+        },
+        "development": {
+          "browserTarget": "demo-video-chat-client:build:development",
+          "port": 4400,
+          "proxyConfig": "apps/demo-video-chat-client/proxy.conf.json"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "demo-video-chat-client:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/demo-video-chat-client/src/**/*.ts",
+          "apps/demo-video-chat-client/src/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/demo-video-chat-client"],
+      "options": {
+        "jestConfig": "apps/demo-video-chat-client/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}

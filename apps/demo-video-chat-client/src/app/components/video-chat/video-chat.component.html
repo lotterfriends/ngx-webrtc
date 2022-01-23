@@ -1,0 +1,12 @@
+
+<div class="conference remote-peer-{{pclients.length}}" [class.remote-peer-x]="pclients.length">
+  <div class="video-chat-remote-peer-holder view-mode-{{viewMode}}" #holder>
+    <ng-container #remotePeerHolder></ng-container>
+  </div>
+</div>
+
+<div class="video-chat-self-holder" [class.hide]="!localVideoEnabled">
+  <video id="localStreamNode" class="mirror" playsinline muted #localStreamNode></video>
+</div>
+<ng-content></ng-content>
+<ngx-webrtc-video-chat-settings-dialog></ngx-webrtc-video-chat-settings-dialog>

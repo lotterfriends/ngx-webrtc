@@ -1,0 +1,9 @@
+
+<div class="peer" *ngIf="user" (click)="fit=!fit" [ngClass]="fit ? 'fit' : 'not-fit'">
+  <video [class.hide]="!user.hasCam || user.videoMuted" (loadedmetadata)="setSize($event)" id="videoStreamNode" playsinline #videoStreamNode></video>
+  <audio #audioStreamNode></audio>
+  <span class="name">{{user.user.name}}</span>
+  <div [class.hide]="user.hasCam && !user.videoMuted" class="no-video">
+    <ngx-webrtc-avatar  [name]="user.user.name"></ngx-webrtc-avatar>
+  </div>
+</div>
