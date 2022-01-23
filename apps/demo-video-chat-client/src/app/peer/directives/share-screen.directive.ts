@@ -11,10 +11,10 @@ import { StreamService } from '../services/stream.service';
 })
 export class ShareScreenDirective {
 
-  private desktopStream: MediaStream;
+  private desktopStream: MediaStream | null = null;
   @HostBinding('class.disabled') public isDisabled = true;
   @HostBinding('class.enabled') public isEnabled = false;
-  @HostListener('click', ['$event']) async onClick($event): Promise<void>{
+  @HostListener('click', ['$event']) async onClick(): Promise<void>{
     if (!this.isEnabled) {
       await this.startShareScreen();
     } else {
@@ -33,7 +33,12 @@ export class ShareScreenDirective {
 
     if (this.desktopStream) {
       this.streamService.localShareScreenStream$.next(this.desktopStream);
-      this.streamService.replaceTrack(this.streamService.getVideoTrackForStream(this.desktopStream));
+      const desktopVideoTrack = this.streamService.getVideoTrackForStream(this.desktopStream);
+      if (desktopVideoTrack) {
+        this.streamService.replaceTrack(desktopVideoTrack);
+      } else {
+        console.warn('no videotrack in desktop stream');
+      }
       const streamInactive$ = fromEvent(this.desktopStream, 'inactive').pipe(take(1));
       const sharingStopped$ = fromEvent(this.desktopStream.getVideoTracks()[0], 'ended').pipe(take(1));
 
@@ -57,7 +62,12 @@ export class ShareScreenDirective {
 
   private stopShareScreen(): void {
     this.streamService.localShareScreenStream$.next(null);
-    this.streamService.replaceTrack(this.streamService.getVideoTrackForStream(this.streamService.getLocalStream()));
+    const videoTrack = this.streamService.getVideoTrackForStream();
+    if (videoTrack) {
+      this.streamService.replaceTrack(videoTrack);
+    } else {
+      console.warn('video track not found');
+    }
     if (this.desktopStream) {
       this.desktopStream.getTracks().forEach(track => {
         track.stop();

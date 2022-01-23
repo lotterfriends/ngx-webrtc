@@ -1,6 +1,4 @@
-import { Message } from "../../../../libs/models/message";
-import { MessageType } from "../../../../libs/models/message-type";
-import { ServerMessage } from "../../../../libs/models/server-message";
+import { Message, MessageType,ServerMessage } from "@ngx-webrtc/demo-video-chat-models";
 
 export class MessageStorageService {
   private static instance: MessageStorageService;

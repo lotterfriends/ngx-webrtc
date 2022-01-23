@@ -1,5 +1,4 @@
-import { ServerUser } from "../../../../libs/models/server-user";
-import { User } from "../../../../libs/models/user";
+import { ServerUser, User } from "@ngx-webrtc/demo-video-chat-models";
 
 export class UserStorageService {
   private static instance: UserStorageService;

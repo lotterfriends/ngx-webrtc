@@ -22,7 +22,11 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   private hasStream = false;
   private showVideoSettingsDialogInternal = UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE;
-  private onDeviceChangeListener;
+  private onDeviceChangeListener: EventListener = () => {
+    if (this.hasStream) {
+      this.initDeviceList();
+    }
+  }
   public set showVideoSettingsDialog(value){
     if (this.showVideoSettingsDialogInternal !== value && !value) {
       this.uiService.hideVideoSettingsDialog();
@@ -57,11 +61,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
     ).subscribe(this.initDeviceList.bind(this));
 
     // not possible with HostListener
-    this.onDeviceChangeListener = navigator.mediaDevices.addEventListener('devicechange', () => {
-      if (this.hasStream) {
-        this.initDeviceList();
-      }
-    });
+    navigator.mediaDevices.addEventListener('devicechange', this.onDeviceChangeListener);
   }
 
   ngOnDestroy(): void {
@@ -110,10 +110,16 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
     const stream = this.streamService.getLocalStream();
     if (stream) {
       if (kind === DeviceType.VideoInput && this.streamService.hasVideo) {
-        return this.streamService.getVideoTrackForStream(this.streamService.getLocalStream()).getSettings().deviceId === device.deviceId;
+        const track = this.streamService.getVideoTrackForStream(stream);
+        if (track) {
+          return track.getSettings().deviceId === device.deviceId;
+        }
       }
       if (kind === DeviceType.AudioInput && this.streamService.hasAudio) {
-        return this.streamService.getAudioTrackForStream(this.streamService.getLocalStream()).getSettings().deviceId === device.deviceId;
+        const track = this.streamService.getAudioTrackForStream(stream);
+        if (track) {
+          return track.getSettings().deviceId === device.deviceId;
+        } 
       }
     }
     return false;
@@ -126,8 +132,13 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
         deviceId
       }}).then((stream) => {
         const track = this.streamService.getVideoTrackForStream(stream);
-        this.streamService.replaceTrack(track);
-        this.streamService.replaceTrackInStream(this.streamService.getLocalStream(), track);
+        if (track) {
+          this.streamService.replaceTrack(track);
+        }
+        const currentStream = this.streamService.getLocalStream();
+        if (currentStream && track) {
+          this.streamService.replaceTrackInStream(currentStream, track);
+        }
       }, console.error);
     }
     if (kind === DeviceType.AudioInput) {
@@ -135,8 +146,13 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
         deviceId
       }}).then((stream) => {
         const track = this.streamService.getAudioTrackForStream(stream);
-        this.streamService.replaceTrack(track);
-        this.streamService.replaceTrackInStream(this.streamService.getLocalStream(), track);
+        if(track) {
+          this.streamService.replaceTrack(track);
+        }
+        const currentStream = this.streamService.getLocalStream();
+        if (currentStream && track) {
+          this.streamService.replaceTrackInStream(currentStream, track);
+        }
       }, console.error);
     }
     if (kind === DeviceType.AudioOutput) {

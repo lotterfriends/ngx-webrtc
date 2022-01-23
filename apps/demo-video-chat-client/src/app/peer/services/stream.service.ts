@@ -10,10 +10,10 @@ export class StreamService {
   constructor() { }
 
 
-  public localStream$ = new BehaviorSubject<MediaStream>(null);
-  public localShareScreenStream$ = new BehaviorSubject<MediaStream>(null);
-  public replaceTrack$ = new BehaviorSubject<MediaStreamTrack>(null);
-  public audioOutput$ = new BehaviorSubject<string>(null);
+  public localStream$ = new BehaviorSubject<MediaStream | null>(null);
+  public localShareScreenStream$ = new BehaviorSubject<MediaStream | null>(null);
+  public replaceTrack$ = new BehaviorSubject<MediaStreamTrack | null>(null);
+  public audioOutput$ = new BehaviorSubject<string | null>(null);
   public localStreamStatusChanged = new EventEmitter<MediaStream | MediaStreamTrack>();
   public localAudioStreamStatusChanged = new EventEmitter<boolean>();
   public localVideoStreamStatusChanged = new EventEmitter<boolean>();
@@ -107,11 +107,11 @@ export class StreamService {
     stream?.addTrack(track);
   }
 
-  public setLocalStream(stream: MediaStream): void {
+  public setLocalStream(stream: MediaStream | null): void {
     this.localStream$.next(stream);
   }
 
-  public getLocalStream(): MediaStream {
+  public getLocalStream(): MediaStream | null {
     return this.localStream$.getValue();
   }
 
@@ -120,31 +120,49 @@ export class StreamService {
   }
 
   public toggleMuteLocalAudioStream(): void {
-    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio);
+    const stream = this.localStream$.getValue();
+    if (stream) {
+      this.toggleMuteStream(stream, StreamType.Audio);
+    }
   }
 
   public muteLocalAudioStream(): void {
-    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio, false);
+    const stream = this.localStream$.getValue();
+    if (stream) {
+      this.toggleMuteStream(stream, StreamType.Audio, false);
+    }
   }
 
   public unmuteLocalAudioStream(): void {
-    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Audio, true);
+    const stream = this.localStream$.getValue();
+    if (stream) {
+      this.toggleMuteStream(stream, StreamType.Audio, true);
+    }
   }
 
   public toggleMuteLocalVideoStream(): void {
-    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video);
+    const stream = this.localStream$.getValue();
+    if (stream) {
+      this.toggleMuteStream(stream, StreamType.Video);
+    }
   }
 
   public muteLocalVideoStream(): void {
-    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video, false);
+    const stream = this.localStream$.getValue();
+    if (stream) {
+      this.toggleMuteStream(stream, StreamType.Video, false);
+    }
   }
 
   public unmuteLocalVideoStream(): void {
-    this.toggleMuteStream(this.localStream$.getValue(), StreamType.Video, true);
+    const value = this.localStream$.getValue();
+    if (value) {
+      this.toggleMuteStream(value, StreamType.Video, true);
+    }
   }
 
   async getScreenCapture(): Promise<MediaStream | null> {
-    let stream: MediaStream = null;
+    let stream: MediaStream | null = null;
     try {
       const n: any = navigator;
       if (n.getDisplayMedia) {
@@ -160,12 +178,18 @@ export class StreamService {
     return stream;
   }
 
-  public getVideoTrackForStream(stream: MediaStream): MediaStreamTrack {
-    return stream?.getVideoTracks()[0];
+  public getVideoTrackForStream(stream?: MediaStream): MediaStreamTrack | null {
+    if (!stream && this.getLocalStream()) {
+      stream = this.getLocalStream() as MediaStream;
+    }
+    return stream?.getVideoTracks()[0] || null;
   }
 
-  public getAudioTrackForStream(stream: MediaStream): MediaStreamTrack {
-    return stream?.getAudioTracks()[0];
+  public getAudioTrackForStream(stream?: MediaStream): MediaStreamTrack | null {
+    if (!stream && this.getLocalStream()) {
+      stream = this.getLocalStream() as MediaStream;
+    }
+    return stream?.getAudioTracks()[0] || null;
   }
 
   public getMediaDevices(): Promise<MediaDeviceInfo[]> {
@@ -176,7 +200,8 @@ export class StreamService {
     this.audioOutput$.next(deviceId);
   }
 
-  public tryGetUserMedia() {
+  // TODO: refactor
+  public tryGetUserMedia(): Promise<MediaStream> {
     const mediaConstraints = {
       audio: true,
       video: true

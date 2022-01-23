@@ -1,6 +1,6 @@
 import { Request, Response, Router } from "express";
 import { createHmac } from "crypto";
-import { MessageType, ServerUser } from "../../../libs/models";
+import { MessageType, ServerUser } from "@ngx-webrtc/demo-video-chat-models";
 
 import { UserStorageService } from "./services/user-storage.service";
 import { MessageStorageService } from "./services/message-storage.service";

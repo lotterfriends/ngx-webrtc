@@ -3,6 +3,7 @@ import { BehaviorSubject, Subject } from 'rxjs';
 import { SdpUtils } from './sdp-utils';
 
 export interface SdpSettings {
+  audioSendCodec?: string;
   videoSendCodec?: string;
   videoRecvCodec?: string;
   audioRecvCodec?: string;
@@ -75,7 +76,7 @@ export class PeerConnectionClient {
   private id = this.getRandom(6);
   public signalingMessage = new EventEmitter<PeerConnectionClientSignalMessage>();
   public seeNewCandidate$ = new BehaviorSubject<{location: string, candidate: string} | null>(null);
-  public remoteStreamAdded = new EventEmitter<StreamTrack>(null);
+  public remoteStreamAdded = new EventEmitter<StreamTrack>();
   public signalState$ = new BehaviorSubject<RTCSignalingState | null>(null);
   public error$ = new BehaviorSubject<{source: string, error?: Error} | null>(null);
   public useShareScreen$ = new BehaviorSubject<boolean>(false);
@@ -282,9 +283,11 @@ export class PeerConnectionClient {
     this.log(track);
     if (this.connection) {
       const sender = this.connection.getSenders().find((s) => {
-        return s.track.kind === track.kind;
+        return s?.track?.kind === track.kind;
       });
-      sender.replaceTrack(track);
+      if (sender) {
+        sender.replaceTrack(track);
+      }
     }
   }
 

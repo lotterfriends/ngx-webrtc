@@ -44,8 +44,10 @@ export class ToggleAudioSelfDirective {
         this.updateStatusWithTrack(stream);
       }
       if (stream instanceof MediaStream && stream.getAudioTracks().length) {
-        const track = this.streamService.getAudioTrackForStream(stream); 
-        this.updateStatusWithTrack(track);
+        const track = this.streamService.getAudioTrackForStream(stream);
+        if (track) {
+          this.updateStatusWithTrack(track);
+        }
       }
     }
   }

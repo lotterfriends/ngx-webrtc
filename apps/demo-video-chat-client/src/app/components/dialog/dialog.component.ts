@@ -10,7 +10,7 @@ export class DialogComponent implements OnInit {
 
   constructor() { }
   @Input() show = false;
-  @Input() title: string;
+  @Input() title: string = '';
   @Output() showChange = new EventEmitter<boolean>();
   ngOnInit(): void {
   }

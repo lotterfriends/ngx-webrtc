@@ -12,8 +12,9 @@ export class ChannelHistoryService {
 
   get history(): string[] {
     if (!this.historyInternal) {
-      if (sessionStorage.getItem('history')) {
-        this.historyInternal = JSON.parse(sessionStorage.getItem('history')) as string[];
+      const sessionStorageHistory = sessionStorage.getItem('history');
+      if (sessionStorageHistory) {
+        this.historyInternal = JSON.parse(sessionStorageHistory) as string[];
       } else {
         this.historyInternal = [];
       }

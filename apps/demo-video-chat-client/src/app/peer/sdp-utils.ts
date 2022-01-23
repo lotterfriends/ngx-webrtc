@@ -226,6 +226,9 @@ export class  SdpUtils {
       return sdp;
     }
     const redPayloadType = SdpUtils.getCodecPayloadTypeFromLine(sdpLines[index]);
+    if (redPayloadType === null) {
+      return sdp;
+    }
     sdpLines = SdpUtils.removeCodecByPayloadType(sdpLines, redPayloadType);
     sdpLines = SdpUtils.removeCodecByName(sdpLines, 'ulpfec');
 
@@ -235,8 +238,8 @@ export class  SdpUtils {
       return sdp;
     }
     const fmtpLine = SdpUtils.parseFmtpLine(sdpLines[index]);
-    const rtxPayloadType = fmtpLine.pt;
-    if (rtxPayloadType === null) {
+    const rtxPayloadType = fmtpLine?.pt;
+    if (!rtxPayloadType || rtxPayloadType === null) {
       return sdp;
     }
     sdpLines.splice(index, 1);
@@ -246,7 +249,7 @@ export class  SdpUtils {
   }
 
   // Promotes |audioSendCodec| to be the first in the m=audio line, if set.
-  public static maybePreferAudioSendCodec(sdp: string, params): string {
+  public static maybePreferAudioSendCodec(sdp: string, params: SdpSettings): string {
     return SdpUtils.maybePreferCodec(sdp, 'audio', 'send', params.audioSendCodec);
   }
 
@@ -314,21 +317,32 @@ export class  SdpUtils {
 
     const fmtpLineIndex = SdpUtils.findFmtpLine(sdpLines, codec);
 
-    let fmtpObj: {pt?: string, params?: {[key: string]: string}} = {};
+    let fmtpObj: {pt: string, params: {[key: string]: string}} | null = {pt: '', params: {}}
     if (fmtpLineIndex === null) {
       const index = SdpUtils.findLine(sdpLines, 'a=rtpmap', codec);
       if (index === null) {
         return sdp;
       }
       const payload = SdpUtils.getCodecPayloadTypeFromLine(sdpLines[index]);
+      if (payload === null) {
+        return sdp;
+      }
       fmtpObj.pt = payload.toString();
       fmtpObj.params = {};
       fmtpObj.params[param] = value;
-      sdpLines.splice(index + 1, 0, SdpUtils.writeFmtpLine(fmtpObj));
+      const result = SdpUtils.writeFmtpLine(fmtpObj);
+      if (result) {
+        sdpLines.splice(index + 1, 0, result);
+      }
     } else {
       fmtpObj = SdpUtils.parseFmtpLine(sdpLines[fmtpLineIndex]);
-      fmtpObj.params[param] = value;
-      sdpLines[fmtpLineIndex] = SdpUtils.writeFmtpLine(fmtpObj);
+      if (fmtpObj) {
+        fmtpObj.params[param] = value;
+        const result = SdpUtils.writeFmtpLine(fmtpObj);
+        if (result) {
+          sdpLines[fmtpLineIndex] = result;
+        }
+      }
     }
 
     sdp = sdpLines.join('\r\n');
@@ -345,6 +359,9 @@ export class  SdpUtils {
     }
 
     const map = SdpUtils.parseFmtpLine(sdpLines[fmtpLineIndex]);
+    if (map === null) {
+      return sdp;
+    }
     delete map.params[param];
 
     const newLine = SdpUtils.writeFmtpLine(map);
@@ -359,8 +376,8 @@ export class  SdpUtils {
   }
 
   // Split an fmtp line into an object including 'pt' and 'params'.
-  public static parseFmtpLine(fmtpLine): null | {pt?: string, params?: any} {
-    const fmtpObj: {pt?: string, params?: any} = {};
+  public static parseFmtpLine(fmtpLine: string): null | {pt: string, params: {[key: string]: string}} {
+    const fmtpObj: {pt: string, params: {[key: string]: string}} = {pt: '', params: {}};
     const spacePos = fmtpLine.indexOf(' ');
     const keyValues = fmtpLine.substring(spacePos + 1).split(';');
 
@@ -372,7 +389,7 @@ export class  SdpUtils {
       return null;
     }
 
-    const params = {};
+    const params: any = {};
     for (const pairString of keyValues) {
       const pair = pairString.split('=');
       if (pair.length === 2) {
@@ -385,7 +402,7 @@ export class  SdpUtils {
   }
 
   // Generate an fmtp line from an object including 'pt' and 'params'.
-  public static writeFmtpLine(fmtpObj: {pt?: string, params?: {[key: string]: string}}): string {
+  public static writeFmtpLine(fmtpObj: {pt?: string, params?: {[key: string]: string}}): string | null {
     if (!fmtpObj.hasOwnProperty('pt') || !fmtpObj.hasOwnProperty('params')) {
       return null;
     }
@@ -402,11 +419,11 @@ export class  SdpUtils {
     if (i === 0) {
       return null;
     }
-    return 'a=fmtp:' + pt.toString() + ' ' + keyValues.join(';');
+    return 'a=fmtp:' + pt?.toString() + ' ' + keyValues.join(';');
   }
 
   // Find fmtp attribute for |codec| in |sdpLines|.
-  public static findFmtpLine(sdpLines: string[], codec: string): number {
+  public static findFmtpLine(sdpLines: string[], codec: string): number | null {
     // Find payload of codec.
     const payload = SdpUtils.getCodecPayloadType(sdpLines, codec);
     // Find the payload in fmtp line.
@@ -415,7 +432,7 @@ export class  SdpUtils {
 
   // Find the line in sdpLines that starts with |prefix|, and, if specified,
   // contains |substr| (case-insensitive search).
-  public static findLine(sdpLines: string[], prefix: string, substr?: string): number {
+  public static findLine(sdpLines: string[], prefix: string, substr?: string): number | null {
     return SdpUtils.findLineInRange(sdpLines, 0, -1, prefix, substr);
   }
 
@@ -428,7 +445,7 @@ export class  SdpUtils {
     prefix?: string,
     substr?: string,
     direction?: 'asc' | 'desc'
-  ): number {
+  ): number | null {
     if (direction === undefined) {
       direction = 'asc';
     }
@@ -439,7 +456,7 @@ export class  SdpUtils {
       // Search beginning to end
       const realEndLine = endLine !== -1 ? endLine : sdpLines.length;
       for (let i = startLine; i < realEndLine; ++i) {
-        if (sdpLines[i].indexOf(prefix) === 0) {
+        if (prefix && sdpLines[i].indexOf(prefix) === 0) {
           if (!substr ||
               sdpLines[i].toLowerCase().indexOf(substr.toLowerCase()) !== -1) {
             return i;
@@ -450,7 +467,7 @@ export class  SdpUtils {
       // Search end to beginning
       const realStartLine = startLine !== -1 ? startLine : sdpLines.length - 1;
       for (let j = realStartLine; j >= 0; --j) {
-        if (sdpLines[j].indexOf(prefix) === 0) {
+        if (prefix && sdpLines[j].indexOf(prefix) === 0) {
           if (!substr ||
               sdpLines[j].toLowerCase().indexOf(substr.toLowerCase()) !== -1) {
             return j;
@@ -462,13 +479,13 @@ export class  SdpUtils {
   }
 
   // Gets the codec payload type from sdp lines.
-  public static getCodecPayloadType(sdpLines: string[], codec: string): string {
+  public static getCodecPayloadType(sdpLines: string[], codec: string): string | null {
     const index = SdpUtils.findLine(sdpLines, 'a=rtpmap', codec);
     return index ? SdpUtils.getCodecPayloadTypeFromLine(sdpLines[index]) : null;
   }
 
   // Gets the codec payload type from an a=rtpmap:X line.
-  public static getCodecPayloadTypeFromLine(sdpLine: string): string {
+  public static getCodecPayloadTypeFromLine(sdpLine: string): string | null {
     const pattern = new RegExp('a=rtpmap:(\\d+) [a-zA-Z0-9-]+\\/\\d+');
     const result = sdpLine.match(pattern);
     return (result && result.length === 2) ? result[1] : null;

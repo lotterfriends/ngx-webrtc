@@ -23,9 +23,9 @@ export interface UserInCall {
 export class CallService {
 
   // TODO: add option to configure this
-  private identifier = 'name';
+  private identifier: (keyof User) = 'name';
   public users$ = new BehaviorSubject<UserInCall[]>([]);
-  private since: number;
+  private since: number = 0;
   public startShareScreen = new EventEmitter<void>();
   public stopShareScreen = new EventEmitter<void>();
   private servers: { urls: string | string[]; }[] = [
@@ -44,8 +44,9 @@ export class CallService {
   }
 
   getSince(): number {
-    if (!this.since && sessionStorage.getItem('since')) {
-      this.since = parseInt(sessionStorage.getItem('since'), 10);
+    const sessionStorageSince: string | null = sessionStorage.getItem('since');
+    if (!this.since && sessionStorageSince && sessionStorageSince !== null) {
+      this.since = parseInt(sessionStorageSince, 10);
     }
     return this.since;
   }
@@ -75,38 +76,56 @@ export class CallService {
 
   public userHasCam(user: User): void {
     const users = this.getUsers();
-    this.findUser(users, user).hasCam = true;
-    this.users$.next(users);
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.hasCam = true;
+      this.users$.next(users);
+    }
   }
 
   public userHasMic(user: User): void {
     const users = this.getUsers();
-    this.findUser(users, user).hasMic = true;
-    this.users$.next(users);
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.hasMic = true;
+      this.users$.next(users);
+    }
   }
 
   public userAudioMuted(user: User): void {
     const users = this.getUsers();
-    this.findUser(users, user).audioMuted = true;
-    this.users$.next(users);
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.audioMuted = true;
+      this.users$.next(users);
+    }
   }
 
   public userAudioUnmuted(user: User): void {
     const users = this.getUsers();
-    this.findUser(users, user).audioMuted = false;
-    this.users$.next(users);
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.audioMuted = false;
+      this.users$.next(users);
+    }
   }
 
   public userVideoMuted(user: User): void {
     const users = this.getUsers();
-    this.findUser(users, user).videoMuted = true;
-    this.users$.next(users);
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.videoMuted = true;
+      this.users$.next(users);
+    }
   }
 
   public userVideoUnmuted(user: User): void {
     const users = this.getUsers();
-    this.findUser(users, user).videoMuted = false;
-    this.users$.next(users);
+    const currentUser = this.findUser(users, user);
+    if (currentUser) {
+      currentUser.videoMuted = false;
+      this.users$.next(users);
+    }
   }
 
   public userStartShareScreen(user: User): void {
@@ -128,15 +147,15 @@ export class CallService {
     this.users$.next(users);
   }
 
-  private findUser(users: UserInCall[], user: User): UserInCall {
-    return users.find(e => e.user[this.identifier] === user[this.identifier]);
+  private findUser(users: UserInCall[], user: User): UserInCall | null {
+    return users.find(e => e.user[this.identifier] === user[this.identifier]) || null;
   }
   public getUsers(): UserInCall[] {
     return this.users$.getValue();
   }
 
-  public getUser(user: User): UserInCall {
-    return this.getUsers().find(e => e.user[this.identifier] === user[this.identifier]);
+  public getUser(user: User): UserInCall | null {
+    return this.getUsers().find(e => e.user[this.identifier] === user[this.identifier]) || null;
   }
 
 
@@ -171,7 +190,7 @@ export class CallService {
     this.started$.next(false);
   }
 
-  public getUserIdentifier(): string {
+  public getUserIdentifier(): (keyof User) {
     return this.identifier;
   }
 

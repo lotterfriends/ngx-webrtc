@@ -4,7 +4,7 @@ import { UserInCall } from '../services/call.service';
 
 export interface RemotePeerComponentInterface {
 
-  user: UserInCall;
+  user: UserInCall | null;
   videoStreamNode: ElementRef;
   audioStreamNode: ElementRef;
   setUser(user: User): void;

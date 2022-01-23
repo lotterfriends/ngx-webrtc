@@ -26,12 +26,12 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
   private debug = true;
   public pclients: {user: User, connection: PeerConnectionClient, component: ComponentRef<RemotePeerComponent>}[] = [];
   public viewMode = UiService.DEFAULTS.VIEW_MODE;
-  private localStream: MediaStream;
+  private localStream: MediaStream | null = null;
   public localVideoEnabled = false;
   private isInitiator = false;
-  private self: string;
-  private users: User[];
-  private identifier: string = this.callService.getUserIdentifier();
+  private self: string | null = null;
+  private users: User[] = [];
+  private identifier: (keyof User) = this.callService.getUserIdentifier();
   private sizing = {
     margin: 10,
     ratios: ['4:3', '16:9', '1:1', '1:2'],
@@ -43,9 +43,9 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
   };
 
   @Input() room!: string;
-  @ViewChild('localStreamNode', { static: false }) localStreamNode: ElementRef;
+  @ViewChild('localStreamNode', { static: false }) localStreamNode!: ElementRef;
   @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
-  @ViewChild('holder', { static: false }) public holder: ElementRef;
+  @ViewChild('holder', { static: false }) public holder!: ElementRef;
   @HostListener('window:resize') public onWinResize(): void {
     this.resize();
   }
@@ -126,9 +126,13 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
       filter(e => e !== null)
     ).subscribe((track) => {
       this.log('replaceTrack', track);
-      this.pclients.forEach(async client => {
-        client.connection.replaceTrack(track);
-      });
+      if (track) {
+        this.pclients.forEach(async client => {
+          client.connection.replaceTrack(track);
+        });
+      } else {
+        this.log('WARNING: track is null');
+      }
     });
 
     // send call events to peers
@@ -204,9 +208,9 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
         this.isInitiator = true;
       }
 
-      for (const user of users.filter(this.filterConnectedUsers.bind(this))) {
+      for (const [i, user] of users.filter(this.filterConnectedUsers.bind(this)).entries()) {
         this.log('new user', user);
-        const component = await this.createRemotePeerComponent();
+        const component = await this.createRemotePeerComponent(i);
         const connection = await this.addPeer(user, component);
         this.pclients.push({
           component,
@@ -283,7 +287,9 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     if (this.localStream) {
       pclient.negotiationNeededTriggered.pipe(
         untilDestroyed(this)
-      ).subscribe(this.startPeerConnection.apply(this, [pclient, user]));
+      ).subscribe(() => {
+        this.startPeerConnection(pclient, user);
+      });
     } else {
       this.startPeerConnection(pclient, user);
     }
@@ -356,9 +362,9 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     return this.cfr.resolveComponentFactory(RemotePeerComponent);
   }
 
-  private async createRemotePeerComponent(): Promise<ComponentRef<RemotePeerComponent>> {
+  private async createRemotePeerComponent(index: number): Promise<ComponentRef<RemotePeerComponent>> {
     const factory = await this.getRemotePeerFactory();
-    const component = this.remotePeerHolder.createComponent(factory, null, this.injector);
+    const component = this.remotePeerHolder.createComponent(factory, index, this.injector);
     this.changeDetectorRef.detectChanges();
     return component;
   }

@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { lastValueFrom } from 'rxjs';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { ChannelHistoryService } from './services/channel-history.service';
 import { ServerService } from './services/server.service';
@@ -17,10 +18,10 @@ export class AppComponent {
   public roomName = this.genRoom();
   public uiShowUserlist = UiService.DEFAULTS.USERLIST_VISIBLE;
   public uiShowChat = UiService.DEFAULTS.CHAT_VISIBLE;
-  private servers: {urls: string | string[]}[];
+  private servers: {urls: string | string[]}[] = [];
 
   @ViewChild('videoChat') private videoChatComponent!: VideoChatComponent;
-  @ViewChild('room', { static: false }) room: ElementRef;
+  @ViewChild('room', { static: false }) room!: ElementRef;
 
   @HostListener('window:popstate', ['$event']) popsate(): void {
     if (location.pathname && location.pathname.length > 6) {
@@ -54,7 +55,7 @@ export class AppComponent {
     // get me when register/refresh is ready
     this.socketService.onMe().subscribe(async (me) => {
       this.userStorageService.setCurrentUser(me);
-      this.servers = await this.serverService.getServers().toPromise();
+      this.servers = await lastValueFrom(this.serverService.getServers());
       this.shouldJoin();
     });
 
@@ -100,7 +101,7 @@ export class AppComponent {
     this.roomName = this.genRoom();
   }
 
-  public join(roomName?: string, ask = false): void {
+  public join(roomName?: string | null, ask = false): void {
     const room = roomName ? roomName : this.roomName;
     // with asking we can prevent that users join on the same time (watch mode with automatic reload)
     // when users join on the same time it's unclear who is initiator
@@ -126,7 +127,7 @@ export class AppComponent {
   public leave(): void {
     this.videoChatComponent.stopCall();
     this.socketService.leaveRoom();
-    history.pushState({}, null, location.origin);
+    history.pushState({}, '', location.origin);
     this.showChat = false;
     this.showJoin = true;
     this.newRoom();

@@ -6,7 +6,7 @@ import { UserInCall } from '../services/call.service';
 })
 export class ToggleAudioUserDirective {
 
-  @Input() appToggleAudioUser: UserInCall;
+  @Input() appToggleAudioUser: UserInCall | null = null;
   @HostBinding('class.disabled') public isDisabled = true;
   @HostBinding('class.enabled') public isEnabled = false;
   @HostListener('click', ['$event']) onClick(): void{

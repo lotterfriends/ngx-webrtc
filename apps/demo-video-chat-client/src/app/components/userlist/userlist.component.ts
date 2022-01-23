@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ServerUser, User } from '@ngx-webrtc/demo-video-chat-models';
+import { ServerUser } from '@ngx-webrtc/demo-video-chat-models';
+import { StreamType } from '../../peer/peer-connection-client';
 import { CallService, UserInCall } from '../../peer/services/call.service';
 import { StreamService } from '../../peer/services/stream.service';
 import { UserStorageService } from '../../services/user-storage.service';
@@ -14,10 +15,10 @@ import { UserStorageService } from '../../services/user-storage.service';
 })
 export class UserlistComponent implements OnInit {
 
-  public users;
+  public users: UserInCall[] = [];
   public selfAudioMuted = false;
   public selfVideoMuted = false;
-  public self: ServerUser;
+  public self: ServerUser | null = null;
 
   constructor(
     public callService: CallService,
@@ -52,22 +53,17 @@ export class UserlistComponent implements OnInit {
       }
       if (stream instanceof MediaStream && stream.getAudioTracks().length) {
         const track = this.streamService.getAudioTrackForStream(stream);
-        this.selfAudioMuted = !track.enabled;
+        this.selfAudioMuted = !track?.enabled;
       }
       if (stream instanceof MediaStreamTrack && stream.kind === StreamType.Video) {
         this.selfVideoMuted = !stream.enabled;
       }
       if (stream instanceof MediaStream && stream.getVideoTracks().length) {
         const track = this.streamService.getVideoTrackForStream(stream);
-        this.selfVideoMuted = !track.enabled;
+        this.selfVideoMuted = !track?.enabled;
       }
       this.cdr.detectChanges();
     }
-  }
-
-  onUserJoined(users: User): void {
-    this.users = users;
-    this.cdr.detectChanges();
   }
 
   changeVolume($event: Event, user: UserInCall): void {

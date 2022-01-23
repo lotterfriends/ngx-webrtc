@@ -45,7 +45,9 @@ export class ToggleVideoSelfDirective {
       }
       if (stream instanceof MediaStream && stream.getVideoTracks().length) {
         const track = this.streamService.getVideoTrackForStream(stream);
-        this.updateStatusWithTrack(track);
+        if (track) {
+          this.updateStatusWithTrack(track);
+        }
       }
     }
   }

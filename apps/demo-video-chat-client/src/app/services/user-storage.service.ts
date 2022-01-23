@@ -20,7 +20,8 @@ export class UserStorageService {
   }
 
   getCurrentUser(): ServerUser | null {
-    return window.sessionStorage.getItem('user') ? (JSON.parse(window.sessionStorage.getItem('user'))as ServerUser) : null;
+    const sessionStorageUser = sessionStorage.getItem('user');
+    return sessionStorageUser ? (JSON.parse(sessionStorageUser)as ServerUser) : null;
   }
 
   removeCurrentUser(): void {

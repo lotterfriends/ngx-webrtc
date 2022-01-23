@@ -1,9 +1,7 @@
-import { Server, Socket } from "socket.io";
+import { Server } from "http";
+import { Socket } from "socket.io";
 import { MessageStorageService } from "./services/message-storage.service";
-import { ServerUser } from "../../../libs/models/server-user";
-import { User } from "../../../libs/models/user";
-import { Message } from "../../../libs/models/message";
-import { MessageType } from "../../../libs/models/message-type";
+import { ServerUser, User, Message, MessageType } from "@ngx-webrtc/demo-video-chat-models";
 import { UserStorageService } from "./services/user-storage.service";
 
 let socketToUsers = new Map();
@@ -25,6 +23,7 @@ const getUserInRoom = (room: string): User[] => {
 }
 
 export const initSockets = (http: Server) => {
+  // TODO: dynamic origin
   let io = require("socket.io")(http, {
     cors: true,
     origins: ["http://localhost:4400"],

@@ -8,19 +8,17 @@ import { UserStorageService } from './services/user-storage.service';
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  user: ServerUser;
-
   constructor(
     private userStorageServie: UserStorageService
     ) {
   }
 
-  getToken(): string {
-    return btoa([this.user.name, this.user.secret].join(':'));
+  getToken(user: ServerUser): string {
+    return btoa([user.name, user.secret].join(':'));
   }
 
-  addAuthHeader(req: HttpRequest<any>): HttpRequest<any> {
-    const token = this.getToken();
+  addAuthHeader(req: HttpRequest<any>, user: ServerUser): HttpRequest<any> {
+    const token = this.getToken(user);
     return req.clone({
       setHeaders: {
         Authorization: `Basic ${token}`,
@@ -29,9 +27,9 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    this.user = this.userStorageServie.getCurrentUser();
-    if (this.user) {
-      return next.handle(this.addAuthHeader(req));
+    const user = this.userStorageServie.getCurrentUser();
+    if (user) {
+      return next.handle(this.addAuthHeader(req, user));
     }
     return next.handle(req);
   }
