@@ -3,13 +3,12 @@ import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactory, Componen
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, filter, first, map } from 'rxjs/operators';
 import { MessageType, User } from '@ngx-webrtc/demo-video-chat-models';
-import { PeerConnectionClient, PeerConnectionClientSignalMessage, StreamType } from '../../peer/peer-connection-client';
-import { StreamService } from '../../peer/services/stream.service';
+import { PeerConnectionClient, PeerConnectionClientSignalMessage, StreamType, StreamService,
+  CallService } from 'ngx-webrtc';
 import { MessagesService } from '../../services/messages.service';
 import { SocketService } from '../../services/socket.service';
 import { UserStorageService } from '../../services/user-storage.service';
 import { RemotePeerComponent } from './remote-peer/remote-peer.component';
-import { CallService } from '../../peer/services/call.service';
 import { UiService, ViewMode } from '../../services/ui.service';
 
 /**

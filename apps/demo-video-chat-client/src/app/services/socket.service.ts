@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Socket } from 'ngx-socket-io';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { PeerConnectionClientSignalMessage } from '../peer/peer-connection-client';
+import { PeerConnectionClientSignalMessage } from 'ngx-webrtc';
 import { UserStorageService } from './user-storage.service';
 import { Message, MessageType, ServerMessage, ServerUser, User } from '@ngx-webrtc/demo-video-chat-models';
 

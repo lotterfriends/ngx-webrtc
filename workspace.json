@@ -4,6 +4,7 @@
     "demo-video-chat-client": "apps/demo-video-chat-client",
     "demo-video-chat-client-e2e": "apps/demo-video-chat-client-e2e",
     "demo-video-chat-models": "libs/demo-video-chat-models",
-    "demo-video-chat-server": "apps/demo-video-chat-server"
+    "demo-video-chat-server": "apps/demo-video-chat-server",
+    "ngx-webrtc": "libs/ngx-webrtc"
   }
 }

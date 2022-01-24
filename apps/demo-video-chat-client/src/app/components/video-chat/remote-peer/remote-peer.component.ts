@@ -1,7 +1,5 @@
 import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { RemotePeerComponentInterface } from '../../../peer/interfaces/remote-peer-component-interface';
-import { CallService, UserInCall } from '../../../peer/services/call.service';
-import { StreamService } from '../../../peer/services/stream.service';
+import { RemotePeerComponentInterface, CallService, UserInCall, StreamService } from 'ngx-webrtc';
 import { User } from '@ngx-webrtc/demo-video-chat-models';
 
 @Component({

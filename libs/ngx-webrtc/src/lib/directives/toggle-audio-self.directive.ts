@@ -6,7 +6,7 @@ import { StreamService } from '../services/stream.service';
 
 @UntilDestroy()
 @Directive({
-  selector: '[appToggleAudioSelf]',
+  selector: '[ngxWebRTCToggleAudioSelf]',
 })
 export class ToggleAudioSelfDirective {
 

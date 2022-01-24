@@ -1,9 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ServerUser } from '@ngx-webrtc/demo-video-chat-models';
-import { StreamType } from '../../peer/peer-connection-client';
-import { CallService, UserInCall } from '../../peer/services/call.service';
-import { StreamService } from '../../peer/services/stream.service';
+import { StreamType, CallService, UserInCall, StreamService } from 'ngx-webrtc';
 import { UserStorageService } from '../../services/user-storage.service';
 
 @UntilDestroy()
@@ -69,17 +67,17 @@ export class UserlistComponent implements OnInit {
   changeVolume($event: Event, user: UserInCall): void {
     const volume = parseInt(($event.target as HTMLInputElement).value, 10);
     user.volume = volume;
-    (user.node.instance.audioStreamNode.nativeElement as HTMLAudioElement).volume = volume;
+    (user?.node?.instance?.audioStreamNode?.nativeElement as HTMLAudioElement).volume = volume;
   }
 
   unmute(user: UserInCall): void {
     user.volume = 1;
-    (user.node.instance.audioStreamNode.nativeElement as HTMLAudioElement).volume = 1;
+    (user?.node?.instance?.audioStreamNode?.nativeElement as HTMLAudioElement).volume = 1;
   }
 
   mute(user: UserInCall): void {
     user.volume = 0;
-    (user.node.instance.audioStreamNode.nativeElement as HTMLAudioElement).volume = 0;
+    (user?.node?.instance?.audioStreamNode?.nativeElement as HTMLAudioElement).volume = 0;
   }
 
 }

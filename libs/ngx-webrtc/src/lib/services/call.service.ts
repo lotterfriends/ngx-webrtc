@@ -1,6 +1,6 @@
 import { ComponentRef, EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { User } from '@ngx-webrtc/demo-video-chat-models';
+import { User } from '../interfaces/user';
 import { RemotePeerComponentInterface } from '../interfaces/remote-peer-component-interface';
 import { PeerConnectionClient } from '../peer-connection-client';
 

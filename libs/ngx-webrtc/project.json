@@ -1,0 +1,42 @@
+{
+  "projectType": "library",
+  "root": "libs/ngx-webrtc",
+  "sourceRoot": "libs/ngx-webrtc/src",
+  "prefix": "ngx-webrtc",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/angular:package",
+      "outputs": ["dist/libs/ngx-webrtc"],
+      "options": {
+        "project": "libs/ngx-webrtc/ng-package.json"
+      },
+      "configurations": {
+        "production": {
+          "tsConfig": "libs/ngx-webrtc/tsconfig.lib.prod.json"
+        },
+        "development": {
+          "tsConfig": "libs/ngx-webrtc/tsconfig.lib.json"
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/ngx-webrtc"],
+      "options": {
+        "jestConfig": "libs/ngx-webrtc/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/ngx-webrtc/src/**/*.ts",
+          "libs/ngx-webrtc/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

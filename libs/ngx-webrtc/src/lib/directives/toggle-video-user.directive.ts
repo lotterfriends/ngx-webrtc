@@ -2,11 +2,11 @@ import { Directive, HostBinding, HostListener, Input } from '@angular/core';
 import { UserInCall } from '../services/call.service';
 
 @Directive({
-  selector: '[appToggleVideoUser]',
+  selector: '[ngxWebRTCToggleVideoUser]',
 })
 export class ToggleVideoUserDirective {
 
-  @Input() appToggleVideoUser: UserInCall | null = null;
+  @Input() ngxWebRTCToggleVideoUser: UserInCall | null = null;
   @HostBinding('class.disabled') public isDisabled = true;
   @HostBinding('class.enabled') public isEnabled = false;
   @HostListener('click', ['$event']) onClick(): void{
@@ -14,12 +14,12 @@ export class ToggleVideoUserDirective {
   }
 
   toggleUserVideo(): void {
-    if (!this.appToggleVideoUser) {
+    if (!this.ngxWebRTCToggleVideoUser) {
       console.log('user not set');
       return;
     }
-    if (this.appToggleVideoUser?.connection) {
-      this.appToggleVideoUser.connection.requestMuteVideo();
+    if (this.ngxWebRTCToggleVideoUser?.connection) {
+      this.ngxWebRTCToggleVideoUser.connection.requestMuteVideo();
       this.isEnabled = !this.isEnabled;
       this.isDisabled = !this.isDisabled;
     }

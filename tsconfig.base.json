@@ -17,7 +17,8 @@
     "paths": {
       "@ngx-webrtc/demo-video-chat-models": [
         "libs/demo-video-chat-models/src/index.ts"
-      ]
+      ],
+      "ngx-webrtc": ["libs/ngx-webrtc/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

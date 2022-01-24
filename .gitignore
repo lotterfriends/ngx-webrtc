@@ -33,6 +33,7 @@ npm-debug.log
 yarn-error.log
 testem.log
 /typings
+libs/ngx-webrtc/node_modules/
 
 # System Files
 .DS_Store

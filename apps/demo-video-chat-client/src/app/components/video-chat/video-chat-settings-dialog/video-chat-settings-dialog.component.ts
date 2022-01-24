@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostListener, OnDestroy } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, filter, first, tap } from 'rxjs/operators';
-import { StreamService } from '../../../peer/services/stream.service';
+import { StreamService } from 'ngx-webrtc';
 import { UiService } from '../../../services/ui.service';
 
 // TODO: display input level

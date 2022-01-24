@@ -7,7 +7,7 @@ import { StreamService } from '../services/stream.service';
 
 @UntilDestroy()
 @Directive({
-  selector: '[appShareScreen]',
+  selector: '[ngxWebRTCShareScreen]',
 })
 export class ShareScreenDirective {
 

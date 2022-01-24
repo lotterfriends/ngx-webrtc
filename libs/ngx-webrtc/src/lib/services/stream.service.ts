@@ -9,7 +9,6 @@ export class StreamService {
 
   constructor() { }
 
-
   public localStream$ = new BehaviorSubject<MediaStream | null>(null);
   public localShareScreenStream$ = new BehaviorSubject<MediaStream | null>(null);
   public replaceTrack$ = new BehaviorSubject<MediaStreamTrack | null>(null);
