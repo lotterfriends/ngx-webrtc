@@ -1,7 +1,7 @@
 # TODO
 - blur / replace background
 - talking detection 
-- example [mulipaty server](https://hpbn.co/webrtc/#multiparty-architectures)
+- example [muliparty server](https://hpbn.co/webrtc/#multiparty-architectures)
 - customize camera quality
 - error handling
   - camera blocked
