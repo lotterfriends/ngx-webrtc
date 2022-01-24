@@ -17,6 +17,7 @@ export class AuthInterceptor implements HttpInterceptor {
     return btoa([user.name, user.secret].join(':'));
   }
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   addAuthHeader(req: HttpRequest<any>, user: ServerUser): HttpRequest<any> {
     const token = this.getToken(user);
     return req.clone({
@@ -26,6 +27,7 @@ export class AuthInterceptor implements HttpInterceptor {
     });
   }
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     const user = this.userStorageServie.getCurrentUser();
     if (user) {

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, ViewChild } from '@angular/core';
 import { RemotePeerComponentInterface, CallService, UserInCall, StreamService } from 'ngx-webrtc';
 import { User } from '@ngx-webrtc/demo-video-chat-models';
 
@@ -6,9 +6,8 @@ import { User } from '@ngx-webrtc/demo-video-chat-models';
   selector: 'ngx-webrtc-remote-peer',
   templateUrl: './remote-peer.component.html',
   styleUrls: ['./remote-peer.component.css'],
-  // changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RemotePeerComponent implements RemotePeerComponentInterface, OnInit {
+export class RemotePeerComponent implements RemotePeerComponentInterface {
   public user: UserInCall | null = null;
   public fit = true;
 
@@ -19,9 +18,6 @@ export class RemotePeerComponent implements RemotePeerComponentInterface, OnInit
     private callService: CallService,
     public elementRef: ElementRef
   ) {
-  }
-
-  ngOnInit(): void {
   }
 
   setUser(user: User): void {

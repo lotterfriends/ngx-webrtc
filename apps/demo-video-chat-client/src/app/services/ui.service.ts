@@ -23,7 +23,6 @@ export class UiService {
   public isChatVisible$ = new BehaviorSubject(UiService.DEFAULTS.CHAT_VISIBLE);
   public isVideoSettingsDialogVisible$ = new BehaviorSubject(UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE);
   public viewMode$ = new BehaviorSubject<ViewMode>(UiService.DEFAULTS.VIEW_MODE);
-  constructor() { }
 
   toggleShowUserlist(): void {
     this.isUserlistVisible$.next(!this.isUserlistVisible$.getValue());

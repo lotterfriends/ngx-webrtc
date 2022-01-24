@@ -8,7 +8,6 @@ export class ChannelHistoryService {
 
   public history$ = new BehaviorSubject<string[]>(this.history);
   private historyInternal: string[] = [];
-  constructor() { }
 
   get history(): string[] {
     if (!this.historyInternal) {

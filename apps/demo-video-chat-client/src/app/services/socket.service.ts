@@ -32,6 +32,7 @@ export class SocketService {
 
   public isConnected: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   log(...args: any[]): void {
     if (this.debug) {
       console.log(...args);

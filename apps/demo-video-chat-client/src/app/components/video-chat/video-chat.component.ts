@@ -437,6 +437,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   private log(...args: any[]): void {
     if (this.debug) {
       console.log(...args);

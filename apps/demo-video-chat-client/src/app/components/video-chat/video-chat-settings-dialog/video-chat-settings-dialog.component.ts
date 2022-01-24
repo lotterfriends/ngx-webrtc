@@ -1,7 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostListener, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged, filter, first, tap } from 'rxjs/operators';
 import { StreamService } from 'ngx-webrtc';
+import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { UiService } from '../../../services/ui.service';
 
 // TODO: display input level
@@ -22,6 +22,8 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   private hasStream = false;
   private showVideoSettingsDialogInternal = UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE;
+  public devicesGoups: {kind: DeviceType, devices: MediaDeviceInfo[]}[] = [];
+
   private onDeviceChangeListener: EventListener = () => {
     if (this.hasStream) {
       this.initDeviceList();
@@ -37,7 +39,6 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
   public get showVideoSettingsDialog(): boolean {
     return this.showVideoSettingsDialogInternal;
   }
-  devicesGoups: {kind: DeviceType, devices: MediaDeviceInfo[]}[] = [];
 
   constructor(
     private uiService: UiService,

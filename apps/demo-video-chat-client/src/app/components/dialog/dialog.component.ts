@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Component({
   selector: 'ngx-webrtc-dialog',
@@ -6,14 +6,11 @@ import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter
   styleUrls: ['./dialog.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DialogComponent implements OnInit {
+export class DialogComponent {
 
-  constructor() { }
   @Input() show = false;
-  @Input() title: string = '';
+  @Input() title = '';
   @Output() showChange = new EventEmitter<boolean>();
-  ngOnInit(): void {
-  }
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent): void {

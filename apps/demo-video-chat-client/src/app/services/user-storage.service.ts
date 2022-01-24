@@ -5,7 +5,6 @@ import { ServerUser } from '@ngx-webrtc/demo-video-chat-models';
   providedIn: 'root',
 })
 export class UserStorageService {
-  constructor() {}
 
   setCurrentUsername(username: string): void {
     window.sessionStorage.setItem('username', username);

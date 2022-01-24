@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, Input, AfterViewChecked } from '@angular/core';
 import { SocketService } from '../../services/socket.service';
 import { MessagesService } from '../../services/messages.service';
 import { first } from 'rxjs/operators';
@@ -66,7 +66,9 @@ export class TextChatComponent implements OnInit, AfterViewChecked {
     try {
       this.myScrollContainer.nativeElement.scrollTop =
         this.myScrollContainer.nativeElement.scrollHeight;
-    } catch (err) {}
+    } catch (err) {
+      // nothing to do
+    }
   }
 
   private initSockets(): void {
