@@ -4,5 +4,7 @@
     "declarationMap": false,
     "composite": false
   },
-  "angularCompilerOptions": {}
+  "angularCompilerOptions": {
+    "compilationMode": "partial"
+  }
 }
