@@ -1,4 +1,13 @@
-import { SdpSettings } from './peer-connection-client';
+import { SdpSettings } from "./interfaces/sdp-settings";
+
+interface FormatObject {
+  pt: string;
+  params: FormatParams
+}
+
+interface FormatParams {
+  [key: string]: string | number
+}
 
 export class  SdpUtils {
 
@@ -9,25 +18,25 @@ export class  SdpUtils {
   public static maybeSetOpusOptions(sdp: string, params: SdpSettings): string {
     // Set Opus in Stereo, if stereo is true, unset it, if stereo is false, and
     // do nothing if otherwise.
-    if (params.opusStereo === 'true') {
+    if (params.opusStereo) {
       sdp = SdpUtils.setCodecParam(sdp, 'opus/48000', 'stereo', '1');
-    } else if (params.opusStereo === 'false') {
+    } else if (!params.opusStereo) {
       sdp = SdpUtils.removeCodecParam(sdp, 'opus/48000', 'stereo');
     }
 
     // Set Opus FEC, if opusfec is true, unset it, if opusfec is false, and
     // do nothing if otherwise.
-    if (params.opusFec === 'true') {
+    if (params.opusFec) {
       sdp = SdpUtils.setCodecParam(sdp, 'opus/48000', 'useinbandfec', '1');
-    } else if (params.opusFec === 'false') {
+    } else if (!params.opusFec) {
       sdp = SdpUtils.removeCodecParam(sdp, 'opus/48000', 'useinbandfec');
     }
 
     // Set Opus DTX, if opusdtx is true, unset it, if opusdtx is false, and
     // do nothing if otherwise.
-    if (params.opusDtx === 'true') {
+    if (params.opusDtx) {
       sdp = SdpUtils.setCodecParam(sdp, 'opus/48000', 'usedtx', '1');
-    } else if (params.opusDtx === 'false') {
+    } else if (!params.opusDtx) {
       sdp = SdpUtils.removeCodecParam(sdp, 'opus/48000', 'usedtx');
     }
 
@@ -215,7 +224,7 @@ export class  SdpUtils {
   }
 
   public static maybeRemoveVideoFec(sdp: string, params: SdpSettings): string {
-    if (params.videoFec !== 'false') {
+    if (params.videoFec !== false) {
       return sdp;
     }
 
@@ -312,12 +321,12 @@ export class  SdpUtils {
   }
 
   // Set fmtp param to specific codec in SDP. If param does not exists, add it.
-  public static setCodecParam(sdp: string, codec: string, param: string, value: string): string {
+  public static setCodecParam(sdp: string, codec: string, param: string, value: string | number): string {
     const sdpLines = sdp.split('\r\n');
 
     const fmtpLineIndex = SdpUtils.findFmtpLine(sdpLines, codec);
 
-    let fmtpObj: {pt: string, params: {[key: string]: string}} | null = {pt: '', params: {}}
+    let fmtpObj: FormatObject | null = {pt: '', params: {}}
     if (fmtpLineIndex === null) {
       const index = SdpUtils.findLine(sdpLines, 'a=rtpmap', codec);
       if (index === null) {
@@ -376,8 +385,8 @@ export class  SdpUtils {
   }
 
   // Split an fmtp line into an object including 'pt' and 'params'.
-  public static parseFmtpLine(fmtpLine: string): null | {pt: string, params: {[key: string]: string}} {
-    const fmtpObj: {pt: string, params: {[key: string]: string}} = {pt: '', params: {}};
+  public static parseFmtpLine(fmtpLine: string): null | FormatObject {
+    const fmtpObj: FormatObject = {pt: '', params: {}};
     const spacePos = fmtpLine.indexOf(' ');
     const keyValues = fmtpLine.substring(spacePos + 1).split(';');
 
@@ -389,7 +398,7 @@ export class  SdpUtils {
       return null;
     }
 
-    const params: any = {};
+    const params: FormatParams = {};
     for (const pairString of keyValues) {
       const pair = pairString.split('=');
       if (pair.length === 2) {
@@ -402,7 +411,7 @@ export class  SdpUtils {
   }
 
   // Generate an fmtp line from an object including 'pt' and 'params'.
-  public static writeFmtpLine(fmtpObj: {pt?: string, params?: {[key: string]: string}}): string | null {
+  public static writeFmtpLine(fmtpObj: FormatObject): string | null {
     if (!fmtpObj.hasOwnProperty('pt') || !fmtpObj.hasOwnProperty('params')) {
       return null;
     }
