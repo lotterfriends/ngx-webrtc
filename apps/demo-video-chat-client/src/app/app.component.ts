@@ -1,4 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { IceServer } from 'ngx-webrtc';
 import { lastValueFrom } from 'rxjs';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { ChannelHistoryService } from './services/channel-history.service';
@@ -18,7 +19,7 @@ export class AppComponent {
   public roomName = this.genRoom();
   public uiShowUserlist = UiService.DEFAULTS.USERLIST_VISIBLE;
   public uiShowChat = UiService.DEFAULTS.CHAT_VISIBLE;
-  private servers: {urls: string | string[]}[] = [];
+  private servers: IceServer[] = [];
 
   @ViewChild('videoChat') private videoChatComponent!: VideoChatComponent;
   @ViewChild('room', { static: false }) room!: ElementRef;

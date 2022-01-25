@@ -4,7 +4,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { distinctUntilChanged, filter, first, map } from 'rxjs/operators';
 import { MessageType, User } from '@ngx-webrtc/demo-video-chat-models';
 import { PeerConnectionClient, PeerConnectionClientSignalMessage, StreamType, StreamService,
-  CallService } from 'ngx-webrtc';
+  CallService, 
+  IceServer} from 'ngx-webrtc';
 import { MessagesService } from '../../services/messages.service';
 import { SocketService } from '../../services/socket.service';
 import { UserStorageService } from '../../services/user-storage.service';
@@ -31,6 +32,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
   private self: string | null = null;
   private users: User[] = [];
   private identifier: (keyof User) = this.callService.getUserIdentifier();
+  private servers: IceServer[] = [];
   private sizing = {
     margin: 10,
     ratios: ['4:3', '16:9', '1:1', '1:2'],
@@ -153,9 +155,9 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
 
   }
 
-  public startCall(servers: {urls: string | string[]}[]): void {
+  public startCall(servers: IceServer[]): void {
     this.log('startCall');
-    this.callService.setServers(servers);
+    this.servers = servers;
     this.getMediaAndStart();
   }
 
@@ -239,13 +241,10 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
       if (entry?.connection) {
         entry.connection.close();
       }
-      this.log(entry);
       if (entry?.component) {
         entry.component.destroy();
       }
-      this.log(this.pclients);
       this.pclients = this.pclients.filter(e => e.user[this.identifier] !== user[this.identifier]);
-      this.log(this.pclients);
 
       // everyone else left, now I'm the initiator
       if (!this.pclients.length) {
@@ -257,7 +256,15 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
 
   private async addPeer(user: User, component: ComponentRef<RemotePeerComponent>): Promise<PeerConnectionClient> {
     this.log('addPeer', user, component);
-    const pclient = await this.callService.createPeerClient();
+
+    const cert = await this.callService.createCertifcate();
+    const pclient = await this.callService.createPeerClient({
+      peerConnectionConfig: {
+        iceServers: this.servers,
+        certificates: [cert],
+      }
+    });
+
     // add media
     if (this.localStream) {
       pclient.addStream(this.localStream);

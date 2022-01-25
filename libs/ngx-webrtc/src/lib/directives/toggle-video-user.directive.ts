@@ -1,5 +1,5 @@
 import { Directive, HostBinding, HostListener, Input } from '@angular/core';
-import { UserInCall } from '../services/call.service';
+import { UserInCall } from "../interfaces/user-in-call";
 
 @Directive({
   selector: '[ngxWebRTCToggleVideoUser]',

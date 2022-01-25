@@ -1,6 +1,6 @@
 import { ElementRef } from '@angular/core';
 import { User } from './user';
-import { UserInCall } from '../services/call.service';
+import { UserInCall } from "./user-in-call";
 
 export interface RemotePeerComponentInterface {
 

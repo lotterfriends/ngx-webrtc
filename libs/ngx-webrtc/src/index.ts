@@ -1,4 +1,5 @@
 export * from './lib/ngx-webrtc.module';
+export * from './lib/ngx-webrtc-configuration';
 
 export * from './lib/peer-connection-client';
 export * from './lib/sdp-utils';
@@ -11,7 +12,10 @@ export * from './lib/directives/toggle-video-self.directive';
 export * from './lib/directives/toggle-video-user.directive';
 
 // interfaces
-export * from './lib/interfaces/remote-peer-component-interface';
+export * from './lib/enums';
+
+// interfaces
+export * from './lib/interfaces';
 
 // services
 export * from './lib/services/call.service';

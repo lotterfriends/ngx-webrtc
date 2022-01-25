@@ -3,40 +3,32 @@ import { BehaviorSubject } from 'rxjs';
 import { User } from '../interfaces/user';
 import { RemotePeerComponentInterface } from '../interfaces/remote-peer-component-interface';
 import { PeerConnectionClient } from '../peer-connection-client';
-
-// TODO abtract user interface
-export interface UserInCall {
-  user: User;
-  hasCam: boolean;
-  hasMic: boolean;
-  volume: number;
-  audioMuted: boolean;
-  videoMuted: boolean;
-  shareScreen: boolean;
-  connection: PeerConnectionClient;
-  node: ComponentRef<RemotePeerComponentInterface>;
-}
+import { PeerConnectionClientSettings } from "../interfaces/peer-connection-client-settings";
+import { UserInCall } from '../interfaces/user-in-call';
+import { NgxWebrtConfiguration } from '../ngx-webrtc-configuration';
+import { IceServer } from '../interfaces/ice-server';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CallService {
 
+  constructor(
+    private readonly config: NgxWebrtConfiguration
+  ){}
+
   // TODO: add option to configure this
-  private identifier: (keyof User) = 'name';
+  private identifier: (keyof User) = this.config.userIdentifier as (keyof User);
   public users$ = new BehaviorSubject<UserInCall[]>([]);
   private since: number = 0;
   public startShareScreen = new EventEmitter<void>();
   public stopShareScreen = new EventEmitter<void>();
-  private servers: { urls: string | string[]; }[] = [
+  public defaultServers: IceServer[] = [
     { urls: 'stun:stun.l.google.com:19302' },
     { urls: 'stun:global.stun.twilio.com:3478?transport=udp' },
     { urls: 'stun:stun.services.mozilla.com' },
   ];
-
   public started$ = new BehaviorSubject<boolean>(false);
-
-  constructor() { }
 
   updateSince(): void {
     this.since = Date.now();
@@ -158,28 +150,15 @@ export class CallService {
     return this.getUsers().find(e => e.user[this.identifier] === user[this.identifier]) || null;
   }
 
-
-  public setServers(servers: { urls: string | string[]; }[]): void {
-    this.servers = servers;
+  public async createPeerClient(settings: PeerConnectionClientSettings): Promise<PeerConnectionClient> {
+    return new PeerConnectionClient(settings);
   }
 
-  public async createPeerClient(): Promise<PeerConnectionClient> {
-
-    // using user certificate algorithm result in random fails
-    const cert = await RTCPeerConnection.generateCertificate({
+  public async createCertifcate(): Promise<RTCCertificate> {
+    return RTCPeerConnection.generateCertificate({
       name: 'ECDSA',
       namedCurve: 'P-256'
     } as AlgorithmIdentifier);
-
-    const peerConnectionClient = new PeerConnectionClient({
-      peerConnectionConfig: {
-        iceServers: this.servers,
-        certificates: [cert]
-      }
-    });
-
-
-    return peerConnectionClient;
   }
 
   public start(): void {

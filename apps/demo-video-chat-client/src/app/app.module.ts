@@ -35,7 +35,10 @@ const config: SocketIoConfig = { url: 'http://localhost:3333', options: {} };
     FormsModule,
     HttpClientModule,
     SocketIoModule.forRoot(config),
-    NgxWebrtcModule
+    NgxWebrtcModule.forRoot({
+      debug: true,
+      userIdentifier: 'name'
+    })
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },

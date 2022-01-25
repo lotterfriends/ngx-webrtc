@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
+import { ModuleWithProviders, NgModule } from '@angular/core';
 import { ShareScreenDirective, ToggleAudioSelfDirective, ToggleAudioUserDirective, ToggleVideoSelfDirective, ToggleVideoUserDirective } from './directives';
+import { NgxWebrtConfiguration } from './ngx-webrtc-configuration';
 
 @NgModule({
   declarations: [
@@ -20,4 +21,18 @@ import { ShareScreenDirective, ToggleAudioSelfDirective, ToggleAudioUserDirectiv
   imports: [CommonModule],
   providers: []
 })
-export class NgxWebrtcModule {}
+export class NgxWebrtcModule {
+  static forRoot(
+    libConfiguration: NgxWebrtConfiguration
+  ): ModuleWithProviders<NgxWebrtcModule> {
+    return {
+      ngModule: NgxWebrtcModule,
+      providers: [
+        {
+          provide: NgxWebrtConfiguration,
+          useValue: libConfiguration,
+        },
+      ],
+    };
+  }
+}

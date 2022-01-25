@@ -1,71 +1,15 @@
 import { EventEmitter } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { PeerConnectionClientSettings } from './interfaces/peer-connection-client-settings';
+import { PeerConnectionClientSignalMessage } from './interfaces/peer-connection-client-signal-message';
+import { PeerConnectionClientSignalMessageType } from './enums/peer-connection-client-signal-message-type';
 import { SdpUtils } from './sdp-utils';
-
-export interface SdpSettings {
-  audioSendCodec?: string;
-  videoSendCodec?: string;
-  videoRecvCodec?: string;
-  audioRecvCodec?: string;
-  videoFec?: 'true' | 'false';
-  opusStereo?: 'true' | 'false';
-  opusFec?: 'true' | 'false';
-  opusDtx?: 'true' | 'false';
-  opusMaxPbr?: 'true' | 'false';
-  audioSendBitrate?: string | number;
-  videoSendInitialBitrate?: string | number;
-  videoSendBitrate?: string | number;
-  audioRecvBitrate?: string | number;
-  videoRecvBitrate?: string | number;
-}
-
-export interface PeerConnectionClientSettings extends SdpSettings {
-  peerConnectionConfig: {
-    iceTransports?: 'relay' | string,
-    iceServers: {urls: string | string[]}[]
-    certificates?: RTCCertificate[]
-  };
-}
-
-export interface PeerConnectionClientSignalMessage {
-  type: RTCSdpType | PeerConnectionClientSignalMessageType;
-  sdp?: string;
-  label?: number | RTCIceCandidate['sdpMLineIndex'];
-  id?: string | RTCIceCandidate['sdpMid'];
-  candidate?: string | RTCIceCandidate['candidate'];
-}
-
-export enum PeerConnectionClientSignalMessageType {
-  Candidate = 'candidate',
-  Answer = 'answer',
-  Offer = 'offer',
-  Bye = 'bye',
-  RequestMuteAudio = 'request-mute-audio',
-  RequestMuteVideo = 'request-mute-video',
-  AudioMuted = 'audio-muted',
-  AudioUnmuted = 'audio-unmuted',
-  VideoMuted = 'video-muted',
-  VideoUnmuted = 'video-unmuted',
-  StartShareScreen = 'start-share-screen',
-  StopShareScreen = 'stop-share-screen',
-}
-
-
-export enum StreamType {
-  Video = 'video',
-  Audio = 'audio',
-}
-
-
-export interface StreamTrack {
-  track: MediaStreamTrack;
-  kind: StreamType;
-}
+import { StreamTrack } from './interfaces/stream-track';
+import { StreamType } from './enums/stream-type';
 
 export class PeerConnectionClient {
 
   private startTime: number;
-  private debug = true;
   private started = false;
   private isInitiator = false;
   private hasRemoteSdp = false;
@@ -569,12 +513,12 @@ export class PeerConnectionClient {
   }
 
   log(...args: any[]): void {
-    if (this.debug) {
+    if (this.settings.debug) {
       console.log(this.id, ...args);
     }
   }
   error(...args: any[]): void {
-    if (this.debug) {
+    if (this.settings.debug) {
       console.error(this.id, ...args);
     }
   }

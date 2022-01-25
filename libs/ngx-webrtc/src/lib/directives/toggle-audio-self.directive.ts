@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Directive, HostBinding, HostListener } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { StreamType } from '../peer-connection-client';
+import { StreamType } from "../enums/stream-type";
 import { CallService } from '../services/call.service';
 import { StreamService } from '../services/stream.service';
 

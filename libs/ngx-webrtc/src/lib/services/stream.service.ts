@@ -1,13 +1,12 @@
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { StreamType } from '../peer-connection-client';
+import { StreamType } from "../enums/stream-type";
+import { NgxWebrtConfiguration } from '../ngx-webrtc-configuration';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StreamService {
-
-  constructor() { }
 
   public localStream$ = new BehaviorSubject<MediaStream | null>(null);
   public localShareScreenStream$ = new BehaviorSubject<MediaStream | null>(null);
@@ -18,6 +17,11 @@ export class StreamService {
   public localVideoStreamStatusChanged = new EventEmitter<boolean>();
   public hasVideo = false;
   public hasAudio = false;
+
+  constructor(
+    private readonly config: NgxWebrtConfiguration
+  ){}
+
 
   public static getAspectRatio(width: number, height: number): string {
 
@@ -63,7 +67,9 @@ export class StreamService {
   }
 
   public toggleMuteStream(stream: MediaStream | MediaStreamTrack, type: StreamType, value?: boolean): void {
-    console.log('toggleMuteStream()', stream, type, value);
+    if (this.config.debug) {
+      console.log('toggleMuteStream()', stream, type, value);
+    }
     if (stream) {
       if (stream instanceof MediaStreamTrack) {
         const targetValue = typeof value !== 'undefined' ? value : !stream.enabled;
@@ -172,7 +178,9 @@ export class StreamService {
         stream = await n.mediaDevices.getUserMedia({ video: { mediaSource: 'screen' } });
       }
     } catch (e) {
-      console.log(`MdoVideoCallComponent.getScreenCapture() -> no permissions`);
+      if (this.config.debug) {
+        console.log(`MdoVideoCallComponent.getScreenCapture() -> no permissions`);
+      }
     }
     return stream;
   }
@@ -215,7 +223,9 @@ export class StreamService {
       }, b => {
         let cam = true, mic = true;
         if (b.message.indexOf('Starting videoinput failed') > -1) {
-          console.log('videoinput used by another software');
+          if(this.config.debug) {
+            console.log('videoinput used by another software');
+          }
           cam = false;
         }
         navigator.mediaDevices.enumerateDevices().then((devices) => {
