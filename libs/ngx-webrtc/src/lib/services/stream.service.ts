@@ -208,10 +208,12 @@ export class StreamService {
   }
 
   // TODO: refactor
-  public tryGetUserMedia(): Promise<MediaStream> {
-    const mediaConstraints = {
-      audio: true,
-      video: true
+  public tryGetUserMedia(mediaConstraints?: MediaStreamConstraints): Promise<MediaStream> {
+    if (!mediaConstraints) {
+      mediaConstraints = {
+        audio: true,
+        video: true
+      }
     };
 
     return new Promise((resolve, reject) => {
@@ -236,8 +238,8 @@ export class StreamService {
             return device.kind === 'audioinput';
           }) !== null;
           const constraints = {
-            video: cam && mediaConstraints.video,
-            audio: mic && mediaConstraints.audio
+            video: cam && mediaConstraints?.video,
+            audio: mic && mediaConstraints?.audio
           };
           navigator.mediaDevices.getUserMedia(constraints).then(a => {
             this.hasAudio = true;
