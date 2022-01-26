@@ -75,7 +75,7 @@ export class PeerConnectionClient {
     return true;
   }
 
-  startAsCallee(initialMessages: string[] | PeerConnectionClientSignalMessage[]): boolean {
+  startAsCallee(initialMessages?: string[] | PeerConnectionClientSignalMessage[]): boolean {
     this.log('startAsCallee', initialMessages);
     if (!this.connection) {
       this.error('startAsCallee()', 'no connection');
@@ -422,7 +422,6 @@ export class PeerConnectionClient {
   // When we receive messages from GAE registration and from the WSS connection,
   // we add them to a queue and drain it if conditions are right.
   drainMessageQueue(): void {
-    console.log('drainMessageQueue');
     // It's possible that we finish registering and receiving messages from WSS
     // before our peer connection is created or started. We need to wait for the
     // peer connection to be created and started before processing messages.
