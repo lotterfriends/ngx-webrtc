@@ -32,18 +32,21 @@ export class StreamService {
     const divisor: number = gcd(width, height);
     return `${width / divisor}x${height / divisor}`;
   }
-  public setStreamInNode(node: HTMLVideoElement, stream: MediaStream | MediaStreamTrack, muted = true): void {
+  public setStreamInNode(node: HTMLVideoElement | HTMLAudioElement, stream: MediaStream | MediaStreamTrack, muted = true, local = false): void {
     const self = this;
     if (node) {
 
       // play when ready
       node.addEventListener('canplay', function onCanPlay(event) {
-        const video: HTMLVideoElement = event.target as HTMLVideoElement;
-        if (video) {
-          video.removeEventListener('canplay', onCanPlay);
-          video.play();
+        // it doesn't matter if we use audio or video element here
+        const eventTargetNode: HTMLVideoElement = event.target as HTMLVideoElement;
+        if (eventTargetNode) {
+          eventTargetNode.removeEventListener('canplay', onCanPlay);
+          eventTargetNode.play();
         }
-        self.localStreamStatusChanged.emit(stream);
+        if (local) {
+          self.localStreamStatusChanged.emit(stream);
+        }
       });
 
       let tmpStream;

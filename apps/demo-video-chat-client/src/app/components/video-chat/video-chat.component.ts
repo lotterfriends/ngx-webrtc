@@ -169,7 +169,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     this.localVideoEnabled = true;
     this.localStream = stream;
     this.streamService.setLocalStream(stream);
-    this.streamService.setStreamInNode(this.localStreamNode.nativeElement, stream);
+    this.streamService.setStreamInNode(this.localStreamNode.nativeElement, stream, true, true);
 
     this.log('joinedRoom');
 
