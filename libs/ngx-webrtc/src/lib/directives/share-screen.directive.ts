@@ -1,11 +1,9 @@
 import { ChangeDetectorRef, Directive, HostBinding, HostListener } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent, merge } from 'rxjs';
 import { take } from 'rxjs/operators';
 import { CallService } from '../services/call.service';
 import { StreamService } from '../services/stream.service';
 
-@UntilDestroy()
 @Directive({
   selector: '[ngxWebrtcShareScreen]',
 })
@@ -44,7 +42,6 @@ export class ShareScreenDirective {
 
       merge(streamInactive$, sharingStopped$)
         .pipe(
-          untilDestroyed(this),
           take(1)
         )
         .subscribe(() => {
