@@ -1,5 +1,6 @@
 import { EventEmitter } from '@angular/core';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Subject } from 'rxjs/internal/Subject';
 import { PeerConnectionClientSettings } from './interfaces/peer-connection-client-settings';
 import { PeerConnectionClientSignalMessage } from './interfaces/peer-connection-client-signal-message';
 import { PeerConnectionClientSignalMessageType } from './enums/peer-connection-client-signal-message-type';

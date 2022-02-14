@@ -1,5 +1,5 @@
 import { ComponentRef, EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { User } from '../interfaces/user';
 import { RemotePeerComponentInterface } from '../interfaces/remote-peer-component-interface';
 import { PeerConnectionClient } from '../peer-connection-client';
