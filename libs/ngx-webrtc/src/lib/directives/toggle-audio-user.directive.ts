@@ -2,11 +2,11 @@ import { Directive, HostBinding, HostListener, Input } from '@angular/core';
 import { UserInCall } from "../interfaces/user-in-call";
 
 @Directive({
-  selector: '[ngxWebRTCToggleAudioUser]',
+  selector: '[ngxWebrtcToggleAudioUser]',
 })
 export class ToggleAudioUserDirective {
 
-  @Input() ngxWebRTCToggleAudioUser: UserInCall | null = null;
+  @Input() ngxWebrtcToggleAudioUser: UserInCall | null = null;
   @HostBinding('class.disabled') public isDisabled = true;
   @HostBinding('class.enabled') public isEnabled = false;
   @HostListener('click', ['$event']) onClick(): void{
@@ -14,12 +14,12 @@ export class ToggleAudioUserDirective {
   }
 
   toggleUserAudio(): void {
-    if (!this.ngxWebRTCToggleAudioUser) {
+    if (!this.ngxWebrtcToggleAudioUser) {
       console.warn('user not set');
       return;
     }
-    if (this.ngxWebRTCToggleAudioUser?.connection) {
-      this.ngxWebRTCToggleAudioUser.connection.requestMuteAudio();
+    if (this.ngxWebrtcToggleAudioUser?.connection) {
+      this.ngxWebrtcToggleAudioUser.connection.requestMuteAudio();
       this.isEnabled = !this.isEnabled;
       this.isDisabled = !this.isDisabled;
     }

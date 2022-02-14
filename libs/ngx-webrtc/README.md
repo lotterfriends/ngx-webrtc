@@ -35,7 +35,9 @@ import { NgxWebrtcModule } from 'ngx-webrtc';
     BrowserModule,
 
     // Specify your library as an import
-     NgxWebrtcModule.forRoot()
+     NgxWebrtcModule.forRoot({
+       userIdentifier: 'id'
+     })
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -113,25 +115,25 @@ export class AppComponent {
 ### Directives
 the directive add there attached node the class enabled/disabled dependent on there state.
 This directives are available:
-- **ngxWebRTCShareScreen** - trigger get capture screen permissions and send screen to CallService. You can listen to the change and call replaceTrack of peer connection to send the screen capture to that connection
-- **ngxWebRTCToggleAudioSelf** - toggle disabled/enable audio track to mute/unmute local audio 
-- **ngxWebRTCToggleAudioUser** - send a toggle audio request to a specific peer connection 
-- **ngxWebRTCToggleVideoSelf**  -toggle disabled/enable video track to mute/unmute local video
-- **ngxWebRTCToggleVideoUser** - send a toggle video request to a specific peer connection 
+- **ngxWebrtcShareScreen** - trigger get capture screen permissions and send screen to CallService. You can listen to the change and call replaceTrack of peer connection to send the screen capture to that connection
+- **ngxWebrtcToggleAudioSelf** - toggle disabled/enable audio track to mute/unmute local audio 
+- **ngxWebrtcToggleAudioUser** - send a toggle audio request to a specific peer connection 
+- **ngxWebrtcToggleVideoSelf**  -toggle disabled/enable video track to mute/unmute local video
+- **ngxWebrtcToggleVideoUser** - send a toggle video request to a specific peer connection 
 
 
 Usage in templates 
 ```html
-<button ngxWebRTCToggleAudioSelf class="toggle-audio">
+<button ngxWebrtcToggleAudioSelf class="toggle-audio">
   <span class="on-enabled">Mute Audio</span>
   <span class="on-disabled">Unmute Audio</span>
 </button>
 
-<button ngxWebRTCToggleVideoSelf class="toggle-video">
+<button ngxWebrtcToggleVideoSelf class="toggle-video">
   <span class="on-enabled">Mute Video</span>
   <span class="on-disabled">Unmute Video</span>
 </button>
-<button ngxWebRTCShareScreen>
+<button ngxWebrtcShareScreen>
   <span class="on-enabled">Stop Share Screen</span>
   <span class="on-disabled">Share Screen</span>
 </button>
@@ -139,8 +141,8 @@ Usage in templates
 <ul>
   <li *ngFor="let user of callService.users$ | async">
     <span *ngIf="user.hasMic || user.hasCam">
-      <button *ngIf="user.hasMic" [ngxWebRTCToggleAudioUser]="user">mute for all</button>
-      <button *ngIf="user.hasCam" [ngxWebRTCToggleVideoUser]="user">disable video for all</button>
+      <button *ngIf="user.hasMic" [ngxWebrtcToggleAudioUser]="user">mute for all</button>
+      <button *ngIf="user.hasCam" [ngxWebrtcToggleVideoUser]="user">disable video for all</button>
     </span>
   </li>
 </ul>
