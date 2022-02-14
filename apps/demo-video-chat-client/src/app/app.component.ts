@@ -117,7 +117,7 @@ export class AppComponent {
     // join room
     this.socketService.joinRoom(room);
     setTimeout(() => {
-      this.videoChatComponent.startCall(this.servers);
+      this.videoChatComponent?.startCall(this.servers);
     });
 
     // update url
