@@ -44,7 +44,7 @@ export class CallService {
   }
 
 
-  public addUser(user: User, connection: PeerConnectionClient, node: ComponentRef<RemotePeerComponentInterface>): void {
+  public addUser(user: User, connection: PeerConnectionClient, node?: ComponentRef<RemotePeerComponentInterface>): void {
     const users = this.getUsers();
     users.push({
       user,

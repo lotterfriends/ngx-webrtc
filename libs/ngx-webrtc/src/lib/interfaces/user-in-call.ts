@@ -14,5 +14,5 @@ export interface UserInCall {
   videoMuted: boolean;
   shareScreen: boolean;
   connection: PeerConnectionClient;
-  node: ComponentRef<RemotePeerComponentInterface>;
+  node?: ComponentRef<RemotePeerComponentInterface>;
 }
