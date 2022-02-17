@@ -1,5 +1,5 @@
 import { ElementRef, EventEmitter, Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { BehaviorSubject } from 'rxjs';
 import { StreamType } from "../enums/stream-type";
 import { NgxWebrtConfiguration } from '../ngx-webrtc-configuration';
 
