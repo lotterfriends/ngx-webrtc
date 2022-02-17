@@ -1,6 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
 import { IceServer } from 'ngx-webrtc';
-import { lastValueFrom } from 'rxjs';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { ChannelHistoryService } from './services/channel-history.service';
 import { ServerService } from './services/server.service';
@@ -56,7 +55,7 @@ export class AppComponent {
     // get me when register/refresh is ready
     this.socketService.onMe().subscribe(async (me) => {
       this.userStorageService.setCurrentUser(me);
-      this.servers = await lastValueFrom(this.serverService.getServers());
+      this.servers = await this.serverService.getServers().toPromise();
       this.shouldJoin();
     });
 
