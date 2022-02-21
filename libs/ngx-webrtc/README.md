@@ -4,7 +4,7 @@
  > This package is currently under development and the api is unstable.
 
 
-example client integration: https://github.com/lotterfriends/ngx-webrtc/tree/main/apps/demo-video-chat-client
+Full featured example client with group video chats, screen sharing and more: https://github.com/lotterfriends/ngx-webrtc/tree/main/apps/demo-video-chat-client
 
 ## Installation
 
@@ -186,6 +186,7 @@ tbd
 - [Blog1](https://bloggeek.me/how-many-users-webrtc-call/)
 - [Blog2](https://bloggeek.me/media-server-for-webrtc-broadcast/)
 - [Media Server](https://ourcodeworld.com/articles/read/1212/top-5-best-open-source-webrtc-media-server-projects)
+- [Perfect negotiation](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Perfect_negotiation)
 - ...
 
 

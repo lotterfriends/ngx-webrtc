@@ -412,7 +412,7 @@ export class  SdpUtils {
 
   // Generate an fmtp line from an object including 'pt' and 'params'.
   public static writeFmtpLine(fmtpObj: FormatObject): string | null {
-    if (!fmtpObj.hasOwnProperty('pt') || !fmtpObj.hasOwnProperty('params')) {
+    if (!Object.prototype.hasOwnProperty.call(fmtpObj, 'pt') || !Object.prototype.hasOwnProperty.call(fmtpObj, 'params')) {
       return null;
     }
     const pt = fmtpObj.pt;

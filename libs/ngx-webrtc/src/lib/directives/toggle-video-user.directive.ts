@@ -1,6 +1,9 @@
 import { Directive, HostBinding, HostListener, Input } from '@angular/core';
 import { UserInCall } from "../interfaces/user-in-call";
 
+/**
+ * Send a toggle video request to a specific peer connection.
+ */
 @Directive({
   selector: '[ngxWebrtcToggleVideoUser]',
 })

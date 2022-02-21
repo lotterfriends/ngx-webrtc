@@ -4,6 +4,10 @@ import { take } from 'rxjs/operators';
 import { CallService } from '../services/call.service';
 import { StreamService } from '../services/stream.service';
 
+/**
+ * Trigger get capture screen permissions and send screen to CallService. 
+ * You can listen to the change and call replaceTrack of peer connection to send the screen capture to that connection
+ */
 @Directive({
   selector: '[ngxWebrtcShareScreen]',
 })

@@ -18,26 +18,74 @@ export class PeerConnectionClient {
   private settings: PeerConnectionClientSettings;
   private isNegotiating = false;
   private id = this.getRandom(6);
-  public signalingMessage = new EventEmitter<PeerConnectionClientSignalMessage>();
-  public seeNewCandidate$ = new BehaviorSubject<{location: string, candidate: string} | null>(null);
-  public remoteStreamAdded = new EventEmitter<StreamTrack>();
-  public signalState$ = new BehaviorSubject<RTCSignalingState | null>(null);
-  public error$ = new BehaviorSubject<{source: string, error?: Error} | null>(null);
-  public useShareScreen$ = new BehaviorSubject<boolean>(false);
-  public remotesDpSet = new BehaviorSubject<MediaStreamTrack | null>(null);
-  public remoteHangUp = new EventEmitter<void>();
-  public muteMyAudio = new EventEmitter<void>();
-  public muteMyVideo = new EventEmitter<void>();
-  public userMuteVideo = new EventEmitter<void>();
-  public userUnmuteVideo = new EventEmitter<void>();
-  public userMuteAudio = new EventEmitter<void>();
-  public userUnmuteAudio = new EventEmitter<void>();
-  public negotiationNeededTriggered = new Subject<boolean>();
-  public iceConnectionState$ = new BehaviorSubject<RTCIceConnectionState| null>(null);
   private readonly DEFAULT_SDP_OFFER_OPTIONS: RTCOfferOptions = {
     offerToReceiveAudio: true,
     offerToReceiveVideo: true,
   };
+  /**
+   * messages send by the peer connection
+   */
+  public signalingMessage = new EventEmitter<PeerConnectionClientSignalMessage>();
+  /**
+   * triggered when new candidate is available initial value is `null`
+   */
+  public seeNewCandidate$ = new BehaviorSubject<{location: string, candidate: string} | null>(null);
+  /**
+   * triggered when a remote stream is added
+   */
+  public remoteStreamAdded = new EventEmitter<StreamTrack>();
+  /**
+   * triggered when the `RTCSignalingState` is changed inital value is `null`
+   */
+  public signalState$ = new BehaviorSubject<RTCSignalingState | null>(null);
+  /**
+   * triggered if an error occure inital value is `null`
+   */
+  public error$ = new BehaviorSubject<{source: string, error?: Error} | null>(null);
+  /**
+   * triggered when the connected user toggle share screen, inital value is `false`
+   */
+  public useShareScreen$ = new BehaviorSubject<boolean>(false);
+  /**
+   * triggered when remote description is set, inital value is `null`
+   */
+  public remotesDescriptionSet = new BehaviorSubject<MediaStreamTrack | null>(null);
+  /**
+   * triggered when connected user close connection
+   */
+  public remoteHangUp = new EventEmitter<void>();
+  /**
+   * triggered when the connected user asks for mute user audio
+   */
+  public muteMyAudio = new EventEmitter<void>();
+  /**
+   * triggered when the connected user asks for mute user video
+   */
+  public muteMyVideo = new EventEmitter<void>();
+  /**
+   * triggered when the connected user mutes his video
+   */
+  public userMuteVideo = new EventEmitter<void>();
+  /**
+   * triggered when the connected user unmutes his video
+   */
+  public userUnmuteVideo = new EventEmitter<void>();
+  /**
+   * triggered when the connected user mutes his audio
+   */
+  public userMuteAudio = new EventEmitter<void>();
+  /**
+   * triggered when the connected user unmutes his audio
+   */
+  public userUnmuteAudio = new EventEmitter<void>();
+  /**
+   * triggerd on need negotiation
+   */
+  public negotiationNeededTriggered = new Subject<boolean>();
+  /**
+   * triggered on I see connection state changed, inital value is `null`
+   */
+  public iceConnectionState$ = new BehaviorSubject<RTCIceConnectionState| null>(null);
 
   constructor(settings: PeerConnectionClientSettings) {
     this.startTime = performance.now();
@@ -51,7 +99,14 @@ export class PeerConnectionClient {
     this.connection.onnegotiationneeded = this.onnegotiationneeded.bind(this);
   }
 
-  startAsCaller(offerOptions: RTCOfferOptions = {}): boolean {
+  /**
+   * Start Peer connection as caller
+   * @link https://developer.mozilla.org/en-US/docs/Web/API/RTCPeerConnection/createOffer
+   * @param offerOptions options for the connection 
+   * 
+   * @returns `true` when offer is made `false` if no connection available or the connection is already open
+   */
+  public startAsCaller(offerOptions: RTCOfferOptions = {}): boolean {
     this.log('startAsCaller', offerOptions);
 
     if (!this.connection) {
@@ -75,7 +130,12 @@ export class PeerConnectionClient {
     return true;
   }
 
-  startAsCallee(initialMessages?: string[] | PeerConnectionClientSignalMessage[]): boolean {
+  /**
+   * Start Peer connection as callee
+   * @param initialMessages messages that are collected before the `PeerConnectionClient` instance is created
+   * @returns `true` when messages are queed or processed `false` if no connection available or the connection is already open
+   */
+  public startAsCallee(initialMessages?: string[] | PeerConnectionClientSignalMessage[]): boolean {
     this.log('startAsCallee', initialMessages);
     if (!this.connection) {
       this.error('startAsCallee()', 'no connection');
@@ -106,7 +166,10 @@ export class PeerConnectionClient {
     return true;
   }
 
-  close(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.Bye` message to connected user and close the open connection 
+   */
+  public close(): void {
     this.log('close');
     if (!this.connection) {
       return;
@@ -118,7 +181,10 @@ export class PeerConnectionClient {
     this.connection = null;
   }
 
-  audioMuted(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.AudioMuted` message to connected user
+   */
+  public audioMuted(): void {
     if (!this.connection) {
       return;
     }
@@ -127,7 +193,10 @@ export class PeerConnectionClient {
     });
   }
 
-  audioUnmuted(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.AudioUnmuted` message to connected user
+   */
+  public audioUnmuted(): void {
     if (!this.connection) {
       return;
     }
@@ -136,7 +205,10 @@ export class PeerConnectionClient {
     });
   }
 
-  videoMuted(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.VideoMuted` message to connected user
+   */
+  public videoMuted(): void {
     if (!this.connection) {
       return;
     }
@@ -145,7 +217,10 @@ export class PeerConnectionClient {
     });
   }
 
-  videoUnmuted(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.VideoUnmuted` message to connected user
+   */
+  public videoUnmuted(): void {
     if (!this.connection) {
       return;
     }
@@ -154,7 +229,10 @@ export class PeerConnectionClient {
     });
   }
 
-  requestMuteAudio(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.RequestMuteAudio` message to connected user
+   */
+  public requestMuteAudio(): void {
     this.log('requestMuteAudio');
     if (!this.connection) {
       return;
@@ -164,7 +242,10 @@ export class PeerConnectionClient {
     });
   }
 
-  requestMuteVideo(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.RequestMuteVideo` message to connected user
+   */
+  public requestMuteVideo(): void {
     this.log('requestMuteVideo');
     if (!this.connection) {
       return;
@@ -174,7 +255,10 @@ export class PeerConnectionClient {
     });
   }
 
-  startShareScreen(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.StartShareScreen` message to connected user
+   */
+  public startShareScreen(): void {
     this.log('startShareScreen');
     if (!this.connection) {
       return;
@@ -184,7 +268,10 @@ export class PeerConnectionClient {
     });
   }
 
-  stopShareScreen(): void {
+  /**
+   * send `PeerConnectionClientSignalMessageType.StopShareScreen` message to connected user
+   */
+  public stopShareScreen(): void {
     this.log('startShareScreen');
     if (!this.connection) {
       return;
@@ -194,7 +281,11 @@ export class PeerConnectionClient {
     });
   }
 
-  getPeerConnectionStates(): {
+  /**
+   * get peer connection state
+   * @returns `null` if not connected otherwiese an object of `RTCSignalingState`, `RTCIceGatheringState` and `RTCIceConnectionState`
+   */
+  public getPeerConnectionStates(): {
     signalingState: RTCSignalingState,
     iceGatheringState: RTCIceGatheringState,
     iceConnectionState: RTCIceConnectionState
@@ -209,21 +300,34 @@ export class PeerConnectionClient {
     };
   }
 
-  getPeerConnectionStats(track?: MediaStreamTrack): Promise<RTCStatsReport> {
+  /**
+   * get the connection stats of a track in the connection 
+   * @param track `MediaStreamTrack` to check state for
+   * @returns Promise that resolves to `RTCStatsReport`
+   */
+  public getPeerConnectionStats(track?: MediaStreamTrack): Promise<RTCStatsReport> {
     if (!this.connection) {
       return Promise.reject();
     }
     return this.connection.getStats(track);
   }
 
-  addTrack(track: MediaStreamTrack): void {
+  /**
+   * add a `MediaStreamTrack` to the connection
+   * @param track `MediaStreamTrack` to be added to the connection.
+   */
+  public addTrack(track: MediaStreamTrack): void {
     this.log('addTrack', track);
     if (this.connection) {
       this.connection.addTrack(track);
     }
   }
 
-  replaceTrack(track: MediaStreamTrack): void {
+  /**
+   * replace current `MediaStreamTrack` with new from parameter
+   * @param track new `MediaStreamTrack`
+   */
+  public replaceTrack(track: MediaStreamTrack): void {
     this.log(track);
     if (this.connection) {
       const sender = this.connection.getSenders().find((s) => {
@@ -235,13 +339,17 @@ export class PeerConnectionClient {
     }
   }
 
+  /**
+   * Add all `MediaStreamTrack`s of a `MediaStream` to the connection
+   * @param mediaSteam `MediaStream` with tracks
+   */
   public addStream(mediaSteam: MediaStream): void {
     mediaSteam.getTracks().forEach(track => {
       this.addTrack(track);
     });
   }
 
-  setLocalSdpAndNotify(sessionDescription: RTCSessionDescriptionInit): void {
+  private setLocalSdpAndNotify(sessionDescription: RTCSessionDescriptionInit): void {
     if (!this.connection) {
       return;
     }
@@ -268,7 +376,7 @@ export class PeerConnectionClient {
     });
   }
 
-  filterIceCandidate(candidateObj: RTCIceCandidate): boolean {
+  private filterIceCandidate(candidateObj: RTCIceCandidate): boolean {
     // this.log('filterIceCandidate', candidateObj);
     const candidateStr = candidateObj.candidate;
 
@@ -285,7 +393,7 @@ export class PeerConnectionClient {
     return true;
   }
 
-  onIceCandidate(event: RTCPeerConnectionIceEvent): void {
+  private onIceCandidate(event: RTCPeerConnectionIceEvent): void {
     // this.log('onIceCandidate', event);
     if (event.candidate) {
       // Eat undesired candidates.
@@ -305,7 +413,7 @@ export class PeerConnectionClient {
   }
 
 
-  handleMessageEvents(messageObj: PeerConnectionClientSignalMessage): void {
+  private handleMessageEvents(messageObj: PeerConnectionClientSignalMessage): void {
     if (messageObj.type === PeerConnectionClientSignalMessageType.Bye) {
       this.remoteHangUp.emit();
     } else if (messageObj.type === PeerConnectionClientSignalMessageType.RequestMuteAudio) {
@@ -327,7 +435,11 @@ export class PeerConnectionClient {
     }
   }
 
-  receiveSignalingMessage(message: string | PeerConnectionClientSignalMessage): void {
+  /**
+   * execute this methode to set messages in the peer connection. You need a connection lay to receive messages.
+   * @param message message to process
+   */
+  public receiveSignalingMessage(message: string | PeerConnectionClientSignalMessage): void {
     this.log('receiveSignalingMessage', message);
     let messageObj: PeerConnectionClientSignalMessage;
     if (typeof message === 'string') {
@@ -355,7 +467,7 @@ export class PeerConnectionClient {
   }
 
 
-  processSignalingMessage(message: PeerConnectionClientSignalMessage): void {
+  private processSignalingMessage(message: PeerConnectionClientSignalMessage): void {
     this.log('processSignalingMessage', message);
     if (!this.connection) {
       return;
@@ -389,7 +501,7 @@ export class PeerConnectionClient {
     }
   }
 
-  doAnswer(): void {
+  private doAnswer(): void {
     if (!this.connection) {
       return;
     }
@@ -400,7 +512,7 @@ export class PeerConnectionClient {
   }
 
 
-  setRemoteSdp(message: PeerConnectionClientSignalMessage): void {
+  private setRemoteSdp(message: PeerConnectionClientSignalMessage): void {
     if (!this.connection) {
       return;
     }
@@ -421,7 +533,7 @@ export class PeerConnectionClient {
 
   // When we receive messages from GAE registration and from the WSS connection,
   // we add them to a queue and drain it if conditions are right.
-  drainMessageQueue(): void {
+  private drainMessageQueue(): void {
     // It's possible that we finish registering and receiving messages from WSS
     // before our peer connection is created or started. We need to wait for the
     // peer connection to be created and started before processing messages.
@@ -443,7 +555,7 @@ export class PeerConnectionClient {
 
   // Hooks
 
-  onIceConnectionStateChange(): void {
+  private onIceConnectionStateChange(): void {
     if (!this.connection) {
       return;
     }
@@ -457,7 +569,7 @@ export class PeerConnectionClient {
     this.iceConnectionState$.next(this.connection.iceConnectionState);
   }
 
-  onnegotiationneeded(): void {
+  private onnegotiationneeded(): void {
     if (!this.connection) {
       return;
     }
@@ -466,7 +578,7 @@ export class PeerConnectionClient {
 
   }
 
-  onSignalingStateChange(): void {
+  private onSignalingStateChange(): void {
     if (!this.connection) {
       return;
     }
@@ -475,12 +587,12 @@ export class PeerConnectionClient {
     this.signalState$.next(this.connection.signalingState);
   }
 
-  onError(source: string, error?: Error): void {
+  private onError(source: string, error?: Error): void {
     this.log(`${source}:`, error);
     this.error$.next({source, error});
   }
 
-  onRecordIceCandidate(location: string, candidateObj: RTCPeerConnectionIceEvent['candidate']): void {
+  private onRecordIceCandidate(location: string, candidateObj: RTCPeerConnectionIceEvent['candidate']): void {
     if (candidateObj?.candidate) {
       this.seeNewCandidate$.next({location, candidate: candidateObj.candidate});
     } else {
@@ -488,14 +600,14 @@ export class PeerConnectionClient {
     }
   }
 
-  onRemoteStreamAdded(event: RTCTrackEvent): void {
+  private onRemoteStreamAdded(event: RTCTrackEvent): void {
     this.remoteStreamAdded.emit({
       track: event.track,
       kind: event.track.kind as StreamType
     });
   }
 
-  onSetRemoteDescriptionSuccess(): void {
+  private onSetRemoteDescriptionSuccess(): void {
     if (!this.connection) {
       return;
     }
@@ -506,17 +618,18 @@ export class PeerConnectionClient {
     const remoteStreams = this.connection.getReceivers();
     if (remoteStreams.length) {
       for (const stream of remoteStreams) {
-        this.remotesDpSet.next(stream.track);
+        this.remotesDescriptionSet.next(stream.track);
       }
     }
   }
 
-  log(...args: any[]): void {
+  private log(...args: any[]): void {
     if (this.settings.debug) {
       console.log(this.id, ...args);
     }
   }
-  error(...args: any[]): void {
+
+  private error(...args: any[]): void {
     if (this.settings.debug) {
       console.error(this.id, ...args);
     }

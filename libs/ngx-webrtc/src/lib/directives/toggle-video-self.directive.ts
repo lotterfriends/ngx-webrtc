@@ -4,6 +4,9 @@ import { StreamType } from "../enums/stream-type";
 import { CallService } from '../services/call.service';
 import { StreamService } from '../services/stream.service';
 
+/**
+ * Toggle disabled/enable video track to mute/unmute local video.
+ */
 @Directive({
   selector: '[ngxWebrtcToggleVideoSelf]',
 })
