@@ -37,13 +37,13 @@ export class CallService {
 
 
   /**
-   * Emited by `ShareScreenDirective` when current User starts sharing his screen. 
+   * Emitted by `ShareScreenDirective` when current User starts sharing his screen. 
    */
   public startShareScreen = new EventEmitter<void>();
   
   
   /**
-   * Emited by `ShareScreenDirective` when current User stops sharing his screen. 
+   * Emitted by `ShareScreenDirective` when current User stops sharing his screen. 
    */
   public stopShareScreen = new EventEmitter<void>();
   
