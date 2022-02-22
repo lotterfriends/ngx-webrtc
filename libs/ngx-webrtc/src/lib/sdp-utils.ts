@@ -1,11 +1,11 @@
 import { SdpSettings } from "./interfaces/sdp-settings";
 
-interface FormatObject {
+export interface FormatObject {
   pt: string;
   params: FormatParams
 }
 
-interface FormatParams {
+export interface FormatParams {
   [key: string]: string | number
 }
 
