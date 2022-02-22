@@ -59,7 +59,7 @@ and methods to create a `PeerConnectionClient`.
 
 #### Defined in
 
-[lib/services/call.service.ts:20](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L20)
+[lib/services/call.service.ts:20](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L20)
 
 ## Properties
 
@@ -79,7 +79,7 @@ default public and free IceServers list
 
 #### Defined in
 
-[lib/services/call.service.ts:61](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L61)
+[lib/services/call.service.ts:61](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L61)
 
 ___
 
@@ -89,7 +89,7 @@ ___
 
 #### Defined in
 
-[lib/services/call.service.ts:29](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L29)
+[lib/services/call.service.ts:29](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L29)
 
 ___
 
@@ -99,7 +99,7 @@ ___
 
 #### Defined in
 
-[lib/services/call.service.ts:26](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L26)
+[lib/services/call.service.ts:26](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L26)
 
 ___
 
@@ -111,7 +111,7 @@ Emitted by `ShareScreenDirective` when current User starts sharing his screen.
 
 #### Defined in
 
-[lib/services/call.service.ts:42](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L42)
+[lib/services/call.service.ts:42](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L42)
 
 ___
 
@@ -123,7 +123,7 @@ chat status state
 
 #### Defined in
 
-[lib/services/call.service.ts:70](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L70)
+[lib/services/call.service.ts:70](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L70)
 
 ___
 
@@ -135,7 +135,7 @@ Emitted by `ShareScreenDirective` when current User stops sharing his screen.
 
 #### Defined in
 
-[lib/services/call.service.ts:48](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L48)
+[lib/services/call.service.ts:48](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L48)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[lib/services/call.service.ts:25](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L25)
+[lib/services/call.service.ts:25](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L25)
 
 ___
 
@@ -158,7 +158,7 @@ get all User via `CallService.getUsers()`, get one user via `CallService.getUser
 
 #### Defined in
 
-[lib/services/call.service.ts:35](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L35)
+[lib/services/call.service.ts:35](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L35)
 
 ## Methods
 
@@ -182,7 +182,7 @@ The `CallService` hold the users state with all users, with this methode you can
 
 #### Defined in
 
-[lib/services/call.service.ts:99](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L99)
+[lib/services/call.service.ts:99](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L99)
 
 ___
 
@@ -208,7 +208,7 @@ Promise resolve to `RTCCertificate`
 
 #### Defined in
 
-[lib/services/call.service.ts:262](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L262)
+[lib/services/call.service.ts:262](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L262)
 
 ___
 
@@ -232,7 +232,7 @@ Create a new `PeerConnectionClient` with the given settings
 
 #### Defined in
 
-[lib/services/call.service.ts:252](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L252)
+[lib/services/call.service.ts:252](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L252)
 
 ___
 
@@ -253,7 +253,7 @@ ___
 
 #### Defined in
 
-[lib/services/call.service.ts:291](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L291)
+[lib/services/call.service.ts:291](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L291)
 
 ___
 
@@ -271,7 +271,7 @@ Timestamp
 
 #### Defined in
 
-[lib/services/call.service.ts:85](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L85)
+[lib/services/call.service.ts:85](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L85)
 
 ___
 
@@ -293,7 +293,7 @@ User in state
 
 #### Defined in
 
-[lib/services/call.service.ts:243](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L243)
+[lib/services/call.service.ts:243](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L243)
 
 ___
 
@@ -311,7 +311,7 @@ identifier to select a User
 
 #### Defined in
 
-[lib/services/call.service.ts:287](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L287)
+[lib/services/call.service.ts:287](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L287)
 
 ___
 
@@ -329,7 +329,7 @@ All users currently in state
 
 #### Defined in
 
-[lib/services/call.service.ts:234](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L234)
+[lib/services/call.service.ts:234](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L234)
 
 ___
 
@@ -351,7 +351,7 @@ remove a user object from state
 
 #### Defined in
 
-[lib/services/call.service.ts:119](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L119)
+[lib/services/call.service.ts:119](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L119)
 
 ___
 
@@ -367,7 +367,7 @@ set call state started to `true`, you can subscribe to `CallService.started$` fo
 
 #### Defined in
 
-[lib/services/call.service.ts:272](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L272)
+[lib/services/call.service.ts:272](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L272)
 
 ___
 
@@ -383,7 +383,7 @@ set call state started to `false`, you can subscribe to `CallService.started$` f
 
 #### Defined in
 
-[lib/services/call.service.ts:279](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L279)
+[lib/services/call.service.ts:279](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L279)
 
 ___
 
@@ -399,7 +399,7 @@ update since timestamp with current time
 
 #### Defined in
 
-[lib/services/call.service.ts:75](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L75)
+[lib/services/call.service.ts:75](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L75)
 
 ___
 
@@ -421,7 +421,7 @@ Use this method when the passed user deactivates his microphone to update the st
 
 #### Defined in
 
-[lib/services/call.service.ts:155](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L155)
+[lib/services/call.service.ts:155](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L155)
 
 ___
 
@@ -443,7 +443,7 @@ Use this method when the passed user activates his microphone to update the stat
 
 #### Defined in
 
-[lib/services/call.service.ts:168](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L168)
+[lib/services/call.service.ts:168](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L168)
 
 ___
 
@@ -465,7 +465,7 @@ Use this method if the passed user has a camera to update the state.
 
 #### Defined in
 
-[lib/services/call.service.ts:129](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L129)
+[lib/services/call.service.ts:129](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L129)
 
 ___
 
@@ -487,7 +487,7 @@ Use this method if the passed user has a microphone to update the state.
 
 #### Defined in
 
-[lib/services/call.service.ts:142](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L142)
+[lib/services/call.service.ts:142](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L142)
 
 ___
 
@@ -509,7 +509,7 @@ Use this method when the passed user starts to share his screen to update the st
 
 #### Defined in
 
-[lib/services/call.service.ts:207](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L207)
+[lib/services/call.service.ts:207](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L207)
 
 ___
 
@@ -531,7 +531,7 @@ Use this method when the passed user stops sharing his screen to update the stat
 
 #### Defined in
 
-[lib/services/call.service.ts:220](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L220)
+[lib/services/call.service.ts:220](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L220)
 
 ___
 
@@ -553,7 +553,7 @@ Use this method when the passed user deactivates his camera to update the state.
 
 #### Defined in
 
-[lib/services/call.service.ts:181](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L181)
+[lib/services/call.service.ts:181](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L181)
 
 ___
 
@@ -575,4 +575,4 @@ Use this method when the passed user activates his camera to update the state.
 
 #### Defined in
 
-[lib/services/call.service.ts:194](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/services/call.service.ts#L194)
+[lib/services/call.service.ts:194](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/services/call.service.ts#L194)

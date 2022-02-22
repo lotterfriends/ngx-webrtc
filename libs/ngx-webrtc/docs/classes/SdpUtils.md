@@ -63,7 +63,7 @@
 
 #### Defined in
 
-[lib/sdp-utils.ts:435](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L435)
+[lib/sdp-utils.ts:435](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L435)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:444](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L444)
+[lib/sdp-utils.ts:444](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L444)
 
 ___
 
@@ -110,7 +110,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:450](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L450)
+[lib/sdp-utils.ts:450](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L450)
 
 ___
 
@@ -131,7 +131,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:491](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L491)
+[lib/sdp-utils.ts:491](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L491)
 
 ___
 
@@ -151,7 +151,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:497](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L497)
+[lib/sdp-utils.ts:497](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L497)
 
 ___
 
@@ -171,7 +171,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:14](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L14)
+[lib/sdp-utils.ts:14](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L14)
 
 ___
 
@@ -192,7 +192,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:266](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L266)
+[lib/sdp-utils.ts:266](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L266)
 
 ___
 
@@ -213,7 +213,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:261](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L261)
+[lib/sdp-utils.ts:261](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L261)
 
 ___
 
@@ -236,7 +236,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:282](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L282)
+[lib/sdp-utils.ts:282](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L282)
 
 ___
 
@@ -257,7 +257,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:276](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L276)
+[lib/sdp-utils.ts:276](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L276)
 
 ___
 
@@ -278,7 +278,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:271](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L271)
+[lib/sdp-utils.ts:271](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L271)
 
 ___
 
@@ -299,7 +299,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:226](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L226)
+[lib/sdp-utils.ts:226](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L226)
 
 ___
 
@@ -320,7 +320,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:59](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L59)
+[lib/sdp-utils.ts:59](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L59)
 
 ___
 
@@ -341,7 +341,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:51](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L51)
+[lib/sdp-utils.ts:51](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L51)
 
 ___
 
@@ -362,7 +362,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:18](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L18)
+[lib/sdp-utils.ts:18](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L18)
 
 ___
 
@@ -383,7 +383,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:75](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L75)
+[lib/sdp-utils.ts:75](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L75)
 
 ___
 
@@ -404,7 +404,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:67](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L67)
+[lib/sdp-utils.ts:67](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L67)
 
 ___
 
@@ -425,7 +425,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:126](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L126)
+[lib/sdp-utils.ts:126](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L126)
 
 ___
 
@@ -445,7 +445,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:388](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L388)
+[lib/sdp-utils.ts:388](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L388)
 
 ___
 
@@ -467,7 +467,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:84](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L84)
+[lib/sdp-utils.ts:84](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L84)
 
 ___
 
@@ -488,7 +488,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:189](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L189)
+[lib/sdp-utils.ts:189](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L189)
 
 ___
 
@@ -509,7 +509,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:209](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L209)
+[lib/sdp-utils.ts:209](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L209)
 
 ___
 
@@ -531,7 +531,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:362](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L362)
+[lib/sdp-utils.ts:362](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L362)
 
 ___
 
@@ -552,7 +552,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:179](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L179)
+[lib/sdp-utils.ts:179](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L179)
 
 ___
 
@@ -575,7 +575,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:324](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L324)
+[lib/sdp-utils.ts:324](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L324)
 
 ___
 
@@ -596,7 +596,7 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:504](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L504)
+[lib/sdp-utils.ts:504](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L504)
 
 ___
 
@@ -616,4 +616,4 @@ ___
 
 #### Defined in
 
-[lib/sdp-utils.ts:414](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/sdp-utils.ts#L414)
+[lib/sdp-utils.ts:414](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/sdp-utils.ts#L414)

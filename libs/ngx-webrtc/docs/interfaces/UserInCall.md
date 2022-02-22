@@ -24,7 +24,7 @@
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:13](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L13)
+[lib/interfaces/user-in-call.ts:13](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L13)
 
 ___
 
@@ -34,7 +34,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:16](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L16)
+[lib/interfaces/user-in-call.ts:16](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L16)
 
 ___
 
@@ -44,7 +44,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:10](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L10)
+[lib/interfaces/user-in-call.ts:10](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L10)
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:11](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L11)
+[lib/interfaces/user-in-call.ts:11](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L11)
 
 ___
 
@@ -64,7 +64,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:17](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L17)
+[lib/interfaces/user-in-call.ts:17](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L17)
 
 ___
 
@@ -74,7 +74,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:15](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L15)
+[lib/interfaces/user-in-call.ts:15](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L15)
 
 ___
 
@@ -84,7 +84,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:9](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L9)
+[lib/interfaces/user-in-call.ts:9](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L9)
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:14](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L14)
+[lib/interfaces/user-in-call.ts:14](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L14)
 
 ___
 
@@ -104,4 +104,4 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user-in-call.ts:12](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L12)
+[lib/interfaces/user-in-call.ts:12](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user-in-call.ts#L12)

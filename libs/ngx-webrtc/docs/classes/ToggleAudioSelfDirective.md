@@ -47,7 +47,7 @@ Toggle disabled/enable audio track to mute/unmute local audio.
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:23](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L23)
+[lib/directives/toggle-audio-self.directive.ts:23](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L23)
 
 ## Properties
 
@@ -57,7 +57,7 @@ Toggle disabled/enable audio track to mute/unmute local audio.
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:15](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L15)
+[lib/directives/toggle-audio-self.directive.ts:15](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L15)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:17](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L17)
+[lib/directives/toggle-audio-self.directive.ts:17](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L17)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:18](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L18)
+[lib/directives/toggle-audio-self.directive.ts:18](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L18)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:16](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L16)
+[lib/directives/toggle-audio-self.directive.ts:16](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L16)
 
 ## Methods
 
@@ -101,7 +101,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:36](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L36)
+[lib/directives/toggle-audio-self.directive.ts:36](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L36)
 
 ___
 
@@ -119,7 +119,7 @@ OnDestroy.ngOnDestroy
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:31](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L31)
+[lib/directives/toggle-audio-self.directive.ts:31](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L31)
 
 ___
 
@@ -133,7 +133,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:19](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L19)
+[lib/directives/toggle-audio-self.directive.ts:19](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L19)
 
 ___
 
@@ -153,7 +153,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:47](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L47)
+[lib/directives/toggle-audio-self.directive.ts:47](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L47)
 
 ___
 
@@ -173,7 +173,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:40](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L40)
+[lib/directives/toggle-audio-self.directive.ts:40](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L40)
 
 ___
 
@@ -187,7 +187,7 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:61](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L61)
+[lib/directives/toggle-audio-self.directive.ts:61](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L61)
 
 ___
 
@@ -207,4 +207,4 @@ ___
 
 #### Defined in
 
-[lib/directives/toggle-audio-self.directive.ts:65](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L65)
+[lib/directives/toggle-audio-self.directive.ts:65](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/toggle-audio-self.directive.ts#L65)

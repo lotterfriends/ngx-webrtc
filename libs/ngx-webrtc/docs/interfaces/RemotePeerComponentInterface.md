@@ -22,7 +22,7 @@
 
 #### Defined in
 
-[lib/interfaces/remote-peer-component-interface.ts:9](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L9)
+[lib/interfaces/remote-peer-component-interface.ts:9](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L9)
 
 ___
 
@@ -32,7 +32,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/remote-peer-component-interface.ts:7](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L7)
+[lib/interfaces/remote-peer-component-interface.ts:7](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L7)
 
 ___
 
@@ -42,7 +42,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/remote-peer-component-interface.ts:8](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L8)
+[lib/interfaces/remote-peer-component-interface.ts:8](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L8)
 
 ## Methods
 
@@ -62,4 +62,4 @@ ___
 
 #### Defined in
 
-[lib/interfaces/remote-peer-component-interface.ts:10](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L10)
+[lib/interfaces/remote-peer-component-interface.ts:10](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/remote-peer-component-interface.ts#L10)

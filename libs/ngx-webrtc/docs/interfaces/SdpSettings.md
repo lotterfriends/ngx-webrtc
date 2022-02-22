@@ -35,7 +35,7 @@
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:15](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L15)
+[lib/interfaces/sdp-settings.ts:15](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L15)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:6](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L6)
+[lib/interfaces/sdp-settings.ts:6](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L6)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:12](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L12)
+[lib/interfaces/sdp-settings.ts:12](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L12)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:3](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L3)
+[lib/interfaces/sdp-settings.ts:3](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L3)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:10](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L10)
+[lib/interfaces/sdp-settings.ts:10](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L10)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:9](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L9)
+[lib/interfaces/sdp-settings.ts:9](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L9)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:11](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L11)
+[lib/interfaces/sdp-settings.ts:11](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L11)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:8](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L8)
+[lib/interfaces/sdp-settings.ts:8](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L8)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:7](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L7)
+[lib/interfaces/sdp-settings.ts:7](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L7)
 
 ___
 
@@ -125,7 +125,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:16](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L16)
+[lib/interfaces/sdp-settings.ts:16](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L16)
 
 ___
 
@@ -135,7 +135,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:5](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L5)
+[lib/interfaces/sdp-settings.ts:5](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L5)
 
 ___
 
@@ -145,7 +145,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:14](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L14)
+[lib/interfaces/sdp-settings.ts:14](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L14)
 
 ___
 
@@ -155,7 +155,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:4](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L4)
+[lib/interfaces/sdp-settings.ts:4](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L4)
 
 ___
 
@@ -165,4 +165,4 @@ ___
 
 #### Defined in
 
-[lib/interfaces/sdp-settings.ts:13](https://github.com/lotterfriends/video-chat/blob/a615e2f/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L13)
+[lib/interfaces/sdp-settings.ts:13](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/sdp-settings.ts#L13)
