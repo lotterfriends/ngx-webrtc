@@ -24,6 +24,4 @@ export class DialogComponent {
     this.showChange.emit(this.show);
   }
 
-
-
 }

@@ -1,6 +1,7 @@
 {
   "version": 2,
   "projects": {
+    "demo-ui-components": "libs/demo-ui-components",
     "demo-video-chat-client": "apps/demo-video-chat-client",
     "demo-video-chat-models": "libs/demo-video-chat-models",
     "demo-video-chat-server": "apps/demo-video-chat-server",

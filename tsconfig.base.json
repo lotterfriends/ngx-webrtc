@@ -15,6 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "@ngx-webrtc/demo-ui-components": [
+        "libs/demo-ui-components/src/index.ts"
+      ],
       "@ngx-webrtc/demo-video-chat-models": [
         "libs/demo-video-chat-models/src/index.ts"
       ],

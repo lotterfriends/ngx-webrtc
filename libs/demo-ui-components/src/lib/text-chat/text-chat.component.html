@@ -22,13 +22,13 @@
         [(ngModel)]="msg"
         (keyup.enter)="
           msg.length &&
-            sendMessage(msg) &&
+            doSendMessage(msg) &&
             (messageField.value = '')
         "
       />
     <div class="send-button">
       <button
-        (click)="sendMessage(msg) && (messageField.value = '')"
+        (click)="doSendMessage(msg) && (messageField.value = '')"
         [disabled]="!msg.length"
       >
       senden

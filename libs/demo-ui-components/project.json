@@ -1,0 +1,26 @@
+{
+  "projectType": "library",
+  "root": "libs/demo-ui-components",
+  "sourceRoot": "libs/demo-ui-components/src",
+  "prefix": "ngx-webrtc",
+  "targets": {
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/demo-ui-components"],
+      "options": {
+        "jestConfig": "libs/demo-ui-components/jest.config.js",
+        "passWithNoTests": true
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "libs/demo-ui-components/src/**/*.ts",
+          "libs/demo-ui-components/src/**/*.html"
+        ]
+      }
+    }
+  },
+  "tags": []
+}

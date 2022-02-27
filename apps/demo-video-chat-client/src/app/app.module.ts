@@ -6,14 +6,13 @@ import { NgxWebrtcModule } from 'ngx-webrtc';
 import { SocketIoConfig, SocketIoModule } from 'ngx-socket-io';
 import { AppComponent } from './app.component';
 import { AuthInterceptor } from './auth-interceptor';
-import { AvatarComponent } from './components/avatar/avatar.component';
-import { DialogComponent } from './components/dialog/dialog.component';
-import { TextChatComponent } from './components/text-chat/text-chat.component';
-import { UserlistComponent } from './components/userlist/userlist.component';
+import { TextChatContainerComponent } from './components/text-chat-container/text-chat-container.component';
+import { UserlistContainerComponent } from './components/userlist-container/userlist.-containercomponent';
 import { ControlsComponent } from './components/video-chat/controls/controls.component';
 import { RemotePeerComponent } from './components/video-chat/remote-peer/remote-peer.component';
 import { VideoChatSettingsDialogComponent } from './components/video-chat/video-chat-settings-dialog/video-chat-settings-dialog.component';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
+import { DemoUiComponentsModule } from '@ngx-webrtc/demo-ui-components';
 
 
 const config: SocketIoConfig = { url: 'http://localhost:3333', options: {} };
@@ -21,16 +20,15 @@ const config: SocketIoConfig = { url: 'http://localhost:3333', options: {} };
 @NgModule({
   declarations: [
     AppComponent,
-    TextChatComponent,
+    TextChatContainerComponent,
     VideoChatComponent,
     RemotePeerComponent,
-    UserlistComponent,
+    UserlistContainerComponent,
     ControlsComponent,
-    DialogComponent,
     VideoChatSettingsDialogComponent,
-    AvatarComponent
   ],
   imports: [
+    DemoUiComponentsModule,
     BrowserModule,
     FormsModule,
     HttpClientModule,
@@ -45,7 +43,6 @@ const config: SocketIoConfig = { url: 'http://localhost:3333', options: {} };
   ],
   bootstrap: [AppComponent],
   exports: [
-    AvatarComponent
   ]
 })
 export class AppModule { }

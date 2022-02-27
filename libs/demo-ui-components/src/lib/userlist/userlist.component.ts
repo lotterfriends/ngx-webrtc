@@ -1,38 +1,31 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ServerUser } from '@ngx-webrtc/demo-video-chat-models';
 import { StreamType, CallService, UserInCall, StreamService } from 'ngx-webrtc';
-import { UserStorageService } from '../../services/user-storage.service';
 
 @UntilDestroy()
 @Component({
   selector: 'ngx-webrtc-userlist',
   templateUrl: './userlist.component.html',
   styleUrls: ['./userlist.component.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserlistComponent implements OnInit {
 
-  public users: UserInCall[] = [];
   public selfAudioMuted = false;
   public selfVideoMuted = false;
-  public self: ServerUser | null = null;
+  @Input() public self: ServerUser | null = null;
 
   constructor(
     public callService: CallService,
     private cdr: ChangeDetectorRef,
-    private userService: UserStorageService,
     private streamService: StreamService,
-  ) {
-
-  }
+  ) {}
 
   ngOnInit(): void {
     this.init();
   }
 
   private init(): void {
-    this.self = this.userService.getCurrentUser();
     this.callService.started$.pipe(untilDestroyed(this)).subscribe(this.onChatStarted.bind(this));
   }
 
