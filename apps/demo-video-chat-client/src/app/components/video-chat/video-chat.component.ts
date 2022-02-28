@@ -51,9 +51,6 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     private socketService: SocketService,
     private messageService: MessagesService,
     private streamService: StreamService,
-    private changeDetectorRef: ChangeDetectorRef,
-    private cfr: ComponentFactoryResolver,
-    private injector: Injector,
     private callService: CallService,
     private uiService: UiService
   ) {}
@@ -203,7 +200,7 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
 
       for (const [i, user] of users.filter(this.filterConnectedUsers.bind(this)).entries()) {
         this.log('new user', user);
-        const component = await this.createRemotePeerComponent(i);
+        const component = this.remotePeerHolder.createComponent(RemotePeerComponent);
         const connection = await this.addPeer(user, component);
         this.pclients.push({
           component,
@@ -355,18 +352,6 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     this.callService.updateSince();
     this.callService.stop();
   }
-
-  private async getRemotePeerFactory(): Promise<ComponentFactory<RemotePeerComponent>> {
-    return this.cfr.resolveComponentFactory(RemotePeerComponent);
-  }
-
-  private async createRemotePeerComponent(index: number): Promise<ComponentRef<RemotePeerComponent>> {
-    const factory = await this.getRemotePeerFactory();
-    const component = this.remotePeerHolder.createComponent(factory, index, this.injector);
-    this.changeDetectorRef.detectChanges();
-    return component;
-  }
-
 
   private resize(): void {
     setTimeout(() => {
