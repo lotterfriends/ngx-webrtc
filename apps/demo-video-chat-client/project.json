@@ -19,7 +19,11 @@
         ],
         "styles": [
           "node_modules/normalize.css/normalize.css",
-          "apps/demo-video-chat-client/src/styles.css"
+          "apps/demo-video-chat-client/src/styles.css",
+          "libs/demo-ui-components/src/styles/general.css",
+          "libs/demo-ui-components/src/styles/button.css",
+          "libs/demo-ui-components/src/styles/forms.css",
+          "libs/demo-ui-components/src/styles/links.css"
         ],
         "scripts": []
       },

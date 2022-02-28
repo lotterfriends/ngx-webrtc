@@ -1,0 +1,22 @@
+
+button {
+  cursor: pointer;
+  background-color: var(--main-accent-color);
+  border: 0 none;
+  padding: .25em .5em;
+  color: #fff;
+  border-radius: .25em;
+  letter-spacing: .1em;
+  text-align: center;
+  box-shadow: 0 -0.1em 0px var(--main-accent-color-darker) inset;
+  text-shadow: 0 0 0.15em #000;
+  text-transform: capitalize;
+}
+
+button:disabled {
+  cursor: default;
+}
+
+button.round {
+  border-radius: 50%;
+}
