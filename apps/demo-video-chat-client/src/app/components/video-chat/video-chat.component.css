@@ -30,7 +30,7 @@ video {
   object-fit: cover;
 }
 
-.conference.remote-peer-0 + .video-chat-self-holder {
+.video-chat-remote.remote-peer-0 + .video-chat-self-holder {
   top: 0;
   left: 0; 
   height: auto;
@@ -38,80 +38,24 @@ video {
   text-align: center;
 }
 
-.conference.remote-peer-0 + .video-chat-self-holder video {
+.video-chat-remote.remote-peer-0 + .video-chat-self-holder video {
   max-width: inherit;
   height: 100%;
   width: 100%;
 }
 
-.conference.remote-peer-x + .video-chat-self-holder {
+.video-chat-remote.remote-peer-x + .video-chat-self-holder {
   border-top-left-radius: 10px;
   overflow: hidden;
 }
 
-.conference {
+.video-chat-remote {
   display: flex;
   flex: 1;
   border-radius: 10px;
   gap: 20px;
   max-height: 100%;
   max-width: 100%;
-}
-
-.video-chat-remote-peer-holder {
-  display: flex;
-  align-content: center;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-}
-
-.conference.remote-peer-1 ::ng-deep ngx-webrtc-remote-peer {
-  width: 100% !important;
-  height: 100% !important;
-  border-radius: 0 !important;
-  margin: 0 !important;
-}
-
-::ng-deep ngx-webrtc-remote-peer {
-  position: relative;
-  vertical-align: middle;
-  align-self: center;
-  border-radius: 10px;
-  overflow: hidden;
-  display: inline-block;
-  box-shadow:  0 1px 2px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.1), 0 4px 8px rgba(0, 0, 0, 0.1), 0 8px 16px rgba(0, 0, 0, 0.1), 0 16px 32px rgba(0, 0, 0, 0.1), 0 32px 64px rgba(0, 0, 0, 0.1);
-  background: #000;
-  animation: show 0.2s ease;
-}
-
-::ng-deep ngx-webrtc-remote-peer video,
-::ng-deep ngx-webrtc-remote-peer .no-video {
-  position: absolute;
-  right: 0;
-  object-fit: cover;
-  bottom: 0;
-  width: 100%;
-  height: 100%;
-  border-radius: 10px;
-  overflow: hidden;
-  left: 0;
-  top: 0;
-  background-size: cover;
-  overflow: hidden;
-}
-
-@keyframes show {
-  0% {
-      opacity: 0;
-      transform: scale(0.4) translateY(20px);
-  }
-
-  100% {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-  }
 }
 
 .hide {

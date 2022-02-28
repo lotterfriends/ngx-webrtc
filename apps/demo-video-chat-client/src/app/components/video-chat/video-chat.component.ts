@@ -11,6 +11,7 @@ import { SocketService } from '../../services/socket.service';
 import { UserStorageService } from '../../services/user-storage.service';
 import { RemotePeerComponent } from './remote-peer/remote-peer.component';
 import { UiService, ViewMode } from '../../services/ui.service';
+import { ConferenceGridHolderComponent } from '@ngx-webrtc/demo-ui-components';
 
 /**
  * This is an example implementation of an video chat
@@ -33,20 +34,11 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
   private users: User[] = [];
   private identifier: (keyof User) = this.callService.getUserIdentifier();
   private servers: IceServer[] = [];
-  private sizing = {
-    margin: 10,
-    ratios: ['4:3', '16:9', '1:1', '1:2'],
-    selectedRatioIndex: 0,
-    ratio: () => {
-      const ratio = this.sizing.ratios[this.sizing.selectedRatioIndex].split(':');
-      return parseInt(ratio[1], 10) / parseInt(ratio[0], 10);
-    }
-  };
 
   @Input() room!: string;
   @ViewChild('localStreamNode', { static: false }) localStreamNode!: ElementRef;
   @ViewChild('remotePeerHolder',  { read: ViewContainerRef }) remotePeerHolder!: ViewContainerRef;
-  @ViewChild('holder', { static: false }) public holder!: ElementRef;
+  @ViewChild('holder', { static: false }) public holder!: ConferenceGridHolderComponent;
   @HostListener('window:resize') public onWinResize(): void {
     this.resize();
   }
@@ -375,73 +367,15 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     return component;
   }
 
-  private dimensions(): {holderWidth: number, holderHeight: number } {
-    return {
-      holderWidth: this.holder.nativeElement.offsetWidth - (this.sizing.margin * 2),
-      holderHeight: this.holder.nativeElement.offsetHeight - (this.sizing.margin * 2)
-    };
-  }
-
-  private resizer(width: number): void {
-    const components = this.pclients.map(e => e.component);
-    for (const child of components) {
-      const node: HTMLElement = child.instance.elementRef.nativeElement;
-      node.style.margin = this.sizing.margin + 'px';
-      node.style.width = width + 'px';
-      node.style.height = (width * this.sizing.ratio()) + 'px';
-      node.setAttribute('data-aspect', this.sizing.ratios[this.sizing.selectedRatioIndex]);
-    }
-  }
-
-  private area(holderWidth: number, holderHeight: number, increment: number): number | false {
-    let elementWidth = 0;
-    let elementHeight = increment * this.sizing.ratio() + (this.sizing.margin * 2);
-    [...this.holder.nativeElement.children].forEach((): void => {
-      if ((elementWidth + increment) > holderWidth) {
-        elementWidth = 0;
-        elementHeight = elementHeight + (increment * this.sizing.ratio()) + (this.sizing.margin * 2);
-      }
-      elementWidth = elementWidth + increment + (this.sizing.margin * 2);
-    });
-    return (elementHeight > holderHeight || increment > holderWidth) ? false : increment;
-  }
 
   private resize(): void {
     setTimeout(() => {
       if (this.viewMode === ViewMode.Grid) {
-        this.resizeGrid();
+        this.holder.resizeGrid();
       } else {
-        this.removeSize();
+        this.holder.removeSize();
       }
     });
-  }
-
-  private resizeGrid(): void {
-    this.log('resizeGrid');
-    const {holderWidth, holderHeight} = this.dimensions();
-    let max = 0;
-    let i = 1;
-    while (i < holderWidth) {
-      if (!this.area(holderWidth, holderHeight, i)) {
-        max = i - 1;
-        break;
-      }
-      i++;
-    }
-    max = max - (this.sizing.margin * 2);
-    this.resizer(max);
-  }
-
-  private removeSize(): void {
-    this.log('removeSize');
-    const components = this.pclients.map(e => e.component);
-    for (const child of components) {
-      const node: HTMLElement = child.instance.elementRef.nativeElement;
-      node.style.margin =  '';
-      node.style.width = '';
-      node.style.height = '';
-      node.removeAttribute('data-aspect');
-    }
   }
 
   // eslint-disable-next-line  @typescript-eslint/no-explicit-any

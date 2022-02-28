@@ -1,8 +1,8 @@
 
-<div class="conference remote-peer-{{pclients.length}}" [class.remote-peer-x]="pclients.length">
-  <div class="video-chat-remote-peer-holder view-mode-{{viewMode}}" #holder>
+<div class="video-chat-remote remote-peer-{{pclients.length}}" [class.remote-peer-x]="pclients.length">
+  <ngx-webrtc-conference-grid-holder class="video-chat-remote-peer-holder view-mode-{{viewMode}}" #holder>
     <ng-container #remotePeerHolder></ng-container>
-  </div>
+  </ngx-webrtc-conference-grid-holder>
 </div>
 
 <div class="video-chat-self-holder" [class.hide]="!localVideoEnabled">
