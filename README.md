@@ -1,9 +1,15 @@
 # [Library Readme](libs/ngx-webrtc/README.md)
 
+[npmjs.com](https://www.npmjs.com/package/ngx-webrtc)
+
 # Publish
 
 ```bash
+# build library
 npx nx build ngx-webrtc --prod
+# update docs
+npm run gen:docs
+# publish
 cd dist/libs/ngx-webrtc
 npm publish
 ```
