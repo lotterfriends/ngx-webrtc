@@ -15,7 +15,6 @@ export class TextChatComponent implements OnInit, AfterViewChecked {
   @ViewChild('messageField', { static: true })
   private messageFieldRef!: ElementRef;
 
-  @Input() room!: string;
   @Input() messages: Message[] = [];
   @Output() sendMessage = new EventEmitter();
   private get messageField(): HTMLInputElement {
