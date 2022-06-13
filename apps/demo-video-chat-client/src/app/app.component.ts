@@ -85,8 +85,8 @@ export class AppComponent {
 
   private shouldJoin(): void {
     if (location.pathname && location.pathname.length > 6) {
-      this.roomName = location.pathname.substring(1);
-      this.join(null, true);
+      const roomName = location.pathname.substring(1);
+      this.join(roomName, true);
     }
   }
 
@@ -106,9 +106,12 @@ export class AppComponent {
     const room = roomName ? roomName : this.roomName;
     // with asking we can prevent that users join on the same time (watch mode with automatic reload)
     // when users join on the same time it's unclear who is initiator
-    if (ask && !confirm(`do you want to join room "${this.roomName}"`)) {
+    if (ask && !confirm(`do you want to join room "${room}"`)) {
       location.href = location.origin;
+      return;
     }
+
+    this.roomName = room;
     this.channelHistoryService.addChannelToHistory(room);
     // update ui
     this.showChat = true;
