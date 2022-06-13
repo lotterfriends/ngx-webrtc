@@ -60,7 +60,7 @@ export class UserlistComponent implements OnInit {
   // Like in Discord you can change local volumn mute/unmute state of participants
 
   changeVolume($event: Event, user: UserInCall): void {
-    const volume = parseInt(($event.target as HTMLInputElement).value, 10);
+    const volume = parseInt(($event.target as HTMLInputElement).value, 10) / 100;
     user.volume = volume;
     (user?.node?.instance?.audioStreamNode?.nativeElement as HTMLAudioElement).volume = volume;
   }
