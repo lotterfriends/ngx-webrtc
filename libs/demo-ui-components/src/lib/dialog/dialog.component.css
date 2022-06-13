@@ -1,3 +1,11 @@
+:host {
+  display: none;
+}
+
+:host.show {
+  display: inherit;
+}
+  
 .dialog {
   z-index: 99;
   display: none;

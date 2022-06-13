@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, HostListener, HostBinding } from '@angular/core';
 
 @Component({
   selector: 'ngx-webrtc-dialog',
@@ -8,9 +8,12 @@ import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter, HostLi
 })
 export class DialogComponent {
 
-  @Input() show = false;
   @Input() title = '';
   @Output() showChange = new EventEmitter<boolean>();
+  
+  @Input()
+  @HostBinding('class.show')
+  public show = false;
 
   @HostListener('document:keydown', ['$event'])
   handleKeyboardEvent(event: KeyboardEvent): void {
