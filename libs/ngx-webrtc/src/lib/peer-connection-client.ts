@@ -6,6 +6,7 @@ import { PeerConnectionClientSignalMessageType } from './enums/peer-connection-c
 import { SdpUtils } from './sdp-utils';
 import { StreamTrack } from './interfaces/stream-track';
 import { StreamType } from './enums/stream-type';
+import { UtilityService } from './services/utility.service';
 
 export class PeerConnectionClient {
 
@@ -17,7 +18,7 @@ export class PeerConnectionClient {
   private connection: RTCPeerConnection | null;
   private settings: PeerConnectionClientSettings;
   private isNegotiating = false;
-  private id = this.getRandom(6);
+  private id = UtilityService.getRandom(6);
   private readonly DEFAULT_SDP_OFFER_OPTIONS: RTCOfferOptions = {
     offerToReceiveAudio: true,
     offerToReceiveVideo: true,
@@ -633,10 +634,6 @@ export class PeerConnectionClient {
     if (this.settings.debug) {
       console.error(this.id, ...args);
     }
-  }
-
-  private getRandom(size: number): string {
-    return `${Math.round(Math.random() * parseInt(`1${(1e15 + 0 + '').slice(-size)}`, 10))}`;
   }
 
 }

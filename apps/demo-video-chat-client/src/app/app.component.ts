@@ -1,5 +1,5 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
-import { IceServer } from 'ngx-webrtc';
+import { IceServer, UtilityService } from 'ngx-webrtc';
 import { lastValueFrom } from 'rxjs';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { ChannelHistoryService } from './services/channel-history.service';
@@ -50,7 +50,7 @@ export class AppComponent {
 
     // ask for username if not set yet
     if (!this.userStorageService.getCurrentUser()) {
-      this.userStorageService.setCurrentUsername(prompt('enter username') || 'Anon' + this.getRandom(6));
+      this.userStorageService.setCurrentUsername(prompt('enter username') || 'Anon' + UtilityService.getRandom(6));
     }
 
     // get me when register/refresh is ready
@@ -65,7 +65,7 @@ export class AppComponent {
       if (error.code === 'USERNAME_TAKEN') {
         this.userStorageService.removeCurrentUser();
         alert('The Usernname you chooese is taken, please choose a different one');
-        this.userStorageService.setCurrentUsername(prompt('enter username') || 'Anon' + this.getRandom(6));
+        this.userStorageService.setCurrentUsername(prompt('enter username') || 'Anon' + UtilityService.getRandom(6));
       }
       this.socketService.register();
     });
@@ -90,12 +90,8 @@ export class AppComponent {
     }
   }
 
-  private getRandom(size: number): string {
-    return `${Math.round(Math.random() * parseInt(`1${(1e15 + 0 + '').slice(-size)}`, 10))}`;
-  }
-
   private genRoom(): string {
-    return this.getRandom(10);
+    return UtilityService.getRandom(10);
   }
 
   public newRoom(): void {
