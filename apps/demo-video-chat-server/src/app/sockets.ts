@@ -5,8 +5,8 @@ import { ServerUser, User, Message, MessageType } from "@ngx-webrtc/demo-video-c
 import { UserStorageService } from "./services/user-storage.service";
 import * as socketio from "socket.io";
 
-let socketToUsers = new Map();
-let socketToRoom = new Map();
+const socketToUsers = new Map();
+const socketToRoom = new Map();
 
 const messageService: MessageStorageService = MessageStorageService.Instance();
 const userService: UserStorageService = UserStorageService.Instance();
