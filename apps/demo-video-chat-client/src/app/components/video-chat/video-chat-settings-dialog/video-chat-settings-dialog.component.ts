@@ -16,7 +16,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
   private hasStream = false;
   private showVideoSettingsDialogInternal = UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE;
   public devicesGoups: DevicesGroup[] = [];
-
+  public getLabelForDeviceTypeFkt = this.uiService.getLabelForDeviceType;
   private onDeviceChangeListener: EventListener = () => {
     if (this.hasStream) {
       this.initDeviceList();
@@ -67,17 +67,6 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
     this.streamService.getMediaDevices().then(devices => {
       this.devicesGoups = this.deviceService.groupDeviceByKind(devices);
     });
-  }
-
-  getLabelForDeviceType(type: DeviceType): string {
-    switch (type) {
-      case DeviceType.AudioInput:
-        return 'Microphone';
-      case DeviceType.AudioOutput:
-        return 'Audio Output';
-      case DeviceType.VideoInput:
-        return 'Camera';
-    }
   }
 
   isSelected(device: MediaDeviceInfo, kind: DeviceType): boolean {

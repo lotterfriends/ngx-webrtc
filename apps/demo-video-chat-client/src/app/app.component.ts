@@ -17,8 +17,11 @@ export class AppComponent {
   public showJoin = true;
   public showChat = false;
   public roomName = this.genRoom();
+  public wantedRoomName = '';
   public uiShowUserlist = UiService.DEFAULTS.USERLIST_VISIBLE;
   public uiShowChat = UiService.DEFAULTS.CHAT_VISIBLE;
+  public showJoinDialog = false;
+  public wantJoin = false;
   private servers: IceServer[] = [];
 
   @ViewChild('videoChat') private videoChatComponent!: VideoChatComponent;
@@ -98,30 +101,45 @@ export class AppComponent {
     this.roomName = this.genRoom();
   }
 
+  // TODO when dialog is closed with X or ESC, the No action is not triggered 
   public join(roomName?: string | null, ask = false): void {
     const room = roomName ? roomName : this.roomName;
     // with asking we can prevent that users join on the same time (watch mode with automatic reload)
     // when users join on the same time it's unclear who is initiator
-    if (ask && !confirm(`do you want to join room "${room}"`)) {
-      location.href = location.origin;
-      return;
+    if (ask) {
+      this.wantedRoomName = room;
+      this.showJoinDialog = true;
+    } else {
+      this.doJoin(room);
     }
-
+  }
+  
+  public doJoin(room: string) {
+    this.showJoinDialog = false;
     this.roomName = room;
     this.channelHistoryService.addChannelToHistory(room);
     // update ui
     this.showChat = true;
     this.showJoin = false;
-
+  
     // join room
     this.socketService.joinRoom(room);
     setTimeout(() => {
       this.videoChatComponent?.startCall(this.servers);
     });
-
+  
     // update url
     history.pushState({room}, `room ${room}`, `${room}`);
+  }
 
+  joinYes() {
+    this.doJoin(this.wantedRoomName);
+    this.showJoinDialog = false;
+  }
+
+  joinNo() {
+    location.href = location.origin;
+    this.showJoinDialog = false;
   }
 
   public leave(): void {

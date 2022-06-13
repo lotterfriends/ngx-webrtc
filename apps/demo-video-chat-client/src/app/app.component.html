@@ -33,3 +33,5 @@
     <ngx-webrtc-text-chat-container *ngIf="uiShowChat" #textChat [room]="roomName"></ngx-webrtc-text-chat-container>
   </div>
 </section>
+
+<ngx-webrtc-join-chat-dialog *ngIf="showJoinDialog" (yes)="joinYes()" (no)="joinNo()" [show]="showJoinDialog" [room]="wantedRoomName"></ngx-webrtc-join-chat-dialog>

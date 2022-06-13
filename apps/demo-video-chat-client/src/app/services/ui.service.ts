@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { DeviceType } from 'ngx-webrtc';
 import { BehaviorSubject } from 'rxjs';
 
 export enum ViewMode {
@@ -46,6 +47,17 @@ export class UiService {
 
   setViewMode(mode: ViewMode): void {
     this.viewMode$.next(mode);
+  }
+
+  getLabelForDeviceType(type: DeviceType): string {
+    switch (type) {
+      case DeviceType.AudioInput:
+        return 'Microphone';
+      case DeviceType.AudioOutput:
+        return 'Audio Output';
+      case DeviceType.VideoInput:
+        return 'Camera';
+    }
   }
 
 }

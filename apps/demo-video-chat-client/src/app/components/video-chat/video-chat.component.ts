@@ -1,17 +1,19 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ComponentFactory, ComponentFactoryResolver, ComponentRef,
-    ElementRef, HostListener, Injector, Input, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+  AfterViewInit, Component, ComponentRef,
+  ElementRef, HostListener, Input, OnInit, ViewChild, ViewContainerRef
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { distinctUntilChanged, filter, first, map } from 'rxjs/operators';
+import { ConferenceGridHolderComponent } from '@ngx-webrtc/demo-ui-components';
 import { MessageType, User } from '@ngx-webrtc/demo-video-chat-models';
-import { PeerConnectionClient, PeerConnectionClientSignalMessage, StreamType, StreamService,
-  CallService, 
-  IceServer} from 'ngx-webrtc';
+import {
+  CallService, DeviceService, IceServer, PeerConnectionClient, PeerConnectionClientSignalMessage, StreamService, StreamType
+} from 'ngx-webrtc';
+import { distinctUntilChanged, filter, first, map } from 'rxjs/operators';
 import { MessagesService } from '../../services/messages.service';
 import { SocketService } from '../../services/socket.service';
+import { UiService, ViewMode } from '../../services/ui.service';
 import { UserStorageService } from '../../services/user-storage.service';
 import { RemotePeerComponent } from './remote-peer/remote-peer.component';
-import { UiService, ViewMode } from '../../services/ui.service';
-import { ConferenceGridHolderComponent } from '@ngx-webrtc/demo-ui-components';
 
 /**
  * This is an example implementation of an video chat
@@ -52,7 +54,8 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
     private messageService: MessagesService,
     private streamService: StreamService,
     private callService: CallService,
-    private uiService: UiService
+    private uiService: UiService,
+    private deviceService: DeviceService
   ) {}
 
 
@@ -151,7 +154,30 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
   }
 
   private getMediaAndStart(): void {
-    this.streamService.tryGetUserMedia().then(this.onLocalStream.bind(this), this.onNoStream.bind(this));
+    const preferredVideoInputDevice = this.deviceService.preferredVideoInputDevice$.getValue();
+    const preferredAudioInputDevice = this.deviceService.preferredAudioInputDevice$.getValue();
+    const preferredAudioInputDeviceVolume = this.deviceService.preferredAudioInputDeviceVolume$.getValue();
+    let audioConstraint: boolean | { deviceId?: string, volume?: number }  = true;
+    if (preferredAudioInputDevice || preferredAudioInputDeviceVolume !== null) {
+      if (preferredAudioInputDevice && preferredAudioInputDeviceVolume !== null) {
+        audioConstraint = {
+          deviceId: preferredAudioInputDevice,
+          volume: preferredAudioInputDeviceVolume
+        }
+      } else if (preferredAudioInputDevice) {
+        audioConstraint = {
+          deviceId: preferredAudioInputDevice
+        }
+      } else if (preferredAudioInputDeviceVolume) {
+        audioConstraint = {
+          volume: preferredAudioInputDeviceVolume
+        }
+      }
+    }
+    this.streamService.tryGetUserMedia({
+      video: preferredVideoInputDevice ? { deviceId: preferredVideoInputDevice } : true,
+      audio: audioConstraint
+    }).then(this.onLocalStream.bind(this), this.onNoStream.bind(this));
   }
 
   private onLocalStream(stream: MediaStream): void {

@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { DeviceType } from '../enums';
 import { DevicesGroup } from '../interfaces';
 import { NgxWebrtConfiguration } from '../ngx-webrtc-configuration';
@@ -8,6 +9,11 @@ import { StreamService } from './stream.service';
   providedIn: 'root'
 })
 export class DeviceService {
+
+  public preferredAudioInputDevice$ = new BehaviorSubject<string | null>(null);
+  public preferredAudioOutputDevice$ = new BehaviorSubject<string | null>(null);
+  public preferredVideoInputDevice$ = new BehaviorSubject<string | null>(null);
+  public preferredAudioInputDeviceVolume$ = new BehaviorSubject<number | null>(null);
 
   constructor(
     private readonly config: NgxWebrtConfiguration,
@@ -83,24 +89,24 @@ export class DeviceService {
    * @param devices list of devices you get by calling `StreamService.getMediaDevices()`
    * @returns a list of devices grouped by `DeviceType`
    */
-  groupDeviceByKind(devices: MediaDeviceInfo[]): DevicesGroup[] {
+  groupDeviceByKind(devices: MediaDeviceInfo[], omit: DeviceType[] = []): DevicesGroup[] {
     const devicesGoups: DevicesGroup[] = [];
     const audioInput = devices.filter(d => d.kind === DeviceType.AudioInput);
     const audioOutput = devices.filter(d => d.kind === DeviceType.AudioOutput);
     const videoinput = devices.filter(d => d.kind === DeviceType.VideoInput);
-    if (audioInput.length) {
+    if (audioInput.length && !omit.includes(DeviceType.AudioInput)) {
       devicesGoups.push({
         kind: DeviceType.AudioInput,
         devices: audioInput
       });
     }
-    if (audioOutput.length) {
+    if (audioOutput.length && !omit.includes(DeviceType.AudioOutput)) {
       devicesGoups.push({
         kind: DeviceType.AudioOutput,
         devices: audioOutput
       });
     }
-    if (videoinput.length) {
+    if (videoinput.length && !omit.includes(DeviceType.VideoInput)) {
       devicesGoups.push({
         kind: DeviceType.VideoInput,
         devices: videoinput

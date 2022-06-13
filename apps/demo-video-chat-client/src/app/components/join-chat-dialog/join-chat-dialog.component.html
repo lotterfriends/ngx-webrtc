@@ -1,0 +1,32 @@
+
+<ngx-webrtc-dialog [(show)]="show" title="Join">
+
+  <p>Do you want to join room <b>{{room}}</b>?</p>
+
+  
+  <div>Test you Settings:</div>
+
+  <div class="settings-test">
+    <div *ngFor="let deviceGroup of devicesGoups">
+  
+      <div class="device-select">
+        <label for="device-group-{{deviceGroup.kind}}" *ngIf="deviceGroup.devices && deviceGroup.devices.length">{{getLabelForDeviceTypeFkt(deviceGroup.kind)}}</label>
+        <select (change)="changeSelectedDevice($event, deviceGroup.kind)" id="device-group-{{deviceGroup.kind}}" [disabled]="deviceGroup.devices.length === 1" [title]="deviceGroup.devices.length === 1 ? 'disabled because only one device is available': 'please select a device'">
+          <option [selected]="isSelected(d, deviceGroup.kind)" value="{{d.deviceId}}" *ngFor="let d of deviceGroup.devices">{{d.label}}</option>
+        </select>
+      </div>
+    </div>
+  
+    Input Volum:
+    <input (input)="changeVolume($event)" type="range" min="0" max="100" step="1" value="100"> 
+  
+    <video  controls id="videoStreamNode" playsinline #videoStreamNode></video>
+  
+  </div>
+
+  <div>
+    <button (click)="joinYes()">yes</button>&nbsp;
+    <button (click)="joinNo()">no</button>
+  </div>
+
+</ngx-webrtc-dialog>

@@ -3,7 +3,7 @@
   <div *ngFor="let deviceGroup of devicesGoups">
 
     <div class="device-select">
-      <label for="device-group-{{deviceGroup.kind}}" *ngIf="deviceGroup.devices && deviceGroup.devices.length">{{getLabelForDeviceType(deviceGroup.kind)}}</label>
+      <label for="device-group-{{deviceGroup.kind}}" *ngIf="deviceGroup.devices && deviceGroup.devices.length">{{getLabelForDeviceTypeFkt(deviceGroup.kind)}}</label>
       <select (change)="changeSelectedDevice($event, deviceGroup.kind)" id="device-group-{{deviceGroup.kind}}" [disabled]="deviceGroup.devices.length === 1" [title]="deviceGroup.devices.length === 1 ? 'disabled because only one device is available': 'please select a device'">
         <option [selected]="isSelected(d, deviceGroup.kind)" value="{{d.deviceId}}" *ngFor="let d of deviceGroup.devices">{{d.label}}</option>
       </select>

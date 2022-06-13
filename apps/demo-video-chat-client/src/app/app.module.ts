@@ -14,6 +14,7 @@ import { VideoChatSettingsDialogComponent } from './components/video-chat/video-
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { DemoUiComponentsModule } from '@ngx-webrtc/demo-ui-components';
 import { environment } from '../environments/environment';
+import { JoinChatDialogComponent } from './components/join-chat-dialog/join-chat-dialog.component';
 
 
 const config: SocketIoConfig = { 
@@ -30,6 +31,7 @@ const config: SocketIoConfig = {
     UserlistContainerComponent,
     ControlsComponent,
     VideoChatSettingsDialogComponent,
+    JoinChatDialogComponent,
   ],
   imports: [
     DemoUiComponentsModule,
