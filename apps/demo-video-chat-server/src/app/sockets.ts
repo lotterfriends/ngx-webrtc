@@ -3,6 +3,7 @@ import { Socket } from "socket.io";
 import { MessageStorageService } from "./services/message-storage.service";
 import { ServerUser, User, Message, MessageType } from "@ngx-webrtc/demo-video-chat-models";
 import { UserStorageService } from "./services/user-storage.service";
+import * as socketio from "socket.io";
 
 let socketToUsers = new Map();
 let socketToRoom = new Map();
@@ -23,11 +24,15 @@ const getUserInRoom = (room: string): User[] => {
 }
 
 export const initSockets = (http: Server) => {
-  // TODO: dynamic origin
-  let io = require("socket.io")(http, {
-    cors: true,
-    origins: ["http://localhost:4400"],
-  });
+  const options: Partial<socketio.ServerOptions>  = {};
+  const env = process.env.NODE_ENV || 'development';
+  if (env === 'development') {
+    options.cors = {
+      origin: 'http://localhost:4400'
+    }
+  }
+  const io = new socketio.Server(http, options);
+
   // whenever a user connects
   io.on("connection", function (socket: Socket) {
     // console.log(`a user connected ${socket.id}`);
@@ -116,4 +121,6 @@ export const initSockets = (http: Server) => {
     });
 
   });
+
+  return io;
 };

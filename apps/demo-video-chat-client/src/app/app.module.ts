@@ -13,9 +13,13 @@ import { RemotePeerComponent } from './components/video-chat/remote-peer/remote-
 import { VideoChatSettingsDialogComponent } from './components/video-chat/video-chat-settings-dialog/video-chat-settings-dialog.component';
 import { VideoChatComponent } from './components/video-chat/video-chat.component';
 import { DemoUiComponentsModule } from '@ngx-webrtc/demo-ui-components';
+import { environment } from '../environments/environment';
 
 
-const config: SocketIoConfig = { url: 'http://localhost:3333', options: {} };
+const config: SocketIoConfig = { 
+  url: environment.wsPath,
+  options: {}
+};
 
 @NgModule({
   declarations: [
