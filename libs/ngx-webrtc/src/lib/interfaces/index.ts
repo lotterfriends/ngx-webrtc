@@ -1,3 +1,4 @@
+export * from './devices-group';
 export * from './ice-server';
 export * from './peer-connection-client-signal-message';
 export * from './remote-peer-component-interface';

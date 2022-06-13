@@ -20,3 +20,4 @@ export * from './lib/interfaces';
 // services
 export * from './lib/services/call.service';
 export * from './lib/services/stream.service';
+export * from './lib/services/device.service';

@@ -1,17 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { StreamService } from 'ngx-webrtc';
+import { StreamService, DeviceType, DeviceService, DevicesGroup } from 'ngx-webrtc';
 import { distinctUntilChanged, filter, tap } from 'rxjs/operators';
 import { UiService } from '../../../services/ui.service';
 
 // TODO: display input level
-
-enum DeviceType {
-  AudioInput = 'audioinput',
-  AudioOutput = 'audiooutput',
-  VideoInput = 'videoinput'
-}
-
 @UntilDestroy()
 @Component({
   selector: 'ngx-webrtc-video-chat-settings-dialog',
@@ -22,7 +15,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   private hasStream = false;
   private showVideoSettingsDialogInternal = UiService.DEFAULTS.VIDEO_SETTINGS_DIALOG_VISIBLE;
-  public devicesGoups: {kind: DeviceType, devices: MediaDeviceInfo[]}[] = [];
+  public devicesGoups: DevicesGroup[] = [];
 
   private onDeviceChangeListener: EventListener = () => {
     if (this.hasStream) {
@@ -42,7 +35,8 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   constructor(
     private uiService: UiService,
-    private streamService: StreamService
+    private streamService: StreamService,
+    private deviceService: DeviceService,
   ) { }
 
   ngOnInit(): void {
@@ -71,28 +65,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   initDeviceList(): void {
     this.streamService.getMediaDevices().then(devices => {
-      // console.log(devices);
-      const audioInput = devices.filter(d => d.kind === DeviceType.AudioInput);
-      const audioOutput = devices.filter(d => d.kind === DeviceType.AudioOutput);
-      const videoinput = devices.filter(d => d.kind === DeviceType.VideoInput);
-      if (audioInput.length) {
-        this.devicesGoups.push({
-          kind: DeviceType.AudioInput,
-          devices: audioInput
-        });
-      }
-      if (audioOutput.length) {
-        this.devicesGoups.push({
-          kind: DeviceType.AudioOutput,
-          devices: audioOutput
-        });
-      }
-      if (videoinput.length) {
-        this.devicesGoups.push({
-          kind: DeviceType.VideoInput,
-          devices: videoinput
-        });
-      }
+      this.devicesGoups = this.deviceService.groupDeviceByKind(devices);
     });
   }
 
@@ -108,57 +81,12 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
   }
 
   isSelected(device: MediaDeviceInfo, kind: DeviceType): boolean {
-    const stream = this.streamService.getLocalStream();
-    if (stream) {
-      if (kind === DeviceType.VideoInput && this.streamService.hasVideo) {
-        const track = this.streamService.getVideoTrackForStream(stream);
-        if (track) {
-          return track.getSettings().deviceId === device.deviceId;
-        }
-      }
-      if (kind === DeviceType.AudioInput && this.streamService.hasAudio) {
-        const track = this.streamService.getAudioTrackForStream(stream);
-        if (track) {
-          return track.getSettings().deviceId === device.deviceId;
-        } 
-      }
-    }
-    return false;
+    return this.deviceService.isDeviceSelected(device, kind);
   }
 
   changeSelectedDevice(event: Event, kind: DeviceType): void {
     const deviceId = (event.target as HTMLSelectElement).value;
-    if (kind === DeviceType.VideoInput) {
-      navigator.mediaDevices.getUserMedia({ video: {
-        deviceId
-      }}).then((stream) => {
-        const track = this.streamService.getVideoTrackForStream(stream);
-        if (track) {
-          this.streamService.replaceTrack(track);
-        }
-        const currentStream = this.streamService.getLocalStream();
-        if (currentStream && track) {
-          this.streamService.replaceTrackInStream(currentStream, track);
-        }
-      }, console.error);
-    }
-    if (kind === DeviceType.AudioInput) {
-      navigator.mediaDevices.getUserMedia({ audio: {
-        deviceId
-      }}).then((stream) => {
-        const track = this.streamService.getAudioTrackForStream(stream);
-        if(track) {
-          this.streamService.replaceTrack(track);
-        }
-        const currentStream = this.streamService.getLocalStream();
-        if (currentStream && track) {
-          this.streamService.replaceTrackInStream(currentStream, track);
-        }
-      }, console.error);
-    }
-    if (kind === DeviceType.AudioOutput) {
-      this.streamService.setAudioOutput(deviceId);
-    }
+    this.deviceService.changeSelectedDevice(deviceId, kind);
   }
 
 }
