@@ -39,7 +39,7 @@ You can listen to the change and call replaceTrack of peer connection to send th
 
 #### Defined in
 
-[lib/directives/share-screen.directive.ts:27](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L27)
+[lib/directives/share-screen.directive.ts:27](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L27)
 
 ## Properties
 
@@ -49,7 +49,7 @@ You can listen to the change and call replaceTrack of peer connection to send th
 
 #### Defined in
 
-[lib/directives/share-screen.directive.ts:16](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L16)
+[lib/directives/share-screen.directive.ts:16](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L16)
 
 ___
 
@@ -59,7 +59,7 @@ ___
 
 #### Defined in
 
-[lib/directives/share-screen.directive.ts:17](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L17)
+[lib/directives/share-screen.directive.ts:17](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L17)
 
 ___
 
@@ -69,7 +69,7 @@ ___
 
 #### Defined in
 
-[lib/directives/share-screen.directive.ts:18](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L18)
+[lib/directives/share-screen.directive.ts:18](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L18)
 
 ## Methods
 
@@ -83,7 +83,7 @@ ___
 
 #### Defined in
 
-[lib/directives/share-screen.directive.ts:19](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L19)
+[lib/directives/share-screen.directive.ts:19](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L19)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[lib/directives/share-screen.directive.ts:33](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L33)
+[lib/directives/share-screen.directive.ts:33](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L33)
 
 ___
 
@@ -111,4 +111,4 @@ ___
 
 #### Defined in
 
-[lib/directives/share-screen.directive.ts:64](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L64)
+[lib/directives/share-screen.directive.ts:64](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/directives/share-screen.directive.ts#L64)

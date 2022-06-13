@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[lib/interfaces/stream-track.ts:6](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/stream-track.ts#L6)
+[lib/interfaces/stream-track.ts:6](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/stream-track.ts#L6)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[lib/interfaces/stream-track.ts:5](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/stream-track.ts#L5)
+[lib/interfaces/stream-track.ts:5](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/stream-track.ts#L5)

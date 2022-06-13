@@ -20,7 +20,7 @@
 
 #### Defined in
 
-[lib/interfaces/peer-connection-client-signal-message.ts:9](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L9)
+[lib/interfaces/peer-connection-client-signal-message.ts:9](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L9)
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/peer-connection-client-signal-message.ts:8](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L8)
+[lib/interfaces/peer-connection-client-signal-message.ts:8](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L8)
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/peer-connection-client-signal-message.ts:7](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L7)
+[lib/interfaces/peer-connection-client-signal-message.ts:7](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L7)
 
 ___
 
@@ -50,7 +50,7 @@ ___
 
 #### Defined in
 
-[lib/interfaces/peer-connection-client-signal-message.ts:6](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L6)
+[lib/interfaces/peer-connection-client-signal-message.ts:6](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L6)
 
 ___
 
@@ -60,4 +60,4 @@ ___
 
 #### Defined in
 
-[lib/interfaces/peer-connection-client-signal-message.ts:5](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L5)
+[lib/interfaces/peer-connection-client-signal-message.ts:5](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/peer-connection-client-signal-message.ts#L5)

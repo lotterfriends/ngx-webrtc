@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[lib/enums/stream-type.ts:4](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/stream-type.ts#L4)
+[lib/enums/stream-type.ts:4](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/stream-type.ts#L4)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[lib/enums/stream-type.ts:3](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/stream-type.ts#L3)
+[lib/enums/stream-type.ts:3](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/stream-type.ts#L3)

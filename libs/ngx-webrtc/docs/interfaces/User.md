@@ -17,7 +17,7 @@
 
 #### Defined in
 
-[lib/interfaces/user.ts:3](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user.ts#L3)
+[lib/interfaces/user.ts:3](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/user.ts#L3)
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 #### Defined in
 
-[lib/interfaces/user.ts:2](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/interfaces/user.ts#L2)
+[lib/interfaces/user.ts:2](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/interfaces/user.ts#L2)

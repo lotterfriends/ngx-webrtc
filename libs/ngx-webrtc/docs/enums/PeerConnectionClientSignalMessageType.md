@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:4](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L4)
+[lib/enums/peer-connection-client-signal-message-type.ts:4](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L4)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:9](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L9)
+[lib/enums/peer-connection-client-signal-message-type.ts:9](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L9)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:10](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L10)
+[lib/enums/peer-connection-client-signal-message-type.ts:10](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L10)
 
 ___
 
@@ -57,7 +57,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:6](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L6)
+[lib/enums/peer-connection-client-signal-message-type.ts:6](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L6)
 
 ___
 
@@ -67,7 +67,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:3](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L3)
+[lib/enums/peer-connection-client-signal-message-type.ts:3](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L3)
 
 ___
 
@@ -77,7 +77,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:5](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L5)
+[lib/enums/peer-connection-client-signal-message-type.ts:5](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L5)
 
 ___
 
@@ -87,7 +87,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:7](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L7)
+[lib/enums/peer-connection-client-signal-message-type.ts:7](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L7)
 
 ___
 
@@ -97,7 +97,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:8](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L8)
+[lib/enums/peer-connection-client-signal-message-type.ts:8](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L8)
 
 ___
 
@@ -107,7 +107,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:13](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L13)
+[lib/enums/peer-connection-client-signal-message-type.ts:13](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L13)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:14](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L14)
+[lib/enums/peer-connection-client-signal-message-type.ts:14](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L14)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:11](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L11)
+[lib/enums/peer-connection-client-signal-message-type.ts:11](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L11)
 
 ___
 
@@ -137,4 +137,4 @@ ___
 
 #### Defined in
 
-[lib/enums/peer-connection-client-signal-message-type.ts:12](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L12)
+[lib/enums/peer-connection-client-signal-message-type.ts:12](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/enums/peer-connection-client-signal-message-type.ts#L12)

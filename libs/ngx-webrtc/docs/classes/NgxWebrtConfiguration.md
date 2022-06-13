@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[lib/ngx-webrtc-configuration.ts:3](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/ngx-webrtc-configuration.ts#L3)
+[lib/ngx-webrtc-configuration.ts:3](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/ngx-webrtc-configuration.ts#L3)
 
 ___
 
@@ -37,4 +37,4 @@ ___
 
 #### Defined in
 
-[lib/ngx-webrtc-configuration.ts:2](https://github.com/lotterfriends/video-chat/blob/238aa43/libs/ngx-webrtc/src/lib/ngx-webrtc-configuration.ts#L2)
+[lib/ngx-webrtc-configuration.ts:2](https://github.com/lotterfriends/video-chat/blob/cd8d92e/libs/ngx-webrtc/src/lib/ngx-webrtc-configuration.ts#L2)
