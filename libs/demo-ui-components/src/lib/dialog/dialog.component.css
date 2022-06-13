@@ -41,8 +41,11 @@
     0px 8px 12px rgba(161, 173, 187, 0.2),
     0px 0px 24px rgba(233, 238, 247, 0.28);
   display: block;
-  margin: 0 auto;
-  margin-top: 20%;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
 }
 
 .dialog-title {
