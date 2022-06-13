@@ -4,6 +4,8 @@
 
 # Publish
 
+Increase Version in `libs/ngx-webrtc/package.json`
+
 ```bash
 # build library
 npx nx build ngx-webrtc --prod
