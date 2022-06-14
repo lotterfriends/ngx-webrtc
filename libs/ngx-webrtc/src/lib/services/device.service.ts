@@ -5,6 +5,10 @@ import { DevicesGroup } from '../interfaces';
 import { NgxWebrtConfiguration } from '../ngx-webrtc-configuration';
 import { StreamService } from './stream.service';
 
+/**
+ * The DeviceService help you with device interaction (audio and video devices) and can hold a state for devices if you want to implement
+ * a lobby with device testing.
+ */
 @Injectable({
   providedIn: 'root'
 })
