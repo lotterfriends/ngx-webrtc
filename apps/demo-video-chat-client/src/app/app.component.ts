@@ -101,7 +101,6 @@ export class AppComponent {
     this.roomName = this.genRoom();
   }
 
-  // TODO when dialog is closed with X or ESC, the No action is not triggered 
   public join(roomName?: string | null, ask = false): void {
     const room = roomName ? roomName : this.roomName;
     // with asking we can prevent that users join on the same time (watch mode with automatic reload)
@@ -130,6 +129,10 @@ export class AppComponent {
   
     // update url
     history.pushState({room}, `room ${room}`, `${room}`);
+  }
+
+  joinClose() {
+    this.joinNo();
   }
 
   joinYes() {

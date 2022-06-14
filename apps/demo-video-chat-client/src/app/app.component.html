@@ -23,7 +23,6 @@
 
 <section class="room" *ngIf="roomName?.length && showChat" #room>
   <div class="room-chat">
-    <!-- <div>Room: {{roomName}}</div> -->
     <ngx-webrtc-video-chat #videoChat [room]="roomName">
       <ngx-webrtc-controls (fullscreen)="toggleFullscreen()" (leave)="leave()"></ngx-webrtc-controls>
     </ngx-webrtc-video-chat>
@@ -34,4 +33,4 @@
   </div>
 </section>
 
-<ngx-webrtc-join-chat-dialog *ngIf="showJoinDialog" (yes)="joinYes()" (no)="joinNo()" [show]="showJoinDialog" [room]="wantedRoomName"></ngx-webrtc-join-chat-dialog>
+<ngx-webrtc-join-chat-dialog *ngIf="showJoinDialog" (yes)="joinYes()" (no)="joinNo()" (dialogClose)="joinClose()" [show]="showJoinDialog" [room]="wantedRoomName"></ngx-webrtc-join-chat-dialog>

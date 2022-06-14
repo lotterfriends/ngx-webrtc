@@ -15,6 +15,7 @@ export class JoinChatDialogComponent implements OnInit, OnDestroy {
   @ViewChild('videoStreamNode', { static: false }) public videoStreamNode!: ElementRef;
   @Input() public show = false;
   @Input() public room = '';
+  @Output() dialogClose = new EventEmitter();
   @Output() yes = new EventEmitter();
   @Output() no = new EventEmitter();
   public getLabelForDeviceTypeFkt = this.uiService.getLabelForDeviceType;
@@ -89,6 +90,12 @@ export class JoinChatDialogComponent implements OnInit, OnDestroy {
 
   joinNo() {
     this.no.emit();
+  }
+
+  onShowChange(show: boolean) {
+    if (!show) {
+      this.dialogClose.emit();
+    }
   }
 
 }

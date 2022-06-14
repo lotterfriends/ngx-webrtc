@@ -1,5 +1,5 @@
 
-<ngx-webrtc-dialog [(show)]="show" title="Join">
+<ngx-webrtc-dialog [(show)]="show" title="Join" (showChange)="onShowChange($event)">
 
   <p>Do you want to join room <b>{{room}}</b>?</p>
 
