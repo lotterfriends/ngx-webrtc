@@ -34,12 +34,15 @@ export class DeviceService {
       navigator.mediaDevices.getUserMedia({ video: {
         deviceId
       }}).then((stream) => {
+        
         const track = this.streamService.getVideoTrackForStream(stream);
         if (track) {
           this.streamService.replaceTrack(track);
         }
         const currentStream = this.streamService.getLocalStream();
         if (currentStream && track) {
+          const oldTrack = this.streamService.getVideoTrackForStream(currentStream);
+          oldTrack?.stop();
           this.streamService.replaceTrackInStream(currentStream, track);
         }
       }, console.error);
@@ -54,6 +57,8 @@ export class DeviceService {
         }
         const currentStream = this.streamService.getLocalStream();
         if (currentStream && track) {
+          const oldTrack = this.streamService.getVideoTrackForStream(currentStream);
+          oldTrack?.stop();
           this.streamService.replaceTrackInStream(currentStream, track);
         }
       }, console.error);
