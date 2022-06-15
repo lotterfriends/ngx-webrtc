@@ -60,12 +60,14 @@ export class VideoChatComponent implements OnInit, AfterViewInit {
 
 
   ngAfterViewInit(): void {
+    // update grid size when ui changed
     this.uiService.isChatVisible$.pipe(untilDestroyed(this)).subscribe(this.resize.bind(this));
     this.uiService.isUserlistVisible$.pipe(untilDestroyed(this)).subscribe(this.resize.bind(this));
   }
 
   ngOnInit(): void {
     this.log('init');
+    // get own user from store
     this.self = this.userStorageService.getCurrentUsername();
 
     this.socketService.onUserLeftRoom().pipe(
