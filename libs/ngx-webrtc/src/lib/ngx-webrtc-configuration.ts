@@ -1,4 +1,4 @@
 export class NgxWebrtConfiguration {
-  userIdentifier: string = '';
+  userIdentifier = '';
   debug = true;
 }
