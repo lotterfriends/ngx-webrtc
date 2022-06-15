@@ -13,7 +13,8 @@ npx nx build ngx-webrtc --prod
 npm run gen:docs
 # publish
 cd dist/libs/ngx-webrtc
-npm publish
+npm publish # normal relase
+npm publish --tag next # prerelease
 ```
 
 # Dev

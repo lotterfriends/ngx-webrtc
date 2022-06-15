@@ -182,10 +182,16 @@ export class StreamService {
    */
   public replaceTrackInStream(stream: MediaStream, track: MediaStreamTrack): void {
     if (track.kind === StreamType.Video) {
-      stream?.getVideoTracks().forEach(e => stream.removeTrack(e));
+      stream?.getVideoTracks().forEach(e => {
+        e.stop();
+        stream.removeTrack(e)
+      });
     }
     if (track.kind === StreamType.Audio) {
-      stream?.getAudioTracks().forEach(e => stream.removeTrack(e));
+      stream?.getAudioTracks().forEach((e) => {
+        e.stop();
+        stream.removeTrack(e)
+      });
     }
     stream?.addTrack(track);
   }
