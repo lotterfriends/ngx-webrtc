@@ -13,6 +13,7 @@ export class UserlistComponent implements OnInit {
 
   public selfAudioMuted = false;
   public selfVideoMuted = false;
+  public displayVolumn = 100;
   @Input() public self: ServerUser | null = null;
 
   constructor(
@@ -60,17 +61,21 @@ export class UserlistComponent implements OnInit {
   // Like in Discord you can change local volumn mute/unmute state of participants
 
   changeVolume($event: Event, user: UserInCall): void {
-    const volume = parseInt(($event.target as HTMLInputElement).value, 10) / 100;
+    const eventVolume = parseInt(($event.target as HTMLInputElement).value, 10);
+    this.displayVolumn = eventVolume;
+    const volume =  Math.round(eventVolume / 100);
     user.volume = volume;
     (user?.node?.instance?.audioStreamNode?.nativeElement as HTMLAudioElement).volume = volume;
   }
 
   unmute(user: UserInCall): void {
+    this.displayVolumn = 100;
     user.volume = 1;
     (user?.node?.instance?.audioStreamNode?.nativeElement as HTMLAudioElement).volume = 1;
   }
 
   mute(user: UserInCall): void {
+    this.displayVolumn = 0;
     user.volume = 0;
     (user?.node?.instance?.audioStreamNode?.nativeElement as HTMLAudioElement).volume = 0;
   }

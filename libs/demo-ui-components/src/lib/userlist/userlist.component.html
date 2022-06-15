@@ -29,8 +29,8 @@
         Volumen Local
       </span>
       <span class="line" >
-        <input (input)="changeVolume($event, user)" type="range" min="0" max="100" step="1" [value]="user.volume"> 
-        {{user.volume*100}}%
+        <input (input)="changeVolume($event, user)" type="range" min="0" max="100" step="1" [value]="displayVolumn"> 
+        {{displayVolumn}}%
         <button *ngIf="user.volume <= 0" (click)="unmute(user)">unmute</button>
         <button *ngIf="user.volume > 0" (click)="mute(user)">mute</button>
       </span>
