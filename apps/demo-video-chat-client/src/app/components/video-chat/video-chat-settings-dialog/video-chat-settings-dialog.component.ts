@@ -65,7 +65,7 @@ export class VideoChatSettingsDialogComponent implements OnInit, OnDestroy {
 
   initDeviceList(): void {
     this.streamService.getMediaDevices().then(devices => {
-      this.devicesGoups = this.deviceService.groupDeviceByKind(devices);
+      this.devicesGoups = this.deviceService.groupDeviceByKind(devices, [DeviceType.AudioOutput]);
     });
   }
 
