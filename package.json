@@ -7,7 +7,8 @@
     "build": "nx build",
     "test": "nx test",
     "postinstall": "node ./decorate-angular-cli.js && ngcc --properties es2015 browser module main",
-    "gen:docs": "typedoc --tsconfig libs/ngx-webrtc/tsconfig.lib.json --plugin typedoc-ngx-plugin --plugin typedoc-plugin-markdown --theme markdown --out libs/ngx-webrtc/docs --publicPath https://github.com/lotterfriends/ngx-webrtc/tree/main/libs/ngx-webrtc/docs/ libs/ngx-webrtc/src/index.ts",
+    "gen:typedoc": "typedoc --tsconfig libs/ngx-webrtc/tsconfig.lib.json --plugin typedoc-ngx-plugin --plugin typedoc-plugin-markdown --theme markdown --out libs/ngx-webrtc/docs --publicPath https://github.com/lotterfriends/ngx-webrtc/tree/main/libs/ngx-webrtc/docs/ libs/ngx-webrtc/src/index.ts",
+    "gen:docs": "npx ts-node tools/gen-docs.ts",
     "build:prod": "nx build ngx-webrtc --prod"
   },
   "private": true,
